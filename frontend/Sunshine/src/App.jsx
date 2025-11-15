@@ -1,26 +1,25 @@
 import { useState } from 'react'
-import Navbar from './User/Navbar.jsx'
-import Footer from './User/Footer.jsx'
-import Herosection from './User/Home/Herosection.jsx'
-import WhatNew from './User/Home/WhatNew.jsx'
+import { Routes, Route } from 'react-router-dom'
+import UserLayout from './Layouts/UserLayout.jsx'
+import Home from './User/Home.jsx'
+import About from './User/About_us/AboutUs.jsx'
+import Service from './User/Services/Service.jsx'
+import MyTeam from './User/Team/MyTeam.jsx'
 import './App.css'
-import OurExperts from './User/Home/OurExperts.jsx'
-import AppointmentSection from './User/Home/Appoint.jsx'
-import ClientReviews from './User/Home/ClientReviews.jsx'
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <Navbar/>
-      <Herosection/>
-      <WhatNew/>
-      <OurExperts/>
-      <AppointmentSection/>
-      <ClientReviews/>
-      <Footer/>
-    </>
+    <Routes>
+    
+      <Route path="/" element={<UserLayout />}>
+      <Route index element={<Home />} />
+      <Route path="AboutUs" element={<About/>} />
+      <Route path="ServicePage" element={<Service/>} />
+      <Route path="TeamPage" element={<MyTeam/>}/>
+      </Route>
+      
+    </Routes>
   )
 }
 

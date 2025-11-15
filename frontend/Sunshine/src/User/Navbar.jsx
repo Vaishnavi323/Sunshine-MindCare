@@ -3,19 +3,19 @@ import '../../styles/Navbar.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logoImage from '../assets/Sunshine_logo.webp';
+import { Link, NavLink } from 'react-router-dom';
 
 const CustomNavbar = () => {
     return (
-
-        <>
-        
         <Navbar expand="lg" className="custom-navbar" fixed="top">
             <Container fluid className="px-4">
                 {/* Left side - Logo and email */}
                 <div className="d-flex align-items-center gap-3">
-                    <Navbar.Brand href="#" className="d-flex align-items-center">
-                        <img src={logoImage} alt="Sunshine Logo" className="navbar-logo" />
-                    </Navbar.Brand>
+                    <Link to="/" className="d-flex align-items-center" style={{ textDecoration: 'none' }}>
+                        <Navbar.Brand href="#" className="d-flex align-items-center" onClick={(e) => e.preventDefault()}>
+                            <img src={logoImage} alt="Sunshine Logo" className="navbar-logo" />
+                        </Navbar.Brand>
+                    </Link>
                     {/* <div className="vr custom-vr d-none d-lg-block"></div>
                     <div className="d-none d-lg-block">
                         <small className="email-text">sales@spyromechind</small>
@@ -26,14 +26,14 @@ const CustomNavbar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" className="custom-toggler" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
                     <Nav className="mx-auto nav-links">
-                        <Nav.Link href="#" className="mx-2 fw-medium nav-link-custom">Home</Nav.Link>
-                        <Nav.Link href="#" className="mx-2 fw-medium nav-link-custom">About Us</Nav.Link>
-                        <Nav.Link href="#" className="mx-2 fw-medium nav-link-custom">Services</Nav.Link>
-                        <Nav.Link href="#" className="mx-2 fw-medium nav-link-custom">Team</Nav.Link>
-                        <Nav.Link href="#" className="mx-2 fw-medium nav-link-custom">Events</Nav.Link>
-                        <Nav.Link href="#" className="mx-2 fw-medium nav-link-custom">Blogs</Nav.Link>
-                        <Nav.Link href="#" className="mx-2 fw-medium nav-link-custom">Career</Nav.Link>
-                        <Nav.Link href="#" className="mx-2 fw-medium nav-link-custom">Contact Us</Nav.Link>
+                        <Nav.Link as={Link} to="/" className="mx-2 fw-medium nav-link-custom">Home</Nav.Link>
+                        <Nav.Link as={NavLink} to="/AboutUs" className="mx-2 fw-medium nav-link-custom">About Us</Nav.Link>
+                        <Nav.Link as={NavLink} to="/ServicePage" className="mx-2 fw-medium nav-link-custom">Services</Nav.Link>
+                        <Nav.Link as={NavLink} to="/TeamPage" className="mx-2 fw-medium nav-link-custom">Team</Nav.Link>
+                        <Nav.Link as={NavLink} to="/" className="mx-2 fw-medium nav-link-custom">Events</Nav.Link>
+                        <Nav.Link as={NavLink} to="/" className="mx-2 fw-medium nav-link-custom">Blogs</Nav.Link>
+                        <Nav.Link as={NavLink} to="/" className="mx-2 fw-medium nav-link-custom">Career</Nav.Link>
+                        <Nav.Link as={NavLink} to="/" className="mx-2 fw-medium nav-link-custom">Contact Us</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
 
@@ -53,7 +53,6 @@ const CustomNavbar = () => {
                 </div>
             </Container>            
         </Navbar>
-        </>
     );
 };
 

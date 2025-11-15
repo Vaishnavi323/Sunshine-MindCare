@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SpyromechHero = () => {
+const HeroSection = () => {
     return (
         <>
             <style>{`
@@ -481,4 +481,4 @@ const SpyromechHero = () => {
     );
 };
 
-export default SpyromechHero;
+export default HeroSection;
