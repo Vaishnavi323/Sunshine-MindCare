@@ -41,13 +41,13 @@ const CustomNavbar = () => {
                                 Events
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="dropdown-menu-custom">
-                                <Dropdown.Item as={Link} to="/past-events" className="dropdown-item-custom">
+                                <Dropdown.Item as={Link} to="/PastEvents" className="dropdown-item-custom">
                                     Past Events
                                 </Dropdown.Item>
-                                <Dropdown.Item as={Link} to="/upcoming-events" className="dropdown-item-custom">
+                                <Dropdown.Item as={Link} to="/UpcomingEvents" className="dropdown-item-custom">
                                     Upcoming Events
                                 </Dropdown.Item>
-                                <Dropdown.Item as={Link} to="/event-articles" className="dropdown-item-custom">
+                                <Dropdown.Item as={Link} to="/PublishedArticles" className="dropdown-item-custom">
                                     Articles
                                 </Dropdown.Item>
                             </Dropdown.Menu>
@@ -75,7 +75,7 @@ const CustomNavbar = () => {
                             </Dropdown.Menu>
                         </Dropdown>
 
-                        <Nav.Link as={NavLink} to="/" className="mx-2 fw-medium nav-link-custom">Contact Us</Nav.Link>
+                        <Nav.Link as={NavLink} to="/ContactUs" className="mx-2 fw-medium nav-link-custom">Contact Us</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
 
@@ -131,7 +131,7 @@ const CustomNavbar = () => {
                     left: 50%;
                     width: 0;
                     height: 2px;
-                    background: #ff6b35;
+                    {/* background: #ff6b35; */}
                     transition: all 0.3s ease;
                     transform: translateX(-50%);
                 }
