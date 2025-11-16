@@ -53,7 +53,7 @@ const CustomNavbar = () => {
                             </Dropdown.Menu>
                         </Dropdown>
 
-                        <Nav.Link as={NavLink} to="/" className="mx-2 fw-medium nav-link-custom">Blogs</Nav.Link>
+                        <Nav.Link as={NavLink} to="/BlogPage" className="mx-2 fw-medium nav-link-custom">Blogs</Nav.Link>
                         
                         {/* Careers Dropdown */}
                         <Dropdown 
