@@ -221,7 +221,7 @@ const ClientTestimonials = () => {
           left: 0;
           width: 100%;
           height: 100%;
-          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .testimonial-slide.active {
