@@ -64,7 +64,7 @@ const ClientTestimonials = () => {
                 <Row className="justify-content-center">
                     <Col lg={8} className="text-center">
                         <div className="section-header animate-fade-in">
-                            <h2 className="section-title">What Our Client Say</h2>
+                            <h2 className="section-titles">What Our Client Say</h2>
                             <p className="section-subtitle">
                                 A simple thank you goes a long way and will not only make your employees feel good,
                                 but will actually benefit your business in the process.
@@ -417,7 +417,7 @@ const ClientTestimonials = () => {
         }
 
         @media (max-width: 576px) {
-          .section-title {
+          .section-titles {
             font-size: 1.8rem;
           }
 

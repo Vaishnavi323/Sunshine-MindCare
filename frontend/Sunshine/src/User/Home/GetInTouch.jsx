@@ -64,7 +64,7 @@ const GetInTouchSection = () => {
 
         .map-container {
           width: 100%;
-          height: 500px;
+          height: 410px;
           position: relative;
         }
 
@@ -294,13 +294,13 @@ const GetInTouchSection = () => {
                 </a>
               </div>
               
-              <div className="rating-section">
+              {/* <div className="rating-section">
                 <span className="rating-number">4.8</span>
                 <span className="stars">★★★★★</span>
                 <a href="#reviews" className="reviews-link">129 reviews</a>
               </div>
               
-              <a href="#map" className="map-link">View larger map</a>
+              <a href="#map" className="map-link">View larger map</a> */}
             </div>
           </div>
 
