@@ -161,13 +161,13 @@ const BookAppointment = () => {
             </div>
 
             <Container>
-                <Row className="justify-content-center">
+                <Row className="justify-content-center pt-5">
                     <Col lg={8} xl={6}>
                         {/* Progress Steps */}
-                        <div className="progress-steps">
+                        <div className="progress-steps ">
                             {[1, 2, 3, 4].map(step => (
-                                <div key={step} className={`step ${step === currentStep ? 'active' : ''} ${step < currentStep ? 'completed' : ''}`}>
-                                    <div className="step-circle">
+                                <div key={step} className={`step ${step === currentStep ? 'active' : ''} ${step < currentStep ? 'completed' : ''} `}>
+                                    <div className="step-circle ">
                                         {step < currentStep ? '✓' : step}
                                     </div>
                                     <div className="step-label">

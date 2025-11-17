@@ -33,7 +33,7 @@ const ContactUs = () => {
                     <Row className="justify-content-center text-center">
                         <Col lg={8}>
                             <div className="hero-content animate-fade-in">
-                                <h1 className="hero-title">Get In Touch</h1>
+                                <h1 className="hero-title pt-5">Get In Touch</h1>
                                 <p className="hero-subtitle">
                                     We're here to help you on your mental wellness journey. Reach out to us and let's start the conversation.
                                 </p>

@@ -36,8 +36,7 @@ const Job = () => {
                             "Strong assessment and diagnostic skills"
                         ],
                         postedDate: "2024-01-15",
-                        applyLink: "#",
-                        featured: true
+                        applyLink: "#"
                     },
                     {
                         id: 2,
@@ -55,8 +54,7 @@ const Job = () => {
                             "Excellent communication skills"
                         ],
                         postedDate: "2024-01-12",
-                        applyLink: "#",
-                        featured: false
+                        applyLink: "#"
                     },
                     {
                         id: 3,
@@ -74,8 +72,7 @@ const Job = () => {
                             "Good observational skills"
                         ],
                         postedDate: "2024-01-10",
-                        applyLink: "#",
-                        featured: true
+                        applyLink: "#"
                     },
                     {
                         id: 4,
@@ -93,8 +90,7 @@ const Job = () => {
                             "Flexible schedule availability"
                         ],
                         postedDate: "2024-01-08",
-                        applyLink: "#",
-                        featured: false
+                        applyLink: "#"
                     },
                     {
                         id: 5,
@@ -112,8 +108,7 @@ const Job = () => {
                             "Strong analytical skills"
                         ],
                         postedDate: "2024-01-05",
-                        applyLink: "#",
-                        featured: true
+                        applyLink: "#"
                     },
                     {
                         id: 6,
@@ -131,8 +126,7 @@ const Job = () => {
                             "Family therapy experience"
                         ],
                         postedDate: "2024-01-03",
-                        applyLink: "#",
-                        featured: false
+                        applyLink: "#"
                     }
                 ];
 
@@ -225,7 +219,7 @@ const Job = () => {
                     <Row className="justify-content-center text-center">
                         <Col lg={8}>
                             <div className="hero-content">
-                                <h1 className="hero-title animate-typing">
+                                <h1 className="hero-title animate-typing pt-5">
                                     Join Our Mission
                                 </h1>
                                 <p className="hero-subtitle animate-fade-in">
@@ -300,7 +294,7 @@ const Job = () => {
                         {filteredJobs.map((job, index) => (
                             <Col key={job.id} lg={6} className="mb-4">
                                 <div 
-                                    className={`job-card ${job.featured ? 'featured' : ''} animate-card`}
+                                    className="job-card animate-card"
                                     style={{ animationDelay: `${index * 0.1}s` }}
                                     onClick={() => handleJobClick(job)}
                                 >
@@ -335,9 +329,9 @@ const Job = () => {
                                                 </div>
                                             </div>
 
-                                            <p className="job-description">
+                                            {/* <p className="job-description">
                                                 {job.description}
-                                            </p>
+                                            </p> */}
 
                                             <div className="job-requirements">
                                                 <strong>Key Requirements:</strong>
@@ -685,11 +679,6 @@ const Job = () => {
                     animation: slideUp 0.6s ease-out forwards;
                 }
 
-                .job-card.featured .card {
-                    border: 2px solid #ff6b35;
-                    background: linear-gradient(135deg, #fff9f7 0%, #ffffff 100%);
-                }
-
                 .job-card .card {
                     border: none;
                     border-radius: 15px;
@@ -704,19 +693,6 @@ const Job = () => {
                 .job-card .card:hover {
                     transform: translateY(-10px);
                     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-                }
-
-                .featured-badge {
-                    position: absolute;
-                    top: 15px;
-                    right: 15px;
-                    background: linear-gradient(45deg, #ff6b35, #ff8e53);
-                    color: white;
-                    padding: 5px 12px;
-                    border-radius: 15px;
-                    font-size: 0.8rem;
-                    font-weight: 600;
-                    animation: pulse 2s infinite;
                 }
 
                 @keyframes pulse {

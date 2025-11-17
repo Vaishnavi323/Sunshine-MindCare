@@ -435,7 +435,7 @@ const HeroSection = () => {
             <section
               className="hero-section"
               style={{
-                backgroundImage: `linear-gradient(135deg, rgba(53,103,195,0.78) 0%, rgba(42,82,152,0.58) 100%), url(${banner})`,
+                backgroundImage: `linear-gradient(135deg, rgba(53,103,195,0.45) 0%, rgba(42,82,152,0.35) 100%), url(${banner})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'

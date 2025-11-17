@@ -96,7 +96,7 @@ const PastEvents = () => {
                     <Row className="justify-content-center text-center">
                         <Col lg={8}>
                             <div className="hero-content animate-fade-in">
-                                <h1 className="hero-title">Past Events</h1>
+                                <h1 className="hero-title pt-5">Past Events</h1>
                                 <p className="hero-subtitle">
                                     Relive the impactful moments from our previous mental health events and workshops.
                                 </p>

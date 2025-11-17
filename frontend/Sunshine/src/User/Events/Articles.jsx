@@ -135,7 +135,7 @@ const PublishedArticles = () => {
                     <Row className="justify-content-center text-center">
                         <Col lg={8}>
                             <div className="hero-content animate-fade-in">
-                                <h1 className="hero-title">Published Articles</h1>
+                                <h1 className="hero-title pt-5">Published Articles</h1>
                                 <p className="hero-subtitle">
                                     Explore our featured articles published in leading newspapers and magazines worldwide.
                                 </p>

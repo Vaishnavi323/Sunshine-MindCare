@@ -3,11 +3,17 @@ import '../../styles/Navbar.css';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logoImage from '../assets/Sunshine_logo.webp';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const CustomNavbar = () => {
     const [showEventsDropdown, setShowEventsDropdown] = useState(false);
     const [showCareersDropdown, setShowCareersDropdown] = useState(false);
+    const location = useLocation();
+
+    // Helper function to check if a path is active
+    const isActive = (path) => {
+        return location.pathname === path || location.pathname.startsWith(path + '/');
+    };
 
     return (
         <Navbar expand="lg" className="custom-navbar" fixed="top">
@@ -25,10 +31,10 @@ const CustomNavbar = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" className="custom-toggler" />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
                     <Nav className="mx-auto nav-links">
-                        <Nav.Link as={Link} to="/" className="mx-2 fw-medium nav-link-custom">Home</Nav.Link>
-                        <Nav.Link as={NavLink} to="/AboutUs" className="mx-2 fw-medium nav-link-custom">About Us</Nav.Link>
-                        <Nav.Link as={NavLink} to="/ServicePage" className="mx-2 fw-medium nav-link-custom">Services</Nav.Link>
-                        <Nav.Link as={NavLink} to="/TeamPage" className="mx-2 fw-medium nav-link-custom">Team</Nav.Link>
+                        <Nav.Link as={Link} to="/" className={`mx-2 fw-medium nav-link-custom ${isActive('/') && location.pathname === '/' ? 'active' : ''}`}>Home</Nav.Link>
+                        <Nav.Link as={NavLink} to="/AboutUs" className={`mx-2 fw-medium nav-link-custom ${isActive('/AboutUs') ? 'active' : ''}`}>About Us</Nav.Link>
+                        <Nav.Link as={NavLink} to="/ServicePage" className={`mx-2 fw-medium nav-link-custom ${isActive('/ServicePage') ? 'active' : ''}`}>Services</Nav.Link>
+                        <Nav.Link as={NavLink} to="/TeamPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/TeamPage') ? 'active' : ''}`}>Team</Nav.Link>
                         
                         {/* Events Dropdown */}
                         <Dropdown 
@@ -37,7 +43,7 @@ const CustomNavbar = () => {
                             onMouseLeave={() => setShowEventsDropdown(false)}
                             className="mx-2"
                         >
-                            <Dropdown.Toggle as={Nav.Link} className="nav-link-custom fw-medium ">
+                            <Dropdown.Toggle as={Nav.Link} className={`nav-link-custom fw-medium ${isActive('/PastEvents') || isActive('/UpcomingEvents') || isActive('/PublishedArticles') ? 'active' : ''}`}>
                                 Events
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="dropdown-menu-custom">
@@ -53,7 +59,7 @@ const CustomNavbar = () => {
                             </Dropdown.Menu>
                         </Dropdown>
 
-                        <Nav.Link as={NavLink} to="/BlogPage" className="mx-2 fw-medium nav-link-custom">Blogs</Nav.Link>
+                        <Nav.Link as={NavLink} to="/BlogPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/BlogPage') ? 'active' : ''}`}>Blogs</Nav.Link>
                         
                         {/* Careers Dropdown */}
                         <Dropdown 
@@ -62,7 +68,7 @@ const CustomNavbar = () => {
                             onMouseLeave={() => setShowCareersDropdown(false)}
                             className="mx-2"
                         >
-                            <Dropdown.Toggle as={Nav.Link} className="nav-link-custom fw-medium ">
+                            <Dropdown.Toggle as={Nav.Link} className={`nav-link-custom fw-medium ${isActive('/Training') || isActive('/Job') ? 'active' : ''}`}>
                                 Career
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="dropdown-menu-custom">
@@ -75,7 +81,7 @@ const CustomNavbar = () => {
                             </Dropdown.Menu>
                         </Dropdown>
 
-                        <Nav.Link as={NavLink} to="/ContactUs" className="mx-2 fw-medium nav-link-custom">Contact Us</Nav.Link>
+                        <Nav.Link as={NavLink} to="/ContactUs" className={`mx-2 fw-medium nav-link-custom ${isActive('/ContactUs') ? 'active' : ''}`}>Contact Us</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
 
@@ -105,7 +111,7 @@ const CustomNavbar = () => {
                 
                 .navbar-logo {
                     height: 50px;
-                    width: auto;
+                    width: 90px;
                 }
                 
                 .nav-link-custom {
@@ -117,6 +123,12 @@ const CustomNavbar = () => {
                     transition: all 0.3s ease;
                     position: relative;
                 }
+
+                .nav-link-custom.active {
+                    color: #ff6b35 !important;
+                    background-color: rgba(255, 107, 53, 0.15);
+                    border-bottom: 2px solid #ff6b35;
+                }
                 
                 .nav-link-custom:hover {
                     color: #ff6b35 !important;
@@ -125,7 +137,7 @@ const CustomNavbar = () => {
                 }
                 
                 .nav-link-custom::after {
-                    content: '';
+                    {/* content: ''; */}
                     position: absolute;
                     bottom: 0;
                     left: 50%;

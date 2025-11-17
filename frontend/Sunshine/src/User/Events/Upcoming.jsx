@@ -122,7 +122,7 @@ const UpcomingEvents = () => {
                     <Row className="justify-content-center text-center">
                         <Col lg={8}>
                             <div className="hero-content animate-fade-in">
-                                <h1 className="hero-title">Upcoming Events</h1>
+                                <h1 className="hero-title pt-5">Upcoming Events</h1>
                                 <p className="hero-subtitle">
                                     Join us for our future mental health events, workshops, and community gatherings.
                                 </p>

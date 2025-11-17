@@ -144,7 +144,7 @@ const Internship = () => {
                         <Col lg={10}>
                             <div className="hero-content">
                                 <div className="title-container">
-                                    <h1 className="hero-title animate-typing">
+                                    <h1 className="hero-title animate-typing pt-5">
                                         {programData.hero.title}
                                     </h1>
                                 </div>
