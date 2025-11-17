@@ -1,4 +1,5 @@
 import React from 'react';
+import banner from '../../assets/banner.jpg';
 
 const HeroSection = () => {
     return (
@@ -255,7 +256,7 @@ const HeroSection = () => {
 
         .company-name {
           font-weight: 700;
-          color: #3498db;
+          color: #07b4f3f6;
           position: relative;
           display: inline-block;
         }
@@ -431,7 +432,15 @@ const HeroSection = () => {
         }
       `}</style>
 
-            <section className="hero-section">
+            <section
+              className="hero-section"
+              style={{
+                backgroundImage: `linear-gradient(135deg, rgba(53,103,195,0.78) 0%, rgba(42,82,152,0.58) 100%), url(${banner})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
+            >
                 {/* Floating Background Elements */}
                 <div className="floating-elements">
                     <div className="floating-element element-1"></div>
@@ -441,7 +450,7 @@ const HeroSection = () => {
                 </div>
 
                 {/* Animated Gear Background */}
-                <div className="gear-background">
+                {/* <div className="gear-background">
                     <svg className="gear gear-1" viewBox="0 0 100 100">
                         <path d="M50,10 L55,25 L70,25 L58,35 L63,50 L50,42 L37,50 L42,35 L30,25 L45,25 Z M50,5 C47,5 45,7 45,10 L40,10 C37,10 35,12 35,15 L30,20 C28,22 28,25 30,27 L27,32 C25,34 25,37 27,39 L30,44 C28,46 28,49 30,51 L35,56 C35,59 37,61 40,61 L45,61 C45,64 47,66 50,66 C53,66 55,64 55,61 L60,61 C63,61 65,59 65,56 L70,51 C72,49 72,46 70,44 L73,39 C75,37 75,34 73,32 L70,27 C72,25 72,22 70,20 L65,15 C65,12 63,10 60,10 L55,10 C55,7 53,5 50,5 Z" />
                     </svg>
@@ -461,7 +470,7 @@ const HeroSection = () => {
                     <svg className="gear gear-5" viewBox="0 0 100 100">
                         <path d="M50,10 L55,25 L70,25 L58,35 L63,50 L50,42 L37,50 L42,35 L30,25 L45,25 Z M50,5 C47,5 45,7 45,10 L40,10 C37,10 35,12 35,15 L30,20 C28,22 28,25 30,27 L27,32 C25,34 25,37 27,39 L30,44 C28,46 28,49 30,51 L35,56 C35,59 37,61 40,61 L45,61 C45,64 47,66 50,66 C53,66 55,64 55,61 L60,61 C63,61 65,59 65,56 L70,51 C72,49 72,46 70,44 L73,39 C75,37 75,34 73,32 L70,27 C72,25 72,22 70,20 L65,15 C65,12 63,10 60,10 L55,10 C55,7 53,5 50,5 Z" />
                     </svg>
-                </div>
+                </div> */}
 
                 {/* Hero Content */}
                 <div className="hero-content">
@@ -470,11 +479,9 @@ const HeroSection = () => {
                     </h1>
                     <div className="orange-underline"></div>
                     <p className="hero-description">
-                        <span className="company-name">SUNSHINE MINDCARE PVT.LTD</span> Discover healing and growth at Sunshine Counseling. Our compassionate team is here for your mental well-being journey.
+                        <span className="company-name">SUNSHINE MINDCARE</span> Discover healing and growth at Sunshine Counseling. Our compassionate team is here for your mental well-being journey.
                     </p>
-                    <button className="cta-button">
-                        Discover More
-                    </button>
+                    
                 </div>
             </section>
         </>

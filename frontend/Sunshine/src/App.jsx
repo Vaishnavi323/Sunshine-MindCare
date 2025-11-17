@@ -10,6 +10,9 @@ import Contact from './User/Contact_us/Contact.jsx'
 import Past from './User/Events/Past.jsx'
 import Upcoming from './User/Events/Upcoming.jsx'
 import Articles from './User/Events/Articles.jsx'
+import Training from './User/Careers/Internship/Training.jsx'
+import Job from './User/Careers/Jobs/Job.jsx'
+import Book from './User/Book_Appoint/Book.jsx'
 import './App.css'
 
 
@@ -27,6 +30,10 @@ function App() {
       <Route path="PastEvents" element={<Past/>}/>
       <Route path="UpcomingEvents" element={<Upcoming/>}/>
       <Route path="PublishedArticles" element={<Articles/>}/>
+      <Route path="Training" element={<Training/>}/>
+      <Route path="Job" element={<Job/>}/>
+      <Route path="BookAppointment" element={<Book/>}/>
+      
       </Route>
       
     </Routes>

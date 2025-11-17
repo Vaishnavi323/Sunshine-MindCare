@@ -6,8 +6,8 @@ const UserLayout = () => {
     return (
         <div className="app-container">
             
-            <Navbar />
-            <div className="content">
+            <Navbar  />
+            <div className="content pt-5" >
                 <Outlet /> {/* All user routes will be rendered here */}
             </div>
             <Footer />

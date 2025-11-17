@@ -1,9 +1,10 @@
 /* Add padding to body to account for fixed header */
 body {
-  padding-top: 120px;
+  
   font-family: 'Montserrat', sans-serif;
 }
 
 main {
   min-height: 100vh;
+  padding-top: 120px;
 }

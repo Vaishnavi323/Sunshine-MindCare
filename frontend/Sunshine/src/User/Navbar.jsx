@@ -66,10 +66,10 @@ const CustomNavbar = () => {
                                 Career
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="dropdown-menu-custom">
-                                <Dropdown.Item as={Link} to="/training-certification" className="dropdown-item-custom">
+                                <Dropdown.Item as={Link} to="/Training" className="dropdown-item-custom">
                                     Training and Certification
                                 </Dropdown.Item>
-                                <Dropdown.Item as={Link} to="/jobs" className="dropdown-item-custom">
+                                <Dropdown.Item as={Link} to="/Job" className="dropdown-item-custom">
                                     Jobs
                                 </Dropdown.Item>
                             </Dropdown.Menu>
@@ -91,7 +91,7 @@ const CustomNavbar = () => {
                             <i className="fas fa-search"></i>
                         </button>
                     </div>
-                    <button className="appointment-btn">Make Appointment</button>
+                    <Link to={"/BookAppointment"}><button className="appointment-btn">Make Appointment</button></Link>
                 </div>
             </Container>  
 
