@@ -9,7 +9,7 @@ const OurExperts = () => {
         <Row className="align-items-center">
           <Col lg={6}>
             <div className="content-wrapper">
-              <h2 className="section-title mb-4 animate-fade-in">
+              <h2 className="section-title mb-4 animate-fade-in text-white">
                 Our Experts
               </h2>
               <p className="section-description mb-4 animate-slide-up">

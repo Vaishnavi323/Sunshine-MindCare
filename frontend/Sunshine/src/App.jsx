@@ -1,26 +1,42 @@
 import { useState } from 'react'
-import Navbar from './User/Navbar.jsx'
-import Footer from './User/Footer.jsx'
-import Herosection from './User/Home/Herosection.jsx'
-import WhatNew from './User/Home/WhatNew.jsx'
+import { Routes, Route } from 'react-router-dom'
+import UserLayout from './Layouts/UserLayout.jsx'
+import Home from './User/Home.jsx'
+import About from './User/About_us/AboutUs.jsx'
+import Service from './User/Services/Service.jsx'
+import MyTeam from './User/Team/MyTeam.jsx'
+import Blogs from './User/Blog/Blogs.jsx'
+import Contact from './User/Contact_us/Contact.jsx'
+import Past from './User/Events/Past.jsx'
+import Upcoming from './User/Events/Upcoming.jsx'
+import Articles from './User/Events/Articles.jsx'
+import Training from './User/Careers/Internship/Training.jsx'
+import Job from './User/Careers/Jobs/Job.jsx'
+import Book from './User/Book_Appoint/Book.jsx'
 import './App.css'
-import OurExperts from './User/Home/OurExperts.jsx'
-import AppointmentSection from './User/Home/Appoint.jsx'
-import ClientReviews from './User/Home/ClientReviews.jsx'
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <Navbar/>
-      <Herosection/>
-      <WhatNew/>
-      <OurExperts/>
-      <AppointmentSection/>
-      <ClientReviews/>
-      <Footer/>
-    </>
+    <Routes>
+    
+      <Route path="/" element={<UserLayout />}>
+      <Route index element={<Home />} />
+      <Route path="AboutUs" element={<About/>} />
+      <Route path="ServicePage" element={<Service/>} />
+      <Route path="TeamPage" element={<MyTeam/>}/>
+      <Route path="BlogPage" element={<Blogs/>}/>
+      <Route path="ContactUs" element={<Contact/>}/>
+      <Route path="PastEvents" element={<Past/>}/>
+      <Route path="UpcomingEvents" element={<Upcoming/>}/>
+      <Route path="PublishedArticles" element={<Articles/>}/>
+      <Route path="Training" element={<Training/>}/>
+      <Route path="Job" element={<Job/>}/>
+      <Route path="BookAppointment" element={<Book/>}/>
+      
+      </Route>
+      
+    </Routes>
   )
 }
 

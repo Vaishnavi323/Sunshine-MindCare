@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
 
 const OurStory = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -110,9 +111,9 @@ const OurStory = () => {
                   <h4>Book An Appointment</h4>
                   <p>Your journey to well-being starts here. Schedule a therapeutic session, and let our experienced team guide you towards a happier, healthier life.</p>
                 </div>
-                <Button className="appointment-btn">
+                <Link to={"/BookAppointment"}><Button className="appointment-btn">
                   Book <br/>Appointment
-                </Button>
+                </Button></Link>
               </div>
             </div>
           </Col>
