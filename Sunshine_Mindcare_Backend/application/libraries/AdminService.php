@@ -25,7 +25,7 @@ class AdminService
             return [
                 'status'  => true,
                 'message' => 'Login successful',
-                'token'   =>  $token
+                'token'   => $token
             ];
         }
 
