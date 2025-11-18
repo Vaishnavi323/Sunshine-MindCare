@@ -197,7 +197,7 @@ import {
   faChevronDown,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import logo from "../../assets/images/logo.png";
+import logo from "../assets/Sunshine_logo.webp";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [openMenus, setOpenMenus] = useState({});
