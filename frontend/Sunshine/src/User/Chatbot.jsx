@@ -464,7 +464,11 @@ const ChatBot = () => {
                     className="chatbot-button"
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    💬
+                    <img 
+                        src="https://img.icons8.com/ios-filled/50/ffffff/chat--v1.png" 
+                        alt="Chat Icon" 
+                        style={{ width: '30px', height: '30px' }} 
+                    />
                 </button>
 
                 {/* Chat Window */}
