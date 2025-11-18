@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import './App.css'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import UserLayout from './Layouts/UserLayout.jsx'
 import Home from './User/Home.jsx'
 import About from './User/About_us/AboutUs.jsx'
@@ -13,11 +14,81 @@ import Articles from './User/Events/Articles.jsx'
 import Training from './User/Careers/Internship/Training.jsx'
 import Job from './User/Careers/Jobs/Job.jsx'
 import Book from './User/Book_Appoint/Book.jsx'
-import './App.css'
+import ChatBot from './User/Chatbot.jsx'
+
+//Admin Routes
+
+import { AuthProvider, useAuth } from "./Admin/Auth/AuthContext";
+import Sidebar from "./Admin/Sidebar";
+import Navbar from "./Admin/Navbar";
+import Dashboard from "./Admin/Dashboard";
+import Login from "./Admin/Auth/Login";
+import Events from "./Admin/Pages/Events";
+import Initiatives from "./Admin/Pages/Initiatives";
+import Blogss from "./Admin/Pages/Blogss";
+import Gallery from "./Admin/Pages/Gallery";
+import Hospitals from "./Admin/Pages/Hospitals";
+import Team from "./Admin/Pages/Team";
+import Donations from "./Admin/Pages/Donations";
+import Volunteers from "./Admin/Pages/Volunteers";
+
+
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return user ? children : <Navigate to="/login" replace />;
+};
+
+// Admin Layout Component
+const AdminLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar
+        isOpen={sidebarOpen}
+        toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+      />
+
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+
+        <main className="flex-1 overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/initiatives" element={<Initiatives />} />
+            <Route path="/blogs" element={<Blogss />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/hospitals" element={<Hospitals />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/donations" element={<Donations />} />
+            <Route path="/volunteers" element={<Volunteers />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
+  );
+};
 
 
 function App() {
   return (
+    
+    <AuthProvider>
+      
     <Routes>
     
       <Route path="/" element={<UserLayout />}>
@@ -33,10 +104,30 @@ function App() {
       <Route path="Training" element={<Training/>}/>
       <Route path="Job" element={<Job/>}/>
       <Route path="BookAppointment" element={<Book/>}/>
-      
+      <Route path="Chatbot" element={<ChatBot/>}/>
+
+      {/* <Route path="/login" element={<Login />} /> */}
+
       </Route>
+
+      <Route path="/login" element={<Login />} />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/admin" replace />} />
       
     </Routes>
+
+    
+        
+    
+    </AuthProvider>
+    
   )
 }
 

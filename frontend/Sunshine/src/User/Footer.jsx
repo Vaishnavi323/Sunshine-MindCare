@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logoImage from '../assets/Sunshine_logo.webp';
+import logoImage from '../assets/Sunshine_logo.png';
 
 const SunshineFooter = () => {
     const [email, setEmail] = useState('');
@@ -25,6 +25,7 @@ const SunshineFooter = () => {
           background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
           color: white;
           padding: 60px 0 40px;
+          border-top: 5px solid #ff6b35;
         }
         
         .info-card {

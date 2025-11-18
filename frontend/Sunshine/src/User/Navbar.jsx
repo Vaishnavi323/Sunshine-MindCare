@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../../styles/Navbar.css';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logoImage from '../assets/Sunshine_logo.webp';
+import logoImage from '../assets/Sunshine_logo.png';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const CustomNavbar = () => {
@@ -35,9 +35,9 @@ const CustomNavbar = () => {
                         <Nav.Link as={NavLink} to="/AboutUs" className={`mx-2 fw-medium nav-link-custom ${isActive('/AboutUs') ? 'active' : ''}`}>About Us</Nav.Link>
                         <Nav.Link as={NavLink} to="/ServicePage" className={`mx-2 fw-medium nav-link-custom ${isActive('/ServicePage') ? 'active' : ''}`}>Services</Nav.Link>
                         <Nav.Link as={NavLink} to="/TeamPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/TeamPage') ? 'active' : ''}`}>Team</Nav.Link>
-                        
+
                         {/* Events Dropdown */}
-                        <Dropdown 
+                        <Dropdown
                             show={showEventsDropdown}
                             onMouseEnter={() => setShowEventsDropdown(true)}
                             onMouseLeave={() => setShowEventsDropdown(false)}
@@ -60,9 +60,9 @@ const CustomNavbar = () => {
                         </Dropdown>
 
                         <Nav.Link as={NavLink} to="/BlogPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/BlogPage') ? 'active' : ''}`}>Blogs</Nav.Link>
-                        
+
                         {/* Careers Dropdown */}
-                        <Dropdown 
+                        <Dropdown
                             show={showCareersDropdown}
                             onMouseEnter={() => setShowCareersDropdown(true)}
                             onMouseLeave={() => setShowCareersDropdown(false)}
@@ -88,9 +88,9 @@ const CustomNavbar = () => {
                 {/* Right side - Search and Make Appointment Button */}
                 <div className="navbar-actions d-none d-lg-flex align-items-center gap-3">
                     <div className="search-container">
-                        <input 
-                            type="text" 
-                            className="search-input" 
+                        <input
+                            type="text"
+                            className="search-input"
                             placeholder="Search..."
                         />
                         <button className="search-btn" title="Search">
@@ -99,19 +99,19 @@ const CustomNavbar = () => {
                     </div>
                     <Link to={"/BookAppointment"}><button className="appointment-btn">Make Appointment</button></Link>
                 </div>
-            </Container>  
+            </Container>
 
             <style jsx>{`
                 .custom-navbar {
-                    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                    background: linear-gradient(135deg, #1f1f35ff 0%, #174593ff 100%);
                     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                     padding: 0.8rem 0;
                     border-bottom: 3px solid #ff6b35;
                 }
                 
                 .navbar-logo {
-                    height: 50px;
-                    width: 90px;
+                    height: 66px;
+                    width: 140px;
                 }
                 
                 .nav-link-custom {
@@ -178,6 +178,10 @@ const CustomNavbar = () => {
                     transform: rotate(-180deg);
                 }
                 
+
+                .nav-link-custom.dropdown-toggle::after {
+                    display: none !important;
+                }
                 .dropdown-menu-custom {
                     background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
                     border: none;

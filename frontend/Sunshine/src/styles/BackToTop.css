@@ -1,0 +1,65 @@
+/* BackToTop button styles */
+.back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 28px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff9a5a 100%);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  outline: none;
+  border: none;
+  cursor: pointer;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(18px) scale(0.92);
+  transition: all 260ms cubic-bezier(.2,.9,.2,1);
+}
+
+.back-to-top.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.back-to-top:hover {
+  transform: translateY(-6px) scale(1.04);
+  filter: brightness(1.03);
+}
+
+.back-to-top svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+/* subtle floating animation when visible */
+@keyframes btt-float {
+  0% { transform: translateY(0) }
+  50% { transform: translateY(-6px) }
+  100% { transform: translateY(0) }
+}
+
+.back-to-top.show {
+  animation: btt-float 4s ease-in-out infinite;
+}
+
+/* small pulse on click */
+@keyframes btt-click {
+  0% { transform: scale(1) }
+  50% { transform: scale(0.92) }
+  100% { transform: scale(1) }
+}
+
+.btt-pulse {
+  animation: btt-click 360ms ease;
+}
+
+/* mobile tweak */
+@media (max-width: 576px) {
+  .back-to-top { right: 14px; bottom: 20px; width: 44px; height: 44px }
+}
