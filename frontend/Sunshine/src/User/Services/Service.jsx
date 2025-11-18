@@ -365,7 +365,7 @@ const ServicesPage = () => {
                                                     <h5 className="subservice-title">{subservice.title}</h5>
                                                     <div className="subservice-meta">
                                                         <span className="duration">{subservice.duration}</span>
-                                                        <span className="price">{subservice.price}</span>
+                                                        {/* <span className="price">{subservice.price}</span> */}
                                                     </div>
                                                 </div>
                                                 <p className="subservice-description">{subservice.description}</p>

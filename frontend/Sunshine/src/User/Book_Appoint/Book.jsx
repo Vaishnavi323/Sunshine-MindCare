@@ -1,22 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BookAppointment = () => {
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState({
-        serviceType: '',
-        appointmentDate: '',
-        timeSlot: '',
+        // Step 1: Basic Details
         firstName: '',
         lastName: '',
         email: '',
         phone: '',
+        age: '',
+        gender: '',
+        concerns: '',
+        
+        // Step 2: Service Selection
+        serviceType: '',
+        
+        // Step 3: Date & Time
+        appointmentDate: '',
+        timeSlot: '',
+        
+        // Additional
         notes: ''
     });
     const [availableSlots, setAvailableSlots] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [appointments, setAppointments] = useState([]);
+    const [editingAppointmentId, setEditingAppointmentId] = useState(null);
+    const [lastSavedAction, setLastSavedAction] = useState(null); // 'created' | 'rescheduled'
 
     // Mock data - Replace with API calls
     const serviceTypes = [
@@ -34,33 +47,70 @@ const BookAppointment = () => {
         '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'
     ];
 
+    const concernsList = [
+        'Anxiety & Stress',
+        'Depression',
+        'Relationship Issues',
+        'Family Conflicts',
+        'Career Guidance',
+        'Trauma & PTSD',
+        'Addiction',
+        'Self-esteem',
+        'Anger Management',
+        'Other'
+    ];
+
     useEffect(() => {
         // Simulate fetching available slots when date is selected
         if (formData.appointmentDate) {
-            // In real app, this would be an API call
             setAvailableSlots(timeSlots);
         }
     }, [formData.appointmentDate]);
 
-    const handleServiceSelect = (service) => {
-        setFormData(prev => ({ ...prev, serviceType: service.name }));
-        setCurrentStep(2);
+    // Load saved appointments from localStorage
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem('sunshine_appointments')
+            if (raw) setAppointments(JSON.parse(raw))
+        } catch (err) {
+            console.warn('Failed to load appointments', err)
+        }
+    }, [])
+
+    // Navigation handlers
+    const goToNextStep = () => {
+        setCurrentStep(prev => prev + 1);
     };
 
+    const goToPreviousStep = () => {
+        setCurrentStep(prev => prev - 1);
+    };
+
+    // Step 1: Basic Details handlers
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleConcernSelect = (concern) => {
+        setFormData(prev => ({ ...prev, concerns: concern }));
+    };
+
+    // Step 2: Service Selection handlers
+    const handleServiceSelect = (service) => {
+        setFormData(prev => ({ ...prev, serviceType: service.name }));
+    };
+
+    // Step 3: Date & Time handlers
     const handleDateSelect = (date) => {
         setFormData(prev => ({ ...prev, appointmentDate: date, timeSlot: '' }));
     };
 
     const handleTimeSelect = (time) => {
         setFormData(prev => ({ ...prev, timeSlot: time }));
-        setCurrentStep(3);
     };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
+    // Form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -68,9 +118,59 @@ const BookAppointment = () => {
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        setIsSubmitting(false);
+        // Save to localStorage (mock persistence)
+        try {
+            const existing = JSON.parse(localStorage.getItem('sunshine_appointments') || '[]');
+
+            if (editingAppointmentId) {
+                // update existing
+                const updated = existing.map(a => a.id === editingAppointmentId ? { ...a, ...formData, updatedAt: new Date().toISOString() } : a)
+                localStorage.setItem('sunshine_appointments', JSON.stringify(updated))
+                setAppointments(updated)
+            } else {
+                const newAppt = { id: Date.now(), createdAt: new Date().toISOString(), ...formData }
+                existing.push(newAppt)
+                localStorage.setItem('sunshine_appointments', JSON.stringify(existing))
+                setAppointments(existing)
+            }
+        } catch (err) {
+            console.warn('Failed to save appointment', err)
+        }
+
+            setIsSubmitting(false);
         setIsSubmitted(true);
+        setEditingAppointmentId(null);
+        // set user-facing action
+        setLastSavedAction(editingAppointmentId ? 'rescheduled' : 'created')
     };
+
+    const handleRescheduleClick = (appt) => {
+        // Pre-fill form and jump to date/time step so user can pick a new slot
+        setFormData({
+            firstName: appt.firstName || '',
+            lastName: appt.lastName || '',
+            email: appt.email || '',
+            phone: appt.phone || '',
+            age: appt.age || '',
+            gender: appt.gender || '',
+            concerns: appt.concerns || '',
+            serviceType: appt.serviceType || '',
+            appointmentDate: appt.appointmentDate || '',
+            timeSlot: appt.timeSlot || '',
+            notes: appt.notes || ''
+        })
+        setEditingAppointmentId(appt.id)
+        setIsSubmitted(false)
+        setCurrentStep(3)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    const handleCancelAppointment = (id) => {
+        if (!confirm('Cancel this appointment?')) return
+        const updated = appointments.filter(a => a.id !== id)
+        localStorage.setItem('sunshine_appointments', JSON.stringify(updated))
+        setAppointments(updated)
+    }
 
     const getMinDate = () => {
         const today = new Date();
@@ -93,6 +193,25 @@ const BookAppointment = () => {
         });
     };
 
+    // Validation functions
+    const isStep1Valid = () => {
+        return formData.firstName && 
+               formData.lastName && 
+               formData.email && 
+               formData.phone && 
+               formData.age && 
+               formData.gender && 
+               formData.concerns;
+    };
+
+    const isStep2Valid = () => {
+        return formData.serviceType;
+    };
+
+    const isStep3Valid = () => {
+        return formData.appointmentDate && formData.timeSlot;
+    };
+
     if (isSubmitted) {
         return (
             <div className="appointment-page">
@@ -108,40 +227,50 @@ const BookAppointment = () => {
                                     <div className="confetti"></div>
                                     <div className="confetti"></div>
                                 </div>
-                                <h2 className="success-title">Appointment Booked!</h2>
+                                <h2 className="success-title">{lastSavedAction === 'rescheduled' ? 'Appointment Rescheduled!' : 'Appointment Booked!'}</h2>
                                 <div className="booking-summary-card">
                                     <h4>Booking Confirmation</h4>
                                     <div className="summary-details">
+                                        <p><strong>Patient:</strong> {formData.firstName} {formData.lastName}</p>
+                                        <p><strong>Age:</strong> {formData.age} years</p>
+                                        <p><strong>Gender:</strong> {formData.gender}</p>
+                                        <p><strong>Concern:</strong> {formData.concerns}</p>
                                         <p><strong>Service:</strong> {formData.serviceType}</p>
                                         <p><strong>Date:</strong> {formatDate(formData.appointmentDate)}</p>
                                         <p><strong>Time:</strong> {formData.timeSlot}</p>
-                                        <p><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
                                         <p><strong>Email:</strong> {formData.email}</p>
+                                        <p><strong>Phone:</strong> {formData.phone}</p>
                                     </div>
                                     <p className="confirmation-message">
                                         We've sent a confirmation email to {formData.email}. 
                                         You'll receive a reminder 24 hours before your appointment.
                                     </p>
                                 </div>
-                                {/* <button 
+                                <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 12 }}>
+                                    <button 
                                     className="new-booking-btns"
                                     onClick={() => {
                                         setIsSubmitted(false);
                                         setCurrentStep(1);
                                         setFormData({
-                                            serviceType: '',
-                                            appointmentDate: '',
-                                            timeSlot: '',
                                             firstName: '',
                                             lastName: '',
                                             email: '',
                                             phone: '',
+                                            age: '',
+                                            gender: '',
+                                            concerns: '',
+                                            serviceType: '',
+                                            appointmentDate: '',
+                                            timeSlot: '',
                                             notes: ''
                                         });
                                     }}
                                 >
                                     Book Another Appointment    
-                                </button> */}
+                                </button>
+                                <button className="new-booking-btns" style={{ background: '#ffcc80' }} onClick={() => { setIsSubmitted(false); setCurrentStep(1); }}>Manage Appointments</button>
+                                </div>
                             </div>
                         </Col>
                     </Row>
@@ -163,18 +292,39 @@ const BookAppointment = () => {
             <Container>
                 <Row className="justify-content-center pt-5">
                     <Col lg={8} xl={6}>
+                        {/* My Appointments (manage/reschedule) */}
+                        {appointments && appointments.length > 0 && (
+                            <div className="appointments-list" style={{ marginBottom: '1.5rem' }}>
+                                <h5 style={{ marginBottom: '0.75rem', color: '#174593' }}>My Appointments</h5>
+                                <div className="appointments-grid" style={{ display: 'grid', gap: '10px' }}>
+                                    {appointments.slice().reverse().map(a => (
+                                        <div key={a.id} className="appointment-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', padding: '10px 12px', borderRadius: 8, boxShadow: '0 6px 18px rgba(0,0,0,0.06)' }}>
+                                            <div>
+                                                <div style={{ fontWeight: 700 }}>{a.firstName} {a.lastName}</div>
+                                                <div style={{ fontSize: 12, color: '#6c757d' }}>{a.serviceType} • {a.timeSlot} on {a.appointmentDate ? new Date(a.appointmentDate).toLocaleDateString() : '-'}</div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: 8 }}>
+                                                <button className="back-btn" onClick={() => handleRescheduleClick(a)}>Reschedule</button>
+                                                <button className="back-btn" onClick={() => handleCancelAppointment(a.id)}>Cancel</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {/* Progress Steps */}
-                        <div className="progress-steps ">
+                        <div className="progress-steps">
                             {[1, 2, 3, 4].map(step => (
-                                <div key={step} className={`step ${step === currentStep ? 'active' : ''} ${step < currentStep ? 'completed' : ''} `}>
-                                    <div className="step-circle ">
+                                <div key={step} className={`step ${step === currentStep ? 'active' : ''} ${step < currentStep ? 'completed' : ''}`}>
+                                    <div className="step-circle">
                                         {step < currentStep ? '✓' : step}
                                     </div>
                                     <div className="step-label">
-                                        {step === 1 && 'Service'}
-                                        {step === 2 && 'Date & Time'}
-                                        {step === 3 && 'Details'}
-                                        {step === 4 && 'Confirm'}
+                                        {step === 1 && 'Basic Details'}
+                                        {step === 2 && 'Service'}
+                                        {step === 3 && 'Date & Time'}
+                                        {step === 4 && 'Summary'}
                                     </div>
                                 </div>
                             ))}
@@ -186,87 +336,13 @@ const BookAppointment = () => {
                             </div>
                         </div>
 
-                        {/* Step 1: Service Selection */}
+                        {/* Step 1: Basic Details */}
                         {currentStep === 1 && (
                             <div className="step-container animate-slide-in">
-                                <h2 className="step-title">Choose a Service</h2>
-                                <p className="step-subtitle">Select the type of therapy or counseling you're interested in</p>
+                                <h2 className="step-title">Tell Us About Yourself</h2>
+                                <p className="step-subtitle">We'll use this information to match you with the right specialist</p>
                                 
-                                <div className="services-grid">
-                                    {serviceTypes.map(service => (
-                                        <div 
-                                            key={service.id}
-                                            className={`service-card ${formData.serviceType === service.name ? 'selected' : ''}`}
-                                            onClick={() => handleServiceSelect(service)}
-                                        >
-                                            {/* <div className="service-icon">💬</div> */}
-                                            <h4 className="service-name">{service.name}</h4>
-                                            <div className="service-details">
-                                                <span className="duration">{service.duration}</span>
-                                                <span className="price">{service.price}</span>
-                                            </div>
-                                            <div className="selection-indicator"></div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Step 2: Date & Time Selection */}
-                        {currentStep === 2 && (
-                            <div className="step-container animate-slide-in">
-                                <h2 className="step-title">Select Date & Time</h2>
-                                <p className="step-subtitle">Choose your preferred appointment slot</p>
-
-                                <div className="date-time-selection">
-                                    {/* Date Selection */}
-                                    <div className="date-section">
-                                        <h4>Select Date</h4>
-                                        <input
-                                            type="date"
-                                            min={getMinDate()}
-                                            max={getMaxDate()}
-                                            value={formData.appointmentDate}
-                                            onChange={(e) => handleDateSelect(e.target.value)}
-                                            className="date-input"
-                                        />
-                                    </div>
-
-                                    {/* Time Slots */}
-                                    {formData.appointmentDate && (
-                                        <div className="time-section animate-fade-in">
-                                            <h4>Available Time Slots</h4>
-                                            <div className="time-slots-grid">
-                                                {availableSlots.map(slot => (
-                                                    <div
-                                                        key={slot}
-                                                        className={`time-slot ${formData.timeSlot === slot ? 'selected' : ''}`}
-                                                        onClick={() => handleTimeSelect(slot)}
-                                                    >
-                                                        {slot}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <button 
-                                    className="back-btns"
-                                    onClick={() => setCurrentStep(1)}
-                                >
-                                    ← Back to Services
-                                </button>
-                            </div>
-                        )}
-
-                        {/* Step 3: Personal Details */}
-                        {currentStep === 3 && (
-                            <div className="step-container animate-slide-in">
-                                <h2 className="step-title">Your Information</h2>
-                                <p className="step-subtitle">Please provide your contact details</p>
-
-                                <form onSubmit={(e) => { e.preventDefault(); setCurrentStep(4); }} className="details-form">
+                                <form className="details-form">
                                     <div className="form-row">
                                         <div className="form-group">
                                             <label>First Name *</label>
@@ -321,35 +397,163 @@ const BookAppointment = () => {
                                         </div>
                                     </div>
 
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label>Age *</label>
+                                            <input
+                                                type="number"
+                                                name="age"
+                                                value={formData.age}
+                                                onChange={handleInputChange}
+                                                required
+                                                className="form-input"
+                                                placeholder="Your age"
+                                                min="1"
+                                                max="100"
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Gender *</label>
+                                            <select
+                                                name="gender"
+                                                value={formData.gender}
+                                                onChange={handleInputChange}
+                                                required
+                                                className="form-input"
+                                            >
+                                                <option value="">Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                                <option value="Prefer not to say">Prefer not to say</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     <div className="form-group">
-                                        <label>Additional Notes (Optional)</label>
-                                        <textarea
-                                            name="notes"
-                                            value={formData.notes}
-                                            onChange={handleInputChange}
-                                            className="form-textarea"
-                                            placeholder="Any specific concerns or preferences..."
-                                            rows="4"
-                                        ></textarea>
+                                        <label>Primary Concern *</label>
+                                        <div className="concerns-grid">
+                                            {concernsList.map(concern => (
+                                                <div
+                                                    key={concern}
+                                                    className={`concern-card ${formData.concerns === concern ? 'selected' : ''}`}
+                                                    onClick={() => handleConcernSelect(concern)}
+                                                >
+                                                    {concern}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
 
                                     <div className="form-actions">
                                         <button 
                                             type="button"
-                                            className="back-btns"
-                                            onClick={() => setCurrentStep(2)}
-                                        >
-                                            ← Back to Time Selection
-                                        </button>
-                                        <button 
-                                            type="submit"
                                             className="continue-btn"
-                                            disabled={!formData.firstName || !formData.lastName || !formData.email || !formData.phone}
+                                            onClick={goToNextStep}
+                                            disabled={!isStep1Valid()}
                                         >
-                                            Continue to Summary →
+                                            Continue to Services →
                                         </button>
                                     </div>
                                 </form>
+                            </div>
+                        )}
+
+                        {/* Step 2: Service Selection */}
+                        {currentStep === 2 && (
+                            <div className="step-container animate-slide-in">
+                                <h2 className="step-title">Choose a Service</h2>
+                                <p className="step-subtitle">Select the type of therapy or counseling that matches your needs</p>
+                                
+                                <div className="services-grid">
+                                    {serviceTypes.map(service => (
+                                        <div 
+                                            key={service.id}
+                                            className={`service-card ${formData.serviceType === service.name ? 'selected' : ''}`}
+                                            onClick={() => handleServiceSelect(service)}
+                                        >
+                                            <h4 className="service-name">{service.name}</h4>
+                                            <div className="service-details">
+                                                <span className="duration">{service.duration}</span>
+                                                {/* <span className="price">{service.price}</span> */}
+                                            </div>
+                                            <div className="selection-indicator"></div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="form-actions">
+                                    <button 
+                                        className="back-btn"
+                                        onClick={goToPreviousStep}
+                                    >
+                                        ← Back to Details
+                                    </button>
+                                    <button 
+                                        className="continue-btn"
+                                        onClick={goToNextStep}
+                                        disabled={!isStep2Valid()}
+                                    >
+                                        Choose Date & Time →
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Step 3: Date & Time Selection */}
+                        {currentStep === 3 && (
+                            <div className="step-container animate-slide-in">
+                                <h2 className="step-title">Select Date & Time</h2>
+                                <p className="step-subtitle">Choose your preferred appointment slot</p>
+
+                                <div className="date-time-selection">
+                                    {/* Date Selection */}
+                                    <div className="date-section">
+                                        <h4>Select Date</h4>
+                                        <input
+                                            type="date"
+                                            min={getMinDate()}
+                                            max={getMaxDate()}
+                                            value={formData.appointmentDate}
+                                            onChange={(e) => handleDateSelect(e.target.value)}
+                                            className="date-input"
+                                        />
+                                    </div>
+
+                                    {/* Time Slots */}
+                                    {formData.appointmentDate && (
+                                        <div className="time-section animate-fade-in">
+                                            <h4>Available Time Slots</h4>
+                                            <div className="time-slots-grid">
+                                                {availableSlots.map(slot => (
+                                                    <div
+                                                        key={slot}
+                                                        className={`time-slot ${formData.timeSlot === slot ? 'selected' : ''}`}
+                                                        onClick={() => handleTimeSelect(slot)}
+                                                    >
+                                                        {slot}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="form-actions">
+                                    <button 
+                                        className="back-btn"
+                                        onClick={goToPreviousStep}
+                                    >
+                                        ← Back to Services
+                                    </button>
+                                    <button 
+                                        className="continue-btn"
+                                        onClick={goToNextStep}
+                                        disabled={!isStep3Valid()}
+                                    >
+                                        Review Summary →
+                                    </button>
+                                </div>
                             </div>
                         )}
 
@@ -363,45 +567,62 @@ const BookAppointment = () => {
                                     <div className="summary-card">
                                         <h4>Appointment Summary</h4>
                                         <div className="summary-details">
-                                            <div className="summary-item">
-                                                <span className="label">Service:</span>
-                                                <span className="value">{formData.serviceType}</span>
-                                            </div>
-                                            <div className="summary-item">
-                                                <span className="label">Date:</span>
-                                                <span className="value">{formatDate(formData.appointmentDate)}</span>
-                                            </div>
-                                            <div className="summary-item">
-                                                <span className="label">Time:</span>
-                                                <span className="value">{formData.timeSlot}</span>
-                                            </div>
-                                            <div className="summary-item">
-                                                <span className="label">Name:</span>
-                                                <span className="value">{formData.firstName} {formData.lastName}</span>
-                                            </div>
-                                            <div className="summary-item">
-                                                <span className="label">Email:</span>
-                                                <span className="value">{formData.email}</span>
-                                            </div>
-                                            <div className="summary-item">
-                                                <span className="label">Phone:</span>
-                                                <span className="value">{formData.phone}</span>
-                                            </div>
-                                            {formData.notes && (
+                                            <div className="summary-section">
+                                                <h5>Personal Information</h5>
                                                 <div className="summary-item">
-                                                    <span className="label">Notes:</span>
-                                                    <span className="value">{formData.notes}</span>
+                                                    <span className="label">Name:</span>
+                                                    <span className="value">{formData.firstName} {formData.lastName}</span>
                                                 </div>
-                                            )}
+                                                <div className="summary-item">
+                                                    <span className="label">Age & Gender:</span>
+                                                    <span className="value">{formData.age} years, {formData.gender}</span>
+                                                </div>
+                                                <div className="summary-item">
+                                                    <span className="label">Contact:</span>
+                                                    <span className="value">{formData.email} | {formData.phone}</span>
+                                                </div>
+                                                <div className="summary-item">
+                                                    <span className="label">Primary Concern:</span>
+                                                    <span className="value">{formData.concerns}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="summary-section">
+                                                <h5>Appointment Details</h5>
+                                                <div className="summary-item">
+                                                    <span className="label">Service:</span>
+                                                    <span className="value">{formData.serviceType}</span>
+                                                </div>
+                                                <div className="summary-item">
+                                                    <span className="label">Date:</span>
+                                                    <span className="value">{formatDate(formData.appointmentDate)}</span>
+                                                </div>
+                                                <div className="summary-item">
+                                                    <span className="label">Time:</span>
+                                                    <span className="value">{formData.timeSlot}</span>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+
+                                    <div className="additional-notes">
+                                        <label>Additional Notes (Optional)</label>
+                                        <textarea
+                                            name="notes"
+                                            value={formData.notes}
+                                            onChange={handleInputChange}
+                                            className="form-textarea"
+                                            placeholder="Any specific concerns or preferences you'd like to share..."
+                                            rows="3"
+                                        ></textarea>
                                     </div>
 
                                     <div className="confirmation-actions">
                                         <button 
-                                            className="back-btns"
-                                            onClick={() => setCurrentStep(3)}
+                                            className="back-btn"
+                                            onClick={goToPreviousStep}
                                         >
-                                            ← Edit Details
+                                            ← Edit Date & Time
                                         </button>
                                         <button 
                                             className="confirm-btn"
@@ -588,6 +809,38 @@ const BookAppointment = () => {
                     font-size: 1.1rem;
                 }
 
+                /* Concerns Grid */
+                .concerns-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                    gap: 0.8rem;
+                    margin-top: 0.5rem;
+                }
+
+                .concern-card {
+                    background: #f8f9fa;
+                    border: 2px solid #e9ecef;
+                    border-radius: 10px;
+                    padding: 12px;
+                    text-align: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                }
+
+                .concern-card:hover {
+                    border-color: #2a5298;
+                    transform: translateY(-2px);
+                }
+
+                .concern-card.selected {
+                    background: #2a5298;
+                    color: white;
+                    border-color: #2a5298;
+                    transform: scale(1.05);
+                }
+
                 /* Service Selection */
                 .services-grid {
                     display: grid;
@@ -624,11 +877,6 @@ const BookAppointment = () => {
                 .service-card.selected .service-name,
                 .service-card.selected .service-details span {
                     color: white;
-                }
-
-                .service-icon {
-                    font-size: 2.5rem;
-                    margin-bottom: 1rem;
                 }
 
                 .service-name {
@@ -773,7 +1021,7 @@ const BookAppointment = () => {
 
                 .form-textarea {
                     resize: vertical;
-                    min-height: 100px;
+                    min-height: 80px;
                 }
 
                 /* Buttons */
@@ -784,19 +1032,18 @@ const BookAppointment = () => {
                     margin-top: 2rem;
                 }
 
-                .back-btns {
+                .back-btn {
                     background: transparent;
                     border: 2px solid #6c757d;
                     color: #6c757d;
                     padding: 12px 24px;
                     border-radius: 25px;
-                    margin-top: 1rem;
                     font-weight: 600;
                     transition: all 0.3s ease;
                 }
 
-                .back-btns:hover {
-                    background: #2a5298;
+                .back-btn:hover {
+                    background: #6c757d;
                     color: white;
                     transform: translateX(-5px);
                 }
@@ -835,7 +1082,15 @@ const BookAppointment = () => {
                 .summary-details {
                     display: flex;
                     flex-direction: column;
-                    gap: 1rem;
+                    gap: 1.5rem;
+                }
+
+                .summary-section h5 {
+                    color: #2a5298;
+                    margin-bottom: 1rem;
+                    font-size: 1.1rem;
+                    border-bottom: 2px solid #e9ecef;
+                    padding-bottom: 0.5rem;
                 }
 
                 .summary-item {
@@ -853,13 +1108,17 @@ const BookAppointment = () => {
                 .label {
                     font-weight: 600;
                     color: #2a5298;
-                    min-width: 100px;
+                    min-width: 120px;
                 }
 
                 .value {
                     color: #495057;
                     text-align: right;
                     flex: 1;
+                }
+
+                .additional-notes {
+                    margin: 2rem 0;
                 }
 
                 /* Success Animation */
@@ -1038,7 +1297,7 @@ const BookAppointment = () => {
                         font-size: 0.8rem;
                     }
 
-                    .services-grid {
+                    .services-grid, .concerns-grid {
                         grid-template-columns: 1fr;
                     }
 
@@ -1051,7 +1310,7 @@ const BookAppointment = () => {
                         gap: 1rem;
                     }
 
-                    .back-btns, .continue-btn, .confirm-btn {
+                    .back-btn, .continue-btn, .confirm-btn {
                         width: 100%;
                         text-align: center;
                     }
@@ -1074,6 +1333,5 @@ const BookAppointment = () => {
         </div>
     );
 };
-
 
 export default BookAppointment;

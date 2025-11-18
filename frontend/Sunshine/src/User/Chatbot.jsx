@@ -164,7 +164,7 @@ const ChatBot = () => {
             <style>{`
                 .chatbot-container {
                     position: fixed ;
-                    bottom: 30px;
+                    bottom: 20px;
                     left: 30px;
                     z-index: 10000;
                     font-family: 'Montserrat', sans-serif;
@@ -196,8 +196,8 @@ const ChatBot = () => {
                 /* Chat Window */
                 .chatbot-window {
                     position: absolute;
-                    bottom: 90px;
-                    right: 0;
+                    bottom: 70px;
+                    left: 0px;
                     width: 380px;
                     height: 600px;
                     background: white;
