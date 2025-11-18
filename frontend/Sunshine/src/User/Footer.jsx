@@ -25,6 +25,7 @@ const SunshineFooter = () => {
           background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
           color: white;
           padding: 60px 0 40px;
+          border-top: 5px solid #ff6b35;
         }
         
         .info-card {

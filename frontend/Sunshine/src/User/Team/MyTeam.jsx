@@ -9,9 +9,10 @@ const TeamPage = () => {
             profession: 'Psychiatrist & Founder',
             specialization: 'Clinical Psychology & Mental Health',
             image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=600&fit=crop',
-            bio: 'Leading psychiatrist with over 15 years of experience in mental health care.',
+            bio: 'Leading psychiatrist with over 15 years of experience in mental health care. Specializes in complex psychological disorders and innovative treatment approaches.',
             email: 'hemant@sunshinemindcare.com',
-            phone: '+91 9607899660'
+            phone: '+91 9607899660',
+            category: 'founder'
         },
         {
             id: 2,
@@ -19,9 +20,10 @@ const TeamPage = () => {
             profession: 'Clinical Psychologist',
             specialization: 'CBT & Trauma Therapy',
             image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&h=600&fit=crop',
-            bio: 'RCI-licensed clinical psychologist specializing in cognitive behavioral therapy.',
+            bio: 'RCI-licensed clinical psychologist specializing in cognitive behavioral therapy with extensive experience in trauma recovery.',
             email: 'priya@sunshinemindcare.com',
-            phone: '+91 8007869220'
+            phone: '+91 8007869220',
+            category: 'senior'
         },
         {
             id: 3,
@@ -29,9 +31,10 @@ const TeamPage = () => {
             profession: 'Counseling Psychologist',
             specialization: 'Family & Relationship Counseling',
             image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=600&fit=crop',
-            bio: 'Compassionate counselor dedicated to helping families and couples.',
+            bio: 'Compassionate counselor dedicated to helping families and couples build stronger relationships.',
             email: 'anjali@sunshinemindcare.com',
-            phone: '+91 8007869221'
+            phone: '+91 8007869221',
+            category: 'senior'
         },
         {
             id: 4,
@@ -41,7 +44,8 @@ const TeamPage = () => {
             image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop',
             bio: 'RCI-licensed psychologist with expertise in child development and behavioral issues.',
             email: 'rahul@sunshinemindcare.com',
-            phone: '+91 8007869222'
+            phone: '+91 8007869222',
+            category: 'psychologist'
         },
         {
             id: 5,
@@ -51,7 +55,8 @@ const TeamPage = () => {
             image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
             bio: 'Dedicated psychologist focusing on anxiety disorders and mood management.',
             email: 'neha@sunshinemindcare.com',
-            phone: '+91 8007869223'
+            phone: '+91 8007869223',
+            category: 'psychologist'
         },
         {
             id: 6,
@@ -61,7 +66,8 @@ const TeamPage = () => {
             image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&h=600&fit=crop',
             bio: 'Experienced counselor helping individuals navigate life transitions and career challenges.',
             email: 'vikram@sunshinemindcare.com',
-            phone: '+91 8007869224'
+            phone: '+91 8007869224',
+            category: 'counselor'
         },
         {
             id: 7,
@@ -71,7 +77,8 @@ const TeamPage = () => {
             image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&h=600&fit=crop',
             bio: 'Dedicated educator specializing in helping children with learning disabilities.',
             email: 'sneha@sunshinemindcare.com',
-            phone: '+91 8007869225'
+            phone: '+91 8007869225',
+            category: 'educator'
         },
         {
             id: 8,
@@ -81,7 +88,8 @@ const TeamPage = () => {
             image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=600&h=600&fit=crop',
             bio: 'Specialist in addiction recovery and rehabilitation psychology.',
             email: 'aditya@sunshinemindcare.com',
-            phone: '+91 8007869226'
+            phone: '+91 8007869226',
+            category: 'psychologist'
         }
     ]);
 
@@ -94,6 +102,13 @@ const TeamPage = () => {
     const closeModal = () => {
         setSelectedMember(null);
     };
+
+    // Filter team members by category
+    const founder = teamMembers.find(member => member.category === 'founder');
+    const seniorDoctors = teamMembers.filter(member => member.category === 'senior');
+    const psychologists = teamMembers.filter(member => member.category === 'psychologist');
+    const counselors = teamMembers.filter(member => member.category === 'counselor');
+    const educators = teamMembers.filter(member => member.category === 'educator');
 
     return (
         <>
@@ -123,7 +138,7 @@ const TeamPage = () => {
             transform: translateY(0);
           }
           50% {
-            transform: translateY(-10px);
+            transform: translateY(-15px);
           }
         }
 
@@ -136,12 +151,42 @@ const TeamPage = () => {
           }
         }
 
+        @keyframes glow {
+          0%, 100% {
+            box-shadow: 0 0 20px rgba(255, 167, 38, 0.3);
+          }
+          50% {
+            box-shadow: 0 0 40px rgba(255, 167, 38, 0.6);
+          }
+        }
+
+        @keyframes slideInFromLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes slideInFromRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
         .team-page {
-          background: linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%);
+          background: linear-gradient(135deg, #2c2c71f8 0%, #174593ff 100%);
           min-height: 100vh;
           padding: 80px 20px;
           position: relative;
-          /* allow overlays (modals) to be visible above */
           overflow: visible;
         }
 
@@ -187,10 +232,176 @@ const TeamPage = () => {
           line-height: 1.8;
         }
 
-        .team-grid {
+        /* Founder Section */
+        .founder-section {
+          margin-bottom: 100px;
+          animation: fadeInUp 1s ease-out;
+        }
+
+        .founder-card {
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+          border-radius: 25px;
+          overflow: hidden;
+          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+          display: flex;
+          max-width: 1200px;
+          margin: 0 auto;
+          transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          cursor: pointer;
+          animation: pulse 4s infinite ease-in-out;
+          position: relative;
+        }
+
+        .founder-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, #ffa726 0%, transparent 50%);
+          opacity: 0.1;
+          z-index: 1;
+        }
+
+        {/* .founder-card:hover {
+          transform: translateY(-10px) scale(1.02);
+          animation: glow 2s infinite ease-in-out;
+          transition: all 0.3s ease;
+        } */}
+
+        .founder-image-container {
+          flex: 0 0 400px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .founder-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease;
+        }
+
+        .founder-card:hover .founder-image {
+          transform: scale(1.1);
+        }
+
+        .founder-badge {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          background: linear-gradient(135deg, #ffa726, #ff9800);
+          color: white;
+          padding: 10px 20px;
+          border-radius: 25px;
+          font-weight: 700;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          z-index: 2;
+          animation: float 3s infinite ease-in-out;
+        }
+
+        .founder-info {
+          flex: 1;
+          padding: 50px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .founder-name {
+          font-size: 2.5rem;
+          font-weight: 800;
+          color: #1f1f35;
+          margin-bottom: 15px;
+          background: linear-gradient(135deg, #1f1f35, #174593);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .founder-profession {
+          font-size: 1.5rem;
+          color: #ffa726;
+          font-weight: 600;
+          margin-bottom: 15px;
+        }
+
+        .founder-specialization {
+          font-size: 1.2rem;
+          color: #174593;
+          font-weight: 500;
+          margin-bottom: 25px;
+          font-style: italic;
+        }
+
+        .founder-bio {
+          font-size: 1.1rem;
+          color: #666;
+          line-height: 1.8;
+          margin-bottom: 30px;
+        }
+
+        .founder-contact {
+          display: flex;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .contact-btn {
+          background: linear-gradient(135deg, #174593, #1f1f35);
+          color: white;
+          padding: 12px 25px;
+          border-radius: 25px;
+          text-decoration: none;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .contact-btn:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 10px 25px rgba(23, 69, 147, 0.4);
+        }
+
+        /* Team Sections */
+        .team-section {
+          margin-bottom: 80px;
+          animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-title {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: white;
+          margin-bottom: 40px;
+          text-align: center;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          position: relative;
+          padding-bottom: 15px;
+        }
+
+        .section-title::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100px;
+          height: 4px;
+          background: linear-gradient(135deg, #ffa726, #ff9800);
+          border-radius: 2px;
+        }
+
+        .team-grids {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 40px;
+          grid-template-columns: repeat(3, minmax(300px, 1fr));
+          gap: 10px;
+          justify-items: center;
+          
         }
 
         .team-card {
@@ -204,18 +415,22 @@ const TeamPage = () => {
           position: relative;
         }
 
+        .team-card:nth-child(odd) {
+          animation-name: slideInFromLeft;
+        }
+
+        .team-card:nth-child(even) {
+          animation-name: slideInFromRight;
+        }
+
         .team-card:nth-child(1) { animation-delay: 0.1s; }
         .team-card:nth-child(2) { animation-delay: 0.2s; }
         .team-card:nth-child(3) { animation-delay: 0.3s; }
         .team-card:nth-child(4) { animation-delay: 0.4s; }
-        .team-card:nth-child(5) { animation-delay: 0.5s; }
-        .team-card:nth-child(6) { animation-delay: 0.6s; }
-        .team-card:nth-child(7) { animation-delay: 0.7s; }
-        .team-card:nth-child(8) { animation-delay: 0.8s; }
 
         .team-card:hover {
           transform: translateY(-15px) scale(1.02);
-          box-shadow: 0 25px 60px rgba(118, 75, 162, 0.4);
+          box-shadow: 0 25px 60px rgba(255, 167, 38, 0.3);
         }
 
         .team-card:hover .member-image {
@@ -226,7 +441,7 @@ const TeamPage = () => {
           position: relative;
           height: 350px;
           overflow: hidden;
-          background: linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%);
+          background: linear-gradient(135deg, #1f1f35ff 0%, #174593ff 100%);
         }
 
         .member-image {
@@ -242,7 +457,7 @@ const TeamPage = () => {
           left: 0;
           right: 0;
           bottom: 0;
-          background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+          background: linear-gradient(to bottom, transparent 0%, rgba(31, 31, 53, 0.8) 100%);
           opacity: 0;
           transition: opacity 0.4s ease;
         }
@@ -263,7 +478,7 @@ const TeamPage = () => {
           font-weight: 700;
           opacity: 0;
           transition: all 0.4s ease;
-          text: center;
+          text-align: center;
         }
 
         .team-card:hover .view-profile {
@@ -271,7 +486,6 @@ const TeamPage = () => {
           transform: translateX(-50%) translateY(0);
         }
 
-        /* When modal is open, hide hover/dropdown overlays */
         .team-page.modal-open .image-overlay,
         .team-page.modal-open .view-profile {
           opacity: 0 !important;
@@ -279,7 +493,6 @@ const TeamPage = () => {
           transform: translateX(-50%) translateY(20px) !important;
         }
 
-        /* Disable hover lift effect when modal open */
         .team-page.modal-open .team-card {
           transform: none !important;
           box-shadow: 0 15px 45px rgba(0,0,0,0.15) !important;
@@ -293,13 +506,13 @@ const TeamPage = () => {
         .member-name {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #2c3e50;
+          color: #1f1f35;
           margin-bottom: 8px;
         }
 
         .member-profession {
           font-size: 1.1rem;
-          color: #667eea;
+          color: #174593;
           font-weight: 600;
           margin-bottom: 8px;
         }
@@ -318,15 +531,13 @@ const TeamPage = () => {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.7);
+          background: rgba(31, 31, 53, 0.9);
           display: flex;
           align-items: center;
           justify-content: center;
-          /* make sure modal sits above any fixed headers */
           z-index: 99999;
           padding: 20px;
           animation: fadeIn 0.2s ease;
-          -webkit-backdrop-filter: blur(4px);
           backdrop-filter: blur(4px);
         }
 
@@ -394,13 +605,13 @@ const TeamPage = () => {
         .modal-name {
           font-size: 2rem;
           font-weight: 700;
-          color: #2c3e50;
+          color: #1f1f35;
           margin-bottom: 10px;
         }
 
         .modal-profession {
           font-size: 1.3rem;
-          color: #667eea;
+          color: #174593;
           font-weight: 600;
           margin-bottom: 10px;
         }
@@ -430,7 +641,7 @@ const TeamPage = () => {
           align-items: center;
           gap: 15px;
           margin-bottom: 12px;
-          color: #2c3e50;
+          color: #1f1f35;
         }
 
         .contact-item:last-child {
@@ -440,7 +651,7 @@ const TeamPage = () => {
         .contact-icon {
           width: 40px;
           height: 40px;
-          background: #667eea;
+          background: #174593;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -455,7 +666,15 @@ const TeamPage = () => {
         }
 
         @media (max-width: 1024px) {
-          .team-grid {
+          .founder-card {
+            flex-direction: column;
+          }
+
+          .founder-image-container {
+            flex: 0 0 400px;
+          }
+
+          .team-grids {
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
           }
@@ -478,7 +697,19 @@ const TeamPage = () => {
             font-size: 1.1rem;
           }
 
-          .team-grid {
+          .founder-image-container {
+            flex: 0 0 300px;
+          }
+
+          .founder-info {
+            padding: 30px;
+          }
+
+          .founder-name {
+            font-size: 2rem;
+          }
+
+          .team-grids {
             grid-template-columns: 1fr;
           }
 
@@ -490,6 +721,10 @@ const TeamPage = () => {
         @media (max-width: 480px) {
           .page-title {
             font-size: 2rem;
+          }
+
+          .founder-contact {
+            flex-direction: column;
           }
 
           .image-container {
@@ -513,33 +748,166 @@ const TeamPage = () => {
                         </p>
                     </div>
 
-                    {/* Team Grid */}
-                    <div className="team-grid">
-                        {teamMembers.map((member) => (
-                            <div
-                                key={member.id}
-                                className="team-card"
-                                onClick={() => handleMemberClick(member)}
+                    {/* Founder Section */}
+                    {founder && (
+                        <div className="founder-section">
+                            <div 
+                                className="founder-card"
+                                onClick={() => handleMemberClick(founder)}
                             >
-                                <div className="image-container">
+                                <div className="founder-image-container">
                                     <img
-                                        src={member.image}
-                                        alt={member.name}
-                                        className="member-image"
+                                        src={founder.image}
+                                        alt={founder.name}
+                                        className="founder-image"
                                     />
-                                    <div className="image-overlay">
-                                        <div className="view-profile text-center">View Profile</div>
+                                    <div className="founder-badge">Founder</div>
+                                </div>
+                                <div className="founder-info">
+                                    <h2 className="founder-name">{founder.name}</h2>
+                                    <p className="founder-profession">{founder.profession}</p>
+                                    <p className="founder-specialization">{founder.specialization}</p>
+                                    <p className="founder-bio">{founder.bio}</p>
+                                    <div className="founder-contact">
+                                        <a href={`mailto:${founder.email}`} className="contact-btn">
+                                            📧 {founder.email}
+                                        </a>
+                                        <a href={`tel:${founder.phone}`} className="contact-btn">
+                                            📞 {founder.phone}
+                                        </a>
                                     </div>
                                 </div>
-
-                                <div className="member-info">
-                                    <h3 className="member-name">{member.name}</h3>
-                                    <p className="member-profession">{member.profession}</p>
-                                    <p className="member-specialization">{member.specialization}</p>
-                                </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    )}
+
+                    {/* Senior Doctors Section */}
+                    {seniorDoctors.length > 0 && (
+                        <div className="team-section">
+                            <h2 className="section-title">Senior Doctors</h2>
+                            <div className="team-grids">
+                                {seniorDoctors.map((member) => (
+                                    <div
+                                        key={member.id}
+                                        className="team-card"
+                                        onClick={() => handleMemberClick(member)}
+                                    >
+                                        <div className="image-container">
+                                            <img
+                                                src={member.image}
+                                                alt={member.name}
+                                                className="member-image"
+                                            />
+                                            <div className="image-overlay">
+                                                <div className="view-profile">View Profile</div>
+                                            </div>
+                                        </div>
+                                        <div className="member-info">
+                                            <h3 className="member-name">{member.name}</h3>
+                                            <p className="member-profession">{member.profession}</p>
+                                            <p className="member-specialization">{member.specialization}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Psychologists Section */}
+                    {psychologists.length > 0 && (
+                        <div className="team-section">
+                            <h2 className="section-title">Clinical Psychologists</h2>
+                            <div className="team-grids">
+                                {psychologists.map((member) => (
+                                    <div
+                                        key={member.id}
+                                        className="team-card"
+                                        onClick={() => handleMemberClick(member)}
+                                    >
+                                        <div className="image-container">
+                                            <img
+                                                src={member.image}
+                                                alt={member.name}
+                                                className="member-image"
+                                            />
+                                            <div className="image-overlay">
+                                                <div className="view-profile ">View Profile</div>
+                                            </div>
+                                        </div>
+                                        <div className="member-info">
+                                            <h3 className="member-name">{member.name}</h3>
+                                            <p className="member-profession">{member.profession}</p>
+                                            <p className="member-specialization">{member.specialization}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Counselors Section */}
+                    {counselors.length > 0 && (
+                        <div className="team-section">
+                            <h2 className="section-title">Counselors & Therapists</h2>
+                            <div className="team-grids">
+                                {counselors.map((member) => (
+                                    <div
+                                        key={member.id}
+                                        className="team-card"
+                                        onClick={() => handleMemberClick(member)}
+                                    >
+                                        <div className="image-container">
+                                            <img
+                                                src={member.image}
+                                                alt={member.name}
+                                                className="member-image"
+                                            />
+                                            <div className="image-overlay">
+                                                <div className="view-profile">View Profile</div>
+                                            </div>
+                                        </div>
+                                        <div className="member-info">
+                                            <h3 className="member-name">{member.name}</h3>
+                                            <p className="member-profession">{member.profession}</p>
+                                            <p className="member-specialization">{member.specialization}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Educators Section */}
+                    {educators.length > 0 && (
+                        <div className="team-section">
+                            <h2 className="section-title">Special Educators</h2>
+                            <div className="team-grids">
+                                {educators.map((member) => (
+                                    <div
+                                        key={member.id}
+                                        className="team-card"
+                                        onClick={() => handleMemberClick(member)}
+                                    >
+                                        <div className="image-container">
+                                            <img
+                                                src={member.image}
+                                                alt={member.name}
+                                                className="member-image"
+                                            />
+                                            <div className="image-overlay">
+                                                <div className="view-profile">View Profile</div>
+                                            </div>
+                                        </div>
+                                        <div className="member-info">
+                                            <h3 className="member-name">{member.name}</h3>
+                                            <p className="member-profession">{member.profession}</p>
+                                            <p className="member-specialization">{member.specialization}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Modal */}
