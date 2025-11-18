@@ -7,7 +7,8 @@ class AuthTokenHook
         'admincontroller/login',
 		'servicecontroller/list',
 		'SubServiceController/list',
-		'appointmentController/add'
+		'appointmentcontroller/add',
+		'appointmentcontroller/get'
 
 		
     ];
