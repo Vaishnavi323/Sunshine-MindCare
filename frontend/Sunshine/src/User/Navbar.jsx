@@ -110,8 +110,8 @@ const CustomNavbar = () => {
                 }
                 
                 .navbar-logo {
-                    height: 50px;
-                    width: 90px;
+                    height: 66px;
+                    width: 140px;
                 }
                 
                 .nav-link-custom {
