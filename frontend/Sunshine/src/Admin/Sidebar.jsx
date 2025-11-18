@@ -197,7 +197,7 @@ import {
   faChevronDown,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import logo from "../assets/Sunshine_logo.png";
+import logo from "../assets/Sunshine_logo.jpg";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [openMenus, setOpenMenus] = useState({});
@@ -335,8 +335,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {/* Logo */}
         <div className="p-2 px-5 border-b-2 border-gray-300 bg-white">
           <div className="flex items-center justify-between">
-            <div className="w-61 h-18 rounded-xl shadow-lg border-2 border-[#7883ae] overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
-              <img src={logo} alt="Logo" className="w-full h-full object-cover mt-1" />
+            <div className="  overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
+              <img src={logo} alt="Logo" className=" mt-1" />
             </div>
 
             <button

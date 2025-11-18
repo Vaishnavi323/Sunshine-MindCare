@@ -771,7 +771,7 @@ const Dashboard = () => {
                 💙
               </div>
               <h1 className="text-4xl font-bold text-[#2d365b] mb-4 animate-text-wave">
-                Empathy Foundation
+                Sunshine Mindcare 
               </h1>
               <p className="text-xl text-[#7883ae]">
                 Loading your dashboard...
@@ -823,7 +823,7 @@ const Dashboard = () => {
               className="text-5xl font-bold mb-6 animate-title-glow"
               style={{ animation: "slideInDown 0.8s ease-out" }}
             >
-              Empathy Foundation
+              Sunshine Mindcare
             </h1>
             <p
               className="text-xl opacity-90 max-w-2xl mx-auto animate-subtitle-pulse"
