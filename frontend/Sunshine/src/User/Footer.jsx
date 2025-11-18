@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logoImage from '../assets/Sunshine_logo.webp';
+import logoImage from '../assets/Sunshine_logo.png';
 
 const SunshineFooter = () => {
     const [email, setEmail] = useState('');

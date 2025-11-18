@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../../styles/Navbar.css';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logoImage from '../assets/Sunshine_logo.webp';
+import logoImage from '../assets/Sunshine_logo.png';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const CustomNavbar = () => {
