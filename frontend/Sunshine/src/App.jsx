@@ -14,6 +14,7 @@ import Articles from './User/Events/Articles.jsx'
 import Training from './User/Careers/Internship/Training.jsx'
 import Job from './User/Careers/Jobs/Job.jsx'
 import Book from './User/Book_Appoint/Book.jsx'
+import ChatBot from './User/Chatbot.jsx'
 
 //Admin Routes
 
@@ -103,6 +104,7 @@ function App() {
       <Route path="Training" element={<Training/>}/>
       <Route path="Job" element={<Job/>}/>
       <Route path="BookAppointment" element={<Book/>}/>
+      <Route path="Chatbot" element={<ChatBot/>}/>
 
       {/* <Route path="/login" element={<Login />} /> */}
 

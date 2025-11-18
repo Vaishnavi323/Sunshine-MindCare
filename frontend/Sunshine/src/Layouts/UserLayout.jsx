@@ -3,6 +3,7 @@ import Footer from '../User/Footer.jsx'
 import { Outlet } from 'react-router-dom'
 import ScrollToTop from '../User/ScrollToTop.jsx'
 import BackToTop from '../User/BackToTop.jsx'
+import Chatbot from '../User/Chatbot.jsx'
 
 const UserLayout = () => {
     return (
@@ -13,7 +14,8 @@ const UserLayout = () => {
                 <Outlet /> {/* All user routes will be rendered here */}
             </div>
             <Footer />
-            <BackToTop />
+            <BackToTop /><br/>
+            <Chatbot/>
         </div>
     )
 }
