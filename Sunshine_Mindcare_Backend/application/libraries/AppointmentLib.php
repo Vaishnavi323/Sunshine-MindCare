@@ -7,7 +7,7 @@ class AppointmentLib {
 
     public function __construct() {
         $this->CI = &get_instance();
-        $this->CI->load->model('Appointment_model');
+        $this->CI->load->model('AppointmentModel');
     }
 
     public function addAppointment($input) {
@@ -43,12 +43,27 @@ class AppointmentLib {
         ];
 
         // Call Model to insert
-        $insertID = $this->CI->Appointment_model->insertAppointment($data);
+        $insertID = $this->CI->AppointmentModel->insertAppointment($data);
 
         return [
             "success" => true,
             "message" => "Appointment added successfully",
-            "data" => ["appointment_id" => $insertID]
+            "data" => array_merge(
+        	["appointment_id" => $insertID],
+       		 $data
+   			 )
         ];
     }
+	// Get all appointment
+    public function getAppointments()
+    {
+        return $this->db->get('appointments')->result_array();
+    }
+
+    // Get appointment by ID
+    public function getAppointmentById($id)
+    {
+        return $this->db->get_where('appointments', ['id' => $id])->row_array();
+    }
 }
+

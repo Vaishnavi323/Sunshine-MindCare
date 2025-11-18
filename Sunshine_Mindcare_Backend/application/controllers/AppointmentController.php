@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Appointment extends CI_Controller {
+class AppointmentController extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -38,4 +38,21 @@ class Appointment extends CI_Controller {
             ->set_status_header($success ? 200 : 400)
             ->set_output(json_encode($response));
     }
+
+	// Get all appointment
+ public function get()
+{
+    $this->api->request_method('GET');
+
+    $id = $this->input->get('id'); // frontend sends ?id=4
+
+    $response = $this->appointmentservice->list($id);
+
+    if ($response['status']) {
+        $this->api->send_response(200, "Appointment data fetched", $response['data']);
+    } else {
+        $this->api->send_response(404, $response['message'], null);
+    }
 }
+}
+

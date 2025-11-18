@@ -32,7 +32,10 @@ class ServiceService
         if ($insert) {
             return [
                 "status" => true,
-                "message" => "Service added successfully"
+                "message" => "Service added successfully",
+				"data" => array_merge(
+       		 	$data
+   			 )
             ];
         }
 
