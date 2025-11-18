@@ -55,4 +55,10 @@ $route['translate_uri_dashes'] = FALSE;
 
 
 $route['admin/login'] = 'admincontroller/login';
+$route['service/add']  = 'ServiceController/add';
+$route['service/list'] = 'ServiceController/list';
+$route['subservice/add'] = 'SubServiceController/add';
+$route['subservice/list'] = 'SubServiceController/list';
+$route['appointment/add'] = 'AppointmentController/add';
+
 

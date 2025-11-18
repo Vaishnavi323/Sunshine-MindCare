@@ -7,24 +7,26 @@ class AdminController extends CI_Controller
     {
         parent::__construct();
         $this->load->library(['Api', 'AdminService']);
-        header('Content-Type: application/json');
-		header("Access-Control-Allow-Origin: http://localhost:5173");
-		header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-		header("Access-Control-Allow-Headers: Content-Type, Authorization");
-		header("Access-Control-Allow-Credentials: true");    
+        
+    
     }
 
     public function login()
     {
-				// echo 'hiii';die;
-
         $this->api->request_method('POST');
 
         $input = json_decode(file_get_contents("php://input"), true);
+        
+        if (!isset($input['email']) || !isset($input['password'])) {
+            $this->api->send_response(400, 'Email and password are required', 'ERR_MISSING_FIELDS');
+            return;
+        }
+
         $email = $input['email'];
         $password = $input['password'];
 
         $response = $this->adminservice->login($email, $password);
+        
         if ($response['status']) {
             $this->api->send_response(200, $response['message'], null, $response['token']);
         } else {

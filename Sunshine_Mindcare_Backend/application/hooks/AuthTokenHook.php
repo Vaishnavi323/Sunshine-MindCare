@@ -5,6 +5,11 @@ class AuthTokenHook
 {
     private $publicRoutes = [
         'admincontroller/login',
+		'servicecontroller/list',
+		'SubServiceController/list',
+		'appointmentController/add'
+
+		
     ];
 
     private $accessControl = [
@@ -32,7 +37,7 @@ class AuthTokenHook
         }
 
         $token = $matches[1];
-        $user = validate_jwt($token);
+		$user = verify_jwt($token);
 
 
         if (!$user) {
