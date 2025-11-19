@@ -1,6 +1,7 @@
 import React from 'react';
 import a1 from '../../assets/a1.jpg'
 import a2 from '../../assets/a2.jpg'
+import { Link } from 'react-router-dom';
 
 const OurCenter = () => {
     return (
@@ -444,9 +445,9 @@ const OurCenter = () => {
                         </div>
 
                         <div className="contact-section">
-                            <button className="contact-button">
+                            <Link to="/ContactUs"><button className="contact-button">
                                 Contact Us
-                            </button>
+                            </button></Link>
 
                             <div className="phone-info">
                                 <div className="phone-number">+91 9607899660</div>

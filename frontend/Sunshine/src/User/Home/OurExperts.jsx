@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const OurExperts = () => {
@@ -19,9 +20,9 @@ const OurExperts = () => {
                 dedicated professionals. Take the first step towards a healthier mind—schedule your 
                 appointment today.
               </p>
-              <Button className="view-all-btn animate-pulse-glow">
-                View All Team
-              </Button>
+              <Link to="/TeamPage"><Button className="view-all-btn animate-pulse-glow">
+              View All Team
+              </Button></Link>
             </div>
           </Col>
           <Col lg={6}>

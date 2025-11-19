@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import img from '../../assets/j2.jpg';
 
@@ -33,12 +34,12 @@ const JourneySection = () => {
               </div>
 
               <div className="cta-buttons animate-fade-in">
-                <Button className="primary-btn">
+                <Link to="/PublishedArticles"><Button className="primary-btn">
                   Learn More About Us
-                </Button>
-                <Button className="secondary-btn">
+                </Button></Link>
+                <Link to="/TeamPage"><Button className="secondary-btn">
                   Meet Our Team
-                </Button>
+                </Button></Link>
               </div>
             </div>
           </Col>

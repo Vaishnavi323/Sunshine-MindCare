@@ -96,13 +96,13 @@ const ClientTestimonials = () => {
                                             <div className="testimonial-content">
                                                 <p className="testimonial-text">{testimonial.text}</p>
 
-                                                <div className="client-info">
+                                                {/* <div className="client-info">
                                                     <div className="avatar">{testimonial.avatar}</div>
                                                     <div className="client-details">
                                                         <h4 className="client-name">{testimonial.name}</h4>
                                                         <span className="client-contributions">{testimonial.contributions}</span>
                                                     </div>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
