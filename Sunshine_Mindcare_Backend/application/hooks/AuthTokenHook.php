@@ -6,9 +6,10 @@ class AuthTokenHook
     private $publicRoutes = [
         'admincontroller/login',
 		'servicecontroller/list',
-		'SubServiceController/list',
+		'subservicecontroller/list',
 		'appointmentcontroller/add',
-		'appointmentcontroller/get'
+		'appointmentcontroller/get',
+		'articlecontroller/list'
 
 		
     ];

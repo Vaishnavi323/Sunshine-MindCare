@@ -18,4 +18,16 @@ class ServiceModel extends CI_Model
     {
         return $this->db->order_by('id', 'DESC')->get('services')->result();
     }
+
+	// Get single service
+	public function getServiceById($id)
+	{
+		return $this->db->get_where('services', ['id' => $id])->row();
+	}
+
+	// Get sub-services for a service
+	public function getSubServices($service_id)
+	{
+		return $this->db->get_where('sub_services', ['service_id' => $service_id])->result();
+	}
 }
