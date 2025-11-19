@@ -45,11 +45,37 @@ class ServiceService
         ];
     }
 
-    public function list()
-    {
-        return [
-            "status" => true,
-            "data" => $this->CI->ServiceModel->getServices()
-        ];
-    }
+	public function list($id = null)
+	{
+		if ($id) { // Single service fetch
+			$service = $this->CI->ServiceModel->getServiceById($id);
+			if (!$service) {
+				return ["status" => false, "message" => "Service not found"];
+			}
+
+			$sub_services = $this->CI->ServiceModel->getSubServices($id);
+
+			return [
+				"status" => true,
+				"data" => [
+					"id" => $service->id,
+					"title" => $service->title,
+					"description" => $service->description,
+					"image" => $service->image,
+					"created_at" => $service->created_at,
+					"sub_services" => $sub_services
+				]
+			];
+		}
+
+		// Fetch all services with sub-services
+		$services = $this->CI->ServiceModel->getServices();
+
+		foreach ($services as &$service) {
+			$service->sub_services = $this->CI->ServiceModel->getSubServices($service->id);
+		}
+
+		return ["status" => true, "data" => $services];
+	}
+
 }

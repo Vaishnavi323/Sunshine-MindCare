@@ -61,4 +61,6 @@ $route['subservice/add'] = 'SubServiceController/add';
 $route['subservice/list'] = 'SubServiceController/list';
 $route['appointment/add'] = 'AppointmentController/add';
 $route['appointment/list']='AppointmentController/get';
-
+$route['article/add']='ArticleController/add';
+$route['article/list']='ArticleController/list';
+$route['appointment/reschedule']='AppointmentController/adminReschedule';

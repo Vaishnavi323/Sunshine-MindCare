@@ -29,30 +29,57 @@ class AppointmentController extends CI_Controller {
             "message" => $message,
         ];
 
-        if (!empty($data)) {
-            $response["data"] = $data;
-        }
+			if (!empty($data)) {
+				$response["data"] = $data;
+			}
 
-        return $this->output
-            ->set_content_type('application/json')
-            ->set_status_header($success ? 200 : 400)
-            ->set_output(json_encode($response));
-    }
+			return $this->output
+				->set_content_type('application/json')
+				->set_status_header($success ? 200 : 400)
+				->set_output(json_encode($response));
+		}
 
-	// Get all appointment
- public function get()
-{
-    $this->api->request_method('GET');
+		// Get all appointment
+	public function get()
+	{
+		$this->api->request_method('GET');
 
-    $id = $this->input->get('id'); // frontend sends ?id=4
+		$id = $this->input->get('id'); // frontend sends ?id=4
 
-    $response = $this->appointmentservice->list($id);
+		if ($id) {
+		$data = $this->appointmentlib->getAppointmentById($id);
+	} else {
+		$data = $this->appointmentlib->getAppointments();
+	}
 
-    if ($response['status']) {
-        $this->api->send_response(200, "Appointment data fetched", $response['data']);
-    } else {
-        $this->api->send_response(404, $response['message'], null);
-    }
-}
+	if (!empty($data)) {
+		$this->api->send_response(200, "Appointment data fetched", $data);
+	} else {
+		$this->api->send_response(404, "No appointment found", null);
+	}
+
+		if ($response['status']) {
+			$this->api->send_response(200, "Appointment data fetched", $response['data']);
+		} else {
+			$this->api->send_response(404, $response['message'], null);
+		}
+	}
+
+	// admin reshedule
+	
+		public function adminReschedule()
+	{
+		$this->api->request_method('POST');
+		$input = $this->input->post();
+		$response = $this->appointmentlib->adminRescheduleAppointment($input);
+
+		if ($response['success']) {
+			$this->api->send_response(200, $response['message'], null, null, $response['data']);
+
+		} else {
+			$this->api->send_response(400, $response['message'], null);
+		}
+	}
+
 }
 

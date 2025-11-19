@@ -68,12 +68,19 @@ public function add()
 }
 
 
-    public function list()
-    {
-        $this->api->request_method('GET');
+	public function list()
+	{
+		$this->api->request_method('GET');
 
-        $response = $this->serviceservice->list();
+		$id = $this->input->get('id'); // optional
 
-        $this->api->send_response(200, "Services fetched", $response['data']);
-    }
+		$response = $this->serviceservice->list($id);
+
+		if ($response['status']) {
+			$this->api->send_response(200, "Services fetched", $response['data']);
+		} else {
+			$this->api->send_response(404, $response['message'], null);
+		}
+	}
+
 }
