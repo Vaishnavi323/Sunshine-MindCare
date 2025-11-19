@@ -68,9 +68,9 @@ export const SIDEBAR_MENU = [
     path: "/admin/events",
   },
   {
-    title: "Initiatives",
-    icon: faLightbulb,
-    path: "/admin/initiatives",
+    title: "Blogs",
+    icon: faFileAlt,
+    path: "/admin/Blogss",
   },
   {
     title: "Content",

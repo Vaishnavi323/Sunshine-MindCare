@@ -10,6 +10,9 @@ import {
   faDonate,
   faUserPlus,
   faClipboardList,
+  faUserMd,
+  faStethoscope,
+  faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Inline CSS for custom animations and effects
@@ -544,86 +547,6 @@ const DataItem = ({ icon, title, value, time, color, delay = 0 }) => {
   );
 };
 
-const AnimatedBarChart = ({ data, color, delay = 0 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const maxValue = Math.max(...data.map((item) => item.value));
-
-  return (
-    <div
-      style={{
-        ...dashboardStyles.graphContainer,
-        ...(isHovered ? dashboardStyles.graphContainerHover : {}),
-        animation: `fadeInUp 0.8s ease-out ${delay}ms both`,
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-white">
-          {color.includes("#f47058") ? "Monthly Donations" : "Volunteer Growth"}
-        </h3>
-        <div
-          className={`text-2xl transition-transform duration-500 ${
-            isHovered ? "animate-float" : ""
-          }`}
-        >
-          {color.includes("#f47058") ? "💰" : "👥"}
-        </div>
-      </div>
-
-      <div className="flex items-end justify-between h-48 space-x-3">
-        {data.map((item, index) => (
-          <div key={index} className="flex flex-col items-center flex-1">
-            <div
-              className="text-sm text-gray-300 mb-2 transition-all duration-500"
-              style={{
-                transform: isHovered ? "translateY(-5px)" : "translateY(0)",
-              }}
-            >
-              {item.label}
-            </div>
-            <div className="relative w-full h-40 flex items-end">
-              <div
-                style={{
-                  height: `${(item.value / maxValue) * 100}%`,
-                  background: color,
-                  width: "100%",
-                  borderRadius: "8px 8px 0 0",
-                  transition: "all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-                  transformOrigin: "bottom",
-                  animation: `barGrow 1s ease-out ${
-                    index * 0.2 + delay
-                  }ms both`,
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-                className="group"
-              >
-                <div style={dashboardStyles.progressShine}></div>
-                <div
-                  className="absolute bottom-0 left-0 right-0 bg-white bg-opacity-30 h-4"
-                  style={{
-                    borderTopLeftRadius: "8px",
-                    borderTopRightRadius: "8px",
-                  }}
-                ></div>
-              </div>
-            </div>
-            <div
-              className="text-sm font-semibold text-white mt-2 transition-all duration-500"
-              style={{
-                transform: isHovered ? "scale(1.1)" : "scale(1)",
-              }}
-            >
-              {item.value}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -635,16 +558,10 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Main Stats Data
+  // Main Stats Data - Updated with new cards
   const mainStatsData = [
     {
-      title: "Total Donations",
-      value: 24568,
-      icon: faHandHoldingHeart,
-      delay: 100,
-    },
-    {
-      title: "Active Volunteers",
+      title: "Total Doctors",
       value: 156,
       icon: faUserFriends,
       delay: 200,
@@ -656,10 +573,16 @@ const Dashboard = () => {
       delay: 300,
     },
     {
-      title: "Gallery Items",
-      value: 245,
-      icon: faImages,
+      title: "Pending Appointments",
+      value: 23,
+      icon: faClipboardList,
       delay: 400,
+    },
+    {
+      title: "Total Jobs",
+      value: 45,
+      icon: faBriefcase,
+      delay: 500,
     },
   ];
 
@@ -688,73 +611,61 @@ const Dashboard = () => {
     },
   ];
 
-  // Recent Donations
-  const recentDonations = [
+  // Senior Doctors Data
+  const seniorDoctors = [
     {
-      icon: faDonate,
-      title: "Rajesh Kumar",
-      value: "₹25,000",
-      time: "2 hours ago",
-      color: "#10b981",
-    },
-    {
-      icon: faDonate,
-      title: "Anita Sharma",
-      value: "₹15,000",
-      time: "5 hours ago",
+      icon: faUserMd,
+      title: "Dr. Rajesh Kumar",
+      value: "Psychiatry",
+      time: "15+ years experience",
       color: "#3b82f6",
     },
     {
-      icon: faDonate,
-      title: "Corporate Grant",
-      value: "₹1,00,000",
-      time: "1 day ago",
-      color: "#f59e0b",
-    },
-  ];
-
-  // Recent Volunteers
-  const recentVolunteers = [
-    {
-      icon: faUserPlus,
+      icon: faUserMd,
       title: "Dr. Priya Sharma",
-      value: "Counseling",
-      time: "4 hours ago",
+      value: "Clinical Psychology",
+      time: "12+ years experience",
       color: "#8b5cf6",
     },
     {
-      icon: faUserPlus,
-      title: "Rohan Mehra",
-      value: "Event Management",
-      time: "1 day ago",
-      color: "#ec4899",
-    },
-    {
-      icon: faUserPlus,
-      title: "Sneha Reddy",
-      value: "Teaching",
-      time: "2 days ago",
+      icon: faUserMd,
+      title: "Dr. Amit Patel",
+      value: "Counseling",
+      time: "18+ years experience",
       color: "#06b6d4",
     },
+    {
+      icon: faUserMd,
+      title: "Dr. Sneha Reddy",
+      value: "Child Psychology",
+      time: "10+ years experience",
+      color: "#ec4899",
+    },
   ];
 
-  // Graph Data
-  const donationData = [
-    { label: "Jan", value: 12000 },
-    { label: "Feb", value: 19000 },
-    { label: "Mar", value: 15000 },
-    { label: "Apr", value: 25000 },
-    { label: "May", value: 22000 },
-    { label: "Jun", value: 30000 },
-  ];
-
-  const volunteerData = [
-    { label: "Jan", value: 45 },
-    { label: "Feb", value: 52 },
-    { label: "Mar", value: 48 },
-    { label: "Apr", value: 65 },
-    { label: "May", value: 70 },
-    { label: "Jun", value: 85 },
+  // Pending Appointments
+  const pendingAppointments = [
+    {
+      icon: faStethoscope,
+      title: "Rohan Mehra",
+      value: "Follow-up Session",
+      time: "Today, 2:30 PM",
+      color: "#f59e0b",
+    },
+    {
+      icon: faStethoscope,
+      title: "Anita Sharma",
+      value: "Initial Consultation",
+      time: "Tomorrow, 11:00 AM",
+      color: "#10b981",
+    },
+    {
+      icon: faStethoscope,
+      title: "Vikram Singh",
+      value: "Therapy Session",
+      time: "Dec 24, 4:00 PM",
+      color: "#ef4444",
+    },
   ];
 
   if (isLoading) {
@@ -787,7 +698,7 @@ const Dashboard = () => {
     <>
       <KeyframesStyles />
       <div style={dashboardStyles.container}>
-        {/* NEW: Header Card with all-side curved rectangle and animations */}
+        {/* Header Card with all-side curved rectangle and animations */}
         <div style={dashboardStyles.headerCard}>
           {/* Floating Orbs */}
           <div
@@ -837,7 +748,7 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto relative z-10">
-          {/* Stats Grid - Separate section with proper spacing */}
+          {/* Stats Grid - Updated with 4 cards */}
           <div className="mb-12">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {mainStatsData.map((stat, index) => (
@@ -846,7 +757,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Data and Graphs Grid */}
+          {/* Data and Information Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Recent Events */}
             <div
@@ -869,7 +780,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Recent Donations */}
+            {/* Senior Doctors */}
             <div
               style={{
                 ...dashboardStyles.dataCard,
@@ -878,19 +789,19 @@ const Dashboard = () => {
             >
               <h3 className="text-xl font-semibold text-[#2d365b] mb-4 flex items-center">
                 <FontAwesomeIcon
-                  icon={faDonate}
-                  className="mr-3 text-[#10b981] animate-text-wave"
+                  icon={faUserMd}
+                  className="mr-3 text-[#3b82f6] animate-text-wave"
                 />
-                Recent Donations
+                Senior Doctors
               </h3>
               <div className="space-y-4">
-                {recentDonations.map((donation, index) => (
-                  <DataItem key={index} {...donation} delay={index * 100} />
+                {seniorDoctors.map((doctor, index) => (
+                  <DataItem key={index} {...doctor} delay={index * 100} />
                 ))}
               </div>
             </div>
 
-            {/* Recent Volunteers */}
+            {/* Pending Appointments */}
             <div
               style={{
                 ...dashboardStyles.dataCard,
@@ -899,34 +810,17 @@ const Dashboard = () => {
             >
               <h3 className="text-xl font-semibold text-[#2d365b] mb-4 flex items-center">
                 <FontAwesomeIcon
-                  icon={faUserPlus}
-                  className="mr-3 text-[#8b5cf6] animate-text-wave"
+                  icon={faStethoscope}
+                  className="mr-3 text-[#f59e0b] animate-text-wave"
                 />
-                Recent Volunteers
+                Pending Appointments
               </h3>
               <div className="space-y-4">
-                {recentVolunteers.map((volunteer, index) => (
-                  <DataItem key={index} {...volunteer} delay={index * 100} />
+                {pendingAppointments.map((appointment, index) => (
+                  <DataItem key={index} {...appointment} delay={index * 100} />
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* Graphs Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Donations Graph */}
-            <AnimatedBarChart
-              data={donationData}
-              color="linear-gradient(180deg, #f47058 0%, #ff8a75 100%)"
-              delay={200}
-            />
-
-            {/* Volunteers Graph */}
-            <AnimatedBarChart
-              data={volunteerData}
-              color="linear-gradient(180deg, #667eea 0%, #764ba2 100%)"
-              delay={400}
-            />
           </div>
         </div>
       </div>

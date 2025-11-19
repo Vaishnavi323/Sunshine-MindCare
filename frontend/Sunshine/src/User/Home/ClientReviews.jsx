@@ -257,7 +257,7 @@ const ClientTestimonials = () => {
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
           border-left: 5px solid #ff6b35;
           position: relative;
-          height: 100%;
+          height: 60%;
           display: flex;
           flex-direction: column;
           justify-content: center;
