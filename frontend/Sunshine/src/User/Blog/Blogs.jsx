@@ -544,25 +544,15 @@ const BlogPage = () => {
                     <div className="blog-meta">
                       <span className="blog-date">📅 {blog.date}</span>
                       <span>•</span>
-                      <span className="blog-read-time">⏱️ {blog.readTime}</span>
+                      
                     </div>
 
                     <h3 className="blog-title">{blog.title}</h3>
                     <p className="blog-excerpt">{blog.excerpt}</p>
 
-                    <div className="blog-tags">
-                      {blog.tags.map((tag, index) => (
-                        <span key={index} className="tag">{tag}</span>
-                      ))}
-                    </div>
+                
 
-                    <div className="blog-footer">
-                      <div className="blog-author">
-                        <span className="author-name">{blog.author}</span>
-                        <span className="author-role">{blog.authorRole}</span>
-                      </div>
-                      <button className="read-more-btn">Read More →</button>
-                    </div>
+                    
                   </div>
                 </div>
               ))}

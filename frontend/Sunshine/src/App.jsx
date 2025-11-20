@@ -70,7 +70,7 @@ const AdminLayout = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/events" element={<Events />} />
             <Route path="/initiatives" element={<Initiatives />} />
-            <Route path="/blogs" element={<Blogss />} />
+            <Route path="/Blogss" element={<Blogss />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/hospitals" element={<Hospitals />} />
             <Route path="/team" element={<Team />} />
@@ -96,7 +96,7 @@ function App() {
       <Route path="AboutUs" element={<About/>} />
       <Route path="ServicePage" element={<Service/>} />
       <Route path="TeamPage" element={<MyTeam/>}/>
-      <Route path="BlogPage" element={<Blogs/>}/>
+      <Route path="BlogPage" element={<Blogss/>}/>
       <Route path="ContactUs" element={<Contact/>}/>
       <Route path="PastEvents" element={<Past/>}/>
       <Route path="UpcomingEvents" element={<Upcoming/>}/>

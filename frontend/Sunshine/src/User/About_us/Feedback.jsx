@@ -401,7 +401,7 @@ const ReviewFeedback = () => {
                                                 <Card.Body className="p-4">
                                                     {/* Review Header */}
                                                     <div className="review-header">
-                                                        <div className="reviewer-info">
+                                                        {/* <div className="reviewer-info">
                                                             <div className="reviewer-avatar">
                                                                 {review.name.split(' ').map(n => n[0]).join('')}
                                                             </div>
@@ -416,7 +416,7 @@ const ReviewFeedback = () => {
                                                                     )}
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> */}
                                                         <div className="review-rating">
                                                             {renderStars(review.rating, true)}
                                                         </div>
@@ -426,9 +426,9 @@ const ReviewFeedback = () => {
                                                     <div className="review-content">
                                                         <p className="review-text">{review.review}</p>
                                                         <div className="review-experience">
-                                                            <span className="experience-tag">
+                                                            {/* <span className="experience-tag">
                                                                 {review.experience}
-                                                            </span>
+                                                            </span> */}
                                                         </div>
                                                     </div>
 

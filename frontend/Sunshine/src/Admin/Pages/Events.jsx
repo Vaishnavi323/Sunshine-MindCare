@@ -9,6 +9,8 @@ import {
   faChevronLeft,
   faChevronRight,
   faXmark,
+  faUpload,
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import CustomAlert from "../../CustomAlert/CustomAlert";
 import EventForm from "../Forms/EventForm";
@@ -225,8 +227,8 @@ const Events = () => {
         id: Math.max(...events.map((e) => e.id)) + 1,
         ...formData,
         status: "upcoming",
-        image:
-          "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
+        // If no image is uploaded, use a default image
+        image: formData.image || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
       };
       setEvents([...events, newEvent]);
       setAlert({
@@ -326,7 +328,7 @@ const Events = () => {
                 </div>
                 <div className="text-gray-600 font-medium">Total Events</div>
               </div>
-              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
                 <FontAwesomeIcon
                   icon={faCalendarAlt}
                   className="text-white text-2xl"
@@ -344,7 +346,7 @@ const Events = () => {
                 </div>
                 <div className="text-gray-600 font-medium">Upcoming Events</div>
               </div>
-              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
                 <FontAwesomeIcon
                   icon={faMapMarkerAlt}
                   className="text-white text-2xl"
@@ -364,7 +366,7 @@ const Events = () => {
                   Completed Events
                 </div>
               </div>
-              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
+              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
                 <FontAwesomeIcon
                   icon={faCalendarAlt}
                   className="text-white text-2xl"
