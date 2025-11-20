@@ -65,21 +65,21 @@ class AppointmentController extends CI_Controller {
 		}
 	}
 
-	// admin reshedule
+	// // admin reshedule
 	
-		public function adminReschedule()
-	{
-		$this->api->request_method('POST');
-		$input = $this->input->post();
-		$response = $this->appointmentlib->adminRescheduleAppointment($input);
+	// 	public function adminReschedule()
+	// {
+	// 	$this->api->request_method('POST');
+	// 	$input = $this->input->post();
+	// 	$response = $this->appointmentlib->adminRescheduleAppointment($input);
 
-		if ($response['success']) {
-			$this->api->send_response(200, $response['message'], null, null, $response['data']);
+	// 	if ($response['success']) {
+	// 		$this->api->send_response(200, $response['message'], null, null, $response['data']);
 
-		} else {
-			$this->api->send_response(400, $response['message'], null);
-		}
-	}
+	// 	} else {
+	// 		$this->api->send_response(400, $response['message'], null);
+	// 	}
+	// }
 
 }
 

@@ -16,4 +16,13 @@ class ArticleModel extends CI_Model {
     public function getArticleById($id) {
         return $this->db->get_where('articles', ['id' => $id])->row_array();
     }
+	public function updateArticle($id, $data)
+	{
+		$this->db->where('id', $id);
+		return $this->db->update('articles', $data);
+	}
+
+	public function deleteArticle($id) {
+		return $this->db->delete('articles', ['id' => $id]);
+	}
 }

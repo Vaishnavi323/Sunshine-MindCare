@@ -17,15 +17,17 @@ const CustomNavbar = () => {
     };
 
     return (
-        <>
+         <>
             <TopBar />
             <Navbar expand="lg" className="custom-navbar" sticky="top">
             <Container fluid className="px-4">
                 {/* Left side - Logo and email */}
-                <div className="d-flex align-items-center gap-3">
-                    <Link to="/" className="d-flex align-items-center" style={{ textDecoration: 'none' }}>
-                        <Navbar.Brand href="#" className="d-flex align-items-center" onClick={(e) => e.preventDefault()}>
-                            <img src={logoImage} alt="Sunshine Logo" className="navbar-logo" />
+                <div className="d-flex align-items gap-3">
+                    <Link to="/" className="d-flex align-items" style={{ textDecoration: 'none' }}>
+                        <Navbar.Brand href="#" className="d-flex align-items" onClick={(e) => e.preventDefault()}>
+                            <img src={logoImage} alt="Sunshine Logo" className="navbar-logo"
+                           
+                            />
                         </Navbar.Brand>
                     </Link>
                 </div>
@@ -358,6 +360,7 @@ const CustomNavbar = () => {
                     }
                 }
             `}</style>
+          
         </Navbar>
         </>
     );

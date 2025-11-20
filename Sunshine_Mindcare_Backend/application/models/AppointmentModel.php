@@ -18,9 +18,12 @@ class AppointmentModel extends CI_Model {
     {
         return $this->db->get_where('appointments', ['id' => $id])->row_array();
     }
-	public function updateAppointment($id, $data) {
-    $this->db->where('id', $id);
-    return $this->db->update('appointments', $data);
-}
+// 	public function updateAppointment($id, $data) {
+//     $this->db->where('id', $id);
+//     return $this->db->update('appointments', $data);
+// }
+
+
+
 }
 

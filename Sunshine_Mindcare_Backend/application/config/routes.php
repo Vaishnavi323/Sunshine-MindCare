@@ -63,4 +63,14 @@ $route['appointment/add'] = 'AppointmentController/add';
 $route['appointment/list']='AppointmentController/get';
 $route['article/add']='ArticleController/add';
 $route['article/list']='ArticleController/list';
-$route['appointment/reschedule']='AppointmentController/adminReschedule';
+$route['article/delete']='ArticleController/delete';
+// $route['appointment/reschedule']='AppointmentController/adminReschedule';
+$route['event/add'] = 'EventController/add';
+$route['event/list'] = 'EventController/list';
+$route['event/update'] = 'EventController/update';
+$route['event/delete'] = 'EventController/delete';
+$route['blog/add'] = 'BlogController/add';
+$route['blog/list'] ='BlogController/list';
+$route['blog/delete'] = 'BlogController/delete';
+$route['job/add'] = 'JobController/add';
+

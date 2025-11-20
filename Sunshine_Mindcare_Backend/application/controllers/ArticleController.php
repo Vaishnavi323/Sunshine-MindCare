@@ -63,5 +63,18 @@ class ArticleController extends CI_Controller {
             $data
         );
     }
+
+	//delete article
+	public function delete() {
+        $this->api->request_method('POST');
+        $articleId = $this->input->post('id');
+        $response = $this->articlelib->deleteArticle($articleId);
+
+        if ($response['success']) {
+            $this->api->send_response(200, $response['message']);
+        } else {
+            $this->api->send_response(400, $response['message'], $response['message']);
+        }
+    }
 }
 

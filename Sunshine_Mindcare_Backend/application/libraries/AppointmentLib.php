@@ -87,49 +87,49 @@ class AppointmentLib {
     return $this->CI->db->get()->result_array();
 	}
 
-	public function adminRescheduleAppointment($input)
-{
-    if (empty($input['appointment_id']) || empty($input['appointment_date']) || empty($input['appointment_time'])) {
-        return [
-            "success" => false,
-            "message" => "appointment_id, appointment_date and appointment_time are required"
-        ];
-    }
+// 	public function adminRescheduleAppointment($input)
+// {
+//     if (empty($input['appointment_id']) || empty($input['appointment_date']) || empty($input['appointment_time'])) {
+//         return [
+//             "success" => false,
+//             "message" => "appointment_id, appointment_date and appointment_time are required"
+//         ];
+//     }
 
-    // Fetch existing appointment
-    $appointment = $this->CI->AppointmentModel->getAppointmentById($input['appointment_id']);
-    if (!$appointment) {
-        return [
-            "success" => false,
-            "message" => "Appointment not found"
-        ];
-    }
+//     // Fetch existing appointment
+//     $appointment = $this->CI->AppointmentModel->getAppointmentById($input['appointment_id']);
+//     if (!$appointment) {
+//         return [
+//             "success" => false,
+//             "message" => "Appointment not found"
+//         ];
+//     }
 
-    // UPDATED final logic based on your DB
-    $data = [
-        "appointment_date" => $input['appointment_date'],
-        "appointment_time" => $input['appointment_time'],
-        "status" => "rescheduled",
-    ];
+//     // UPDATED final logic based on your DB
+//     $data = [
+//         "appointment_date" => $input['appointment_date'],
+//         "appointment_time" => $input['appointment_time'],
+//         "status" => "rescheduled",
+//     ];
 
-    // Add service reason in new column (you already created)
-    if (!empty($input['reason'])) {
-        $data["reschedule_reason"] = $input['reason'];
-    }
+//     // Add service reason in new column (you already created)
+//     if (!empty($input['reason'])) {
+//         $data["reschedule_reason"] = $input['reason'];
+//     }
 
-    // Update DB
-    $update = $this->CI->AppointmentModel->updateAppointment($input['appointment_id'], $data);
+//     // Update DB
+//     $update = $this->CI->AppointmentModel->updateAppointment($input['appointment_id'], $data);
 
-    if ($update) {
-        return [
-            "success" => true,
-            "message" => "Appointment rescheduled successfully by admin",
-            "data" => array_merge(["appointment_id" => $input['appointment_id']], $data)
-        ];
-    }
+//     if ($update) {
+//         return [
+//             "success" => true,
+//             "message" => "Appointment rescheduled successfully by admin",
+//             "data" => array_merge(["appointment_id" => $input['appointment_id']], $data)
+//         ];
+//     }
 
-    return ["success" => false, "message" => "Failed to reschedule appointment"];
-}
+//     return ["success" => false, "message" => "Failed to reschedule appointment"];
+// }
 
 
 }

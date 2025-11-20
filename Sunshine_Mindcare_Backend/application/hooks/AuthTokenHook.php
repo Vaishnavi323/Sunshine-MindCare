@@ -9,7 +9,9 @@ class AuthTokenHook
 		'subservicecontroller/list',
 		'appointmentcontroller/add',
 		'appointmentcontroller/get',
-		'articlecontroller/list'
+		'articlecontroller/list',
+        'eventcontroller/list',
+		'blogcontroller/list',
 
 		
     ];
