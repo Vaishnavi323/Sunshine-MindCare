@@ -35,6 +35,7 @@ import {
   faChartBar,
   faFileAlt,
   faStar,
+  faSuitcase,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const APP_CONFIG = {
@@ -93,21 +94,21 @@ export const SIDEBAR_MENU = [
     icon: faUsersCog,
     path: "/admin/team",
   },
-  // {
-  //   title: "Donations",
-  //   icon: faDonate,
-  //   path: "/admin/donations",
-  // },
-  // {
-  //   title: "Volunteers",
-  //   icon: faUserPlus,
-  //   path: "/admin/volunteers",
-  // },
-  // {
-  //   title: "Reports",
-  //   icon: faChartLine,
-  //   path: "/admin/reports",
-  // },
+  {
+    title: "Jobs",
+    icon: faSuitcase,
+    path: "/admin/Jobs",
+  },
+  {
+    title: "Volunteers",
+    icon: faUserPlus,
+    path: "/admin/volunteers",
+  },
+  {
+    title: "Reports",
+    icon: faChartLine,
+    path: "/admin/reports",
+  },
 ];
 
 export const NOTIFICATIONS = [

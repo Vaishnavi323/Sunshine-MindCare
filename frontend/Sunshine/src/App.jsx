@@ -29,7 +29,7 @@ import Blogss from "./Admin/Pages/Blogss";
 import AdminReview from "./Admin/Pages/AdminReview";
 import Hospitals from "./Admin/Pages/Hospitals";
 import Team from "./Admin/Pages/Team";
-import Donations from "./Admin/Pages/Donations";
+import Donations from "./Admin/Pages/AdminJobs.jsx";
 import Volunteers from "./Admin/Pages/Volunteers";
 import AdminAppoint from "./Admin/Pages/AdminAppoint";
 
@@ -75,7 +75,7 @@ const AdminLayout = () => {
             <Route path="/Reviews" element={<AdminReview />} />
             <Route path="/hospitals" element={<Hospitals />} />
             <Route path="/team" element={<Team />} />
-            <Route path="/donations" element={<Donations />} />
+            <Route path="/Jobs" element={<Donations />} />
             <Route path="/volunteers" element={<Volunteers />} />
             <Route path="/AdminAppoint" element={<AdminAppoint />} />
           </Routes>
