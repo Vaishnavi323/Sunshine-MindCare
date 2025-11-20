@@ -59,4 +59,38 @@ class ArticleLib {
         if ($id) return $this->CI->ArticleModel->getArticleById($id);
         return $this->CI->ArticleModel->getArticles();
     }
+
+
+		// delelte 
+		public function deleteArticle($articleId)
+	{
+		if (empty($articleId)) {
+			return ["success" => false, "message" => "Article ID is required"];
+		}
+
+		// Check if Event exists
+		$articleData = $this->CI->ArticleModel->getArticleById($articleId);
+		if (!$articleData) {
+			return ["success" => false, "message" => "Invalid Article ID"];
+		}
+
+		// Delete image if exists
+		if (!empty($articleData->image) && file_exists(FCPATH . $articleData->image)) {
+			unlink(FCPATH . $articleData->image);
+		}
+
+		// Delete record
+		$deleted = $this->CI->ArticleModel->deleteArticle($articleId);
+
+		if (!$deleted) {
+			return ["success" => false, "message" => "Failed to delete article"];
+		}
+
+		return [
+			"success" => true,
+			"message" => "Article deleted successfully",
+			"data" => ["id" => $articleId]
+		];
+	}
+
 }
