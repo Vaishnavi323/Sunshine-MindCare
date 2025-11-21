@@ -12,7 +12,7 @@ import CustomAlert from "../../CustomAlert/CustomAlert";
 import { useNavigate } from "react-router-dom";
 import EMIImage from "../../assets/Sunshine_logo.png"
 import EMILogo from "../../assets/Sunshine_logo.jpg"
-
+//
 // Inline CSS for login page
 const loginStyles = {
   container: {
@@ -75,7 +75,7 @@ const loginStyles = {
   },
   rightCard: {
     flex: 1,
-    background: "linear-gradient(135deg, #2d365b 0%, #1e2a4b 100%)",
+    background: "linear-gradient(135deg, #3567c3 0%, #2a5298 100%)",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",

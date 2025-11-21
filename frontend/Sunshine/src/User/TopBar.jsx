@@ -37,7 +37,7 @@ const TopBar = () => {
                 .topbar {
                     background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
                     padding: 12px 0;
-                    position: sticky;
+                    position: relative;
                     top: 0;
                     z-index: 1001;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);

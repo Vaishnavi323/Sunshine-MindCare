@@ -23,7 +23,7 @@ const dashboardStyles = {
     padding: "20px",
   },
   headerCard: {
-    background: "linear-gradient(135deg, #2d365b 0%, #1e2a4b 100%)",
+    background: "linear-gradient(135deg, #3567c3 0%, #2a5298 100%)",
     borderRadius: "25px",
     padding: "50px 30px",
     position: "relative",
@@ -156,7 +156,7 @@ const dashboardStyles = {
     borderColor: "#667eea",
   },
   graphContainer: {
-    background: "linear-gradient(135deg, #2d365b 0%, #1e2a4b 100%)",
+    background: "linear-gradient(135deg, #3567c3 0%, #2a5298 100%)",
     borderRadius: "20px",
     padding: "25px",
     color: "white",
