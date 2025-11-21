@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import {adminLogin} from "../../utils/Admin/login";
 
 const AuthContext = createContext();
 
@@ -12,11 +13,12 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(()=> sessionStorage.getItem("admin_token"));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("admin_token");
-    const userData = localStorage.getItem("admin_user");
+    const token = sessionStorage.getItem("admin_token");
+    const userData = sessionStorage.getItem("admin_user");
 
     if (token && userData) {
       setUser(JSON.parse(userData));
@@ -25,30 +27,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    // Simulate API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (
-          email === "admin@empathyfoundation.org" &&
-          password === "password"
-        ) {
-          const userData = {
-            id: 1,
-            name: "Admin User",
-            email: email,
-            role: "admin",
-            avatar: "👨‍💼",
-          };
-
-          setUser(userData);
-          localStorage.setItem("admin_token", "fake-jwt-token");
-          localStorage.setItem("admin_user", JSON.stringify(userData));
-          resolve({ success: true });
-        } else {
-          resolve({ success: false, error: "Invalid credentials" });
-        }
-      }, 1000);
-    });
+      const response = await adminLogin(email, password);
+      sessionStorage.setItem("admin_token", response.data.token)
+      return response.data;
   };
 
   const logout = () => {
