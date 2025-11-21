@@ -17,16 +17,19 @@ const CustomNavbar = () => {
     };
 
     return (
+
+
+        
          <>
             <TopBar />
-            <Navbar expand="lg" className="custom-navbar" sticky="top">
+            <Navbar expand="xl" className="custom-navbar" sticky="top">
             <Container fluid className="px-4">
                 {/* Left side - Logo and email */}
                 <div className="d-flex align-items gap-3">
                     <Link to="/" className="d-flex align-items" style={{ textDecoration: 'none' }}>
-                        <Navbar.Brand href="#" className="d-flex align-items" onClick={(e) => e.preventDefault()}>
+                        <Navbar.Brand href="#" className="d-flex align-items" onClick={(e) => e.preventDefault()}style={{ backgroundColor: "transparent" }}     >
                             <img src={logoImage} alt="Sunshine Logo" className="navbar-logo"
-                           
+                            style={{  height:"70px",width: "140px", objectFit: "fill", display: "block" }}
                             />
                         </Navbar.Brand>
                     </Link>
@@ -92,7 +95,7 @@ const CustomNavbar = () => {
 
                 {/* Right side - Search and Make Appointment Button */}
                 <div className="navbar-actions d-none d-lg-flex align-items-center gap-3">
-                    <div className="search-container">
+                    {/* <div className="search-container">
                         <input
                             type="text"
                             className="search-input"
@@ -101,16 +104,16 @@ const CustomNavbar = () => {
                         <button className="search-btn" title="Search">
                             <i className="fas fa-search"></i>
                         </button>
-                    </div>
+                    </div> */}
                     <Link to={"/BookAppointment"}><button className="appointment-btn">Make Appointment</button></Link>
                 </div>
             </Container>
 
             <style jsx>{`
                 .custom-navbar {
-                    background: linear-gradient(135deg, #1f1f35ff 0%, #174593ff 100%);
+                    background: linear-gradient(135deg,   	 #1f1f35  0%, #174593ff 100%);
                     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                    padding: 0.8rem 0;
+                    // padding: 0.8rem 0;
                     border-bottom: 3px solid #ff6b35;
                 }
                 
@@ -118,12 +121,14 @@ const CustomNavbar = () => {
                     height: 66px;
                     width: 140px;
                 }
-                
+                 
+
+                   
                 .nav-link-custom {
                     color: #ffffff !important;
                     font-size: 0.95rem;
                     font-weight: 500;
-                    padding: 0.5rem 1rem !important;
+                    padding: 0.3rem 0.9rem !important;
                     border-radius: 4px;
                     transition: all 0.3s ease;
                     position: relative;
