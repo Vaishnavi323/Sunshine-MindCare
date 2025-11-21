@@ -30,7 +30,7 @@ import AdminReview from "./Admin/Pages/AdminReview";
 import Hospitals from "./Admin/Pages/Hospitals";
 import Team from "./Admin/Pages/Team";
 import Donations from "./Admin/Pages/AdminJobs.jsx";
-import Volunteers from "./Admin/Pages/AdminServices.jsx";
+import AdminService from "./Admin/Pages/AdminServices.jsx";
 import AdminAppoint from "./Admin/Pages/AdminAppoint";
 import AdminMessages from './Admin/Pages/AdminMessage.jsx';
 import AdminEnquiries from './Admin/Pages/AdminEnquiry.jsx';
@@ -78,7 +78,7 @@ const AdminLayout = () => {
             <Route path="/hospitals" element={<Hospitals />} />
             <Route path="/team" element={<Team />} />
             <Route path="/Jobs" element={<Donations />} />
-            <Route path="/Services" element={<Volunteers />} />
+            <Route path="/Services" element={<AdminService />} />
             <Route path="/AdminAppoint" element={<AdminAppoint />} />
             <Route path="/AdminMessages" element={<AdminMessages />} />
             <Route path="/AdminEnquiries" element={<AdminEnquiries />} />
