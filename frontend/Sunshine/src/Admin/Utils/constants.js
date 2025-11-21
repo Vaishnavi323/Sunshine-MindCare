@@ -39,6 +39,7 @@ import {
   faSuitcase,
   faMessage,
   faEarListen,
+  faPaperclip,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const APP_CONFIG = {
@@ -116,6 +117,11 @@ export const SIDEBAR_MENU = [
     title: "Enquiries",
     icon: faEarListen,
     path: "/admin/AdminEnquiries",
+  },
+  {
+    title: "Articles",
+    icon: faPaperclip,
+    path: "/admin/AdminArticles",
   },
 ];
 

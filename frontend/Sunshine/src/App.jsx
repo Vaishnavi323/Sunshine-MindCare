@@ -34,6 +34,7 @@ import AdminService from "./Admin/Pages/AdminServices.jsx";
 import AdminAppoint from "./Admin/Pages/AdminAppoint";
 import AdminMessages from './Admin/Pages/AdminMessage.jsx';
 import AdminEnquiries from './Admin/Pages/AdminEnquiry.jsx';
+import AdminArticles from './Admin/Pages/AdminArticles.jsx'
 
 
 // Protected Route Component
@@ -82,6 +83,8 @@ const AdminLayout = () => {
             <Route path="/AdminAppoint" element={<AdminAppoint />} />
             <Route path="/AdminMessages" element={<AdminMessages />} />
             <Route path="/AdminEnquiries" element={<AdminEnquiries />} />
+            <Route path="/AdminArticles" element={<AdminArticles/>} />
+            
           </Routes>
         </main>
       </div>
