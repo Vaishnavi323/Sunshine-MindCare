@@ -23,6 +23,7 @@ import {
   faUserTie,
   faUserGraduate,
   faUsers,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Team = () => {
@@ -168,12 +169,12 @@ const Team = () => {
   // Filter doctors based on search and filters
   const filteredDoctors = doctors.filter(doctor => {
     const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doctor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase());
+      doctor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "all" || doctor.category === selectedCategory;
     const matchesStatus = selectedStatus === "all" || doctor.status === selectedStatus;
     const matchesSpecialization = selectedSpecialization === "all" || doctor.specialization === selectedSpecialization;
-    
+
     return matchesSearch && matchesCategory && matchesStatus && matchesSpecialization;
   });
 
@@ -386,7 +387,7 @@ const Team = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-100 p-6">
       <style>{animationStyles}</style>
-      
+
       {/* Alert */}
       {alert && (
         <div className="fixed top-4 right-4 z-50 animate-fade-in">
@@ -448,7 +449,7 @@ const Team = () => {
           </div>
 
           {/* Active Doctors */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{animationDelay: '0.1s'}}>
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold text-green-600 mb-2">
@@ -466,7 +467,7 @@ const Team = () => {
           </div>
 
           {/* Senior Doctors */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{animationDelay: '0.2s'}}>
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold text-blue-600 mb-2">
@@ -484,7 +485,7 @@ const Team = () => {
           </div>
 
           {/* Junior Doctors */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{animationDelay: '0.3s'}}>
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{ animationDelay: '0.3s' }}>
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold text-green-600 mb-2">
@@ -518,10 +519,7 @@ const Team = () => {
                   placeholder="Search by name, email, or specialization..."
                   className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
                 />
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                />
+                
               </div>
             </div>
 
@@ -544,7 +542,7 @@ const Team = () => {
             </div>
 
             {/* Status Filter */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-semibold text-[#2d365b] mb-2">
                 Status
               </label>
@@ -559,7 +557,7 @@ const Team = () => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
           </div>
 
           {/* Specialization Filter */}
@@ -598,15 +596,15 @@ const Team = () => {
         </div>
 
         {/* Doctors Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
           {currentDoctors.map((doctor, index) => (
             <div
               key={doctor.id}
               className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover-lift group animate-slide-in-up"
-              style={{animationDelay: `${index * 0.1}s`}}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Doctor Header */}
-              <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] p-4 text-white">
+              <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] p-3 text-white">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-2">
                     <FontAwesomeIcon icon={getCategoryIcon(doctor.category)} />
@@ -614,16 +612,16 @@ const Team = () => {
                       {doctor.category}
                     </span>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(doctor.status)}`}>
+                  {/* <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(doctor.status)}`}>
                     {doctor.status}
-                  </span>
+                  </span> */}
                 </div>
                 <h3 className="text-lg font-bold truncate">{doctor.name}</h3>
                 <p className="text-sm opacity-90 truncate">{doctor.specialization}</p>
               </div>
 
               {/* Doctor Content */}
-              <div className="p-5">
+              <div className="p-3">
                 {/* Doctor Image and Basic Info */}
                 <div className="flex items-center space-x-4 mb-4">
                   <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-gray-200">
@@ -634,16 +632,16 @@ const Team = () => {
                     />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center space-x-1 mb-1">
+                    {/* <div className="flex items-center space-x-1 mb-1">
                       {renderStars(doctor.rating)}
                       <span className="text-sm text-gray-600 ml-1">({doctor.rating})</span>
-                    </div>
+                    </div> */}
                     <div className="text-sm text-gray-600">
                       {doctor.experience} experience
                     </div>
-                    <div className="text-sm text-gray-600">
+                    {/* <div className="text-sm text-gray-600">
                       {doctor.patients} patients
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
@@ -657,14 +655,14 @@ const Team = () => {
                     <FontAwesomeIcon icon={faPhone} className="text-[#2d365b] mr-3 w-4" />
                     <span className="text-sm">{doctor.phone}</span>
                   </div>
-                  <div className="flex items-center text-gray-700">
+                  {/* <div className="flex items-center text-gray-700">
                     <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2d365b] mr-3 w-4" />
                     <span className="text-sm truncate">{doctor.address}</span>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Qualification */}
-                <div className="mb-4">
+                <div className="mb-2">
                   <div className="flex items-center text-gray-700 mb-1">
                     <FontAwesomeIcon icon={faGraduationCap} className="text-[#2d365b] mr-3 w-4" />
                     <span className="text-sm font-semibold">Qualification</span>
@@ -673,14 +671,14 @@ const Team = () => {
                 </div>
 
                 {/* Description */}
-                <div className="mb-4">
+                <div className="mb-1">
                   <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
                     {doctor.description}
                   </p>
                 </div>
 
                 {/* Joining Date */}
-                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                {/* <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
                   <div className="flex items-center">
                     <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
                     <span>
@@ -690,17 +688,17 @@ const Team = () => {
                       })}
                     </span>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Action Buttons */}
-                <div className="flex space-x-2 pt-4 border-t border-gray-200">
-                  <button
+                <div className="flex space-x-2 pt-2 border-t border-gray-200">
+                  {/* <button
                     onClick={() => setViewDoctor(doctor)}
                     className="flex-1 bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition-all duration-300 flex items-center justify-center space-x-2 border border-blue-500"
                   >
                     <FontAwesomeIcon icon={faEye} />
                     <span>View</span>
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => handleEdit(doctor)}
                     className="flex-1 bg-[#2d365b] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2d365b]"
@@ -765,15 +763,13 @@ const Team = () => {
                 onClick={() =>
                   typeof pageNum === "number" && setCurrentPage(pageNum)
                 }
-                className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 hover-lift ${
-                  pageNum === currentPage
+                className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 hover-lift ${pageNum === currentPage
                     ? "bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white shadow-lg border border-[#2d365b]"
                     : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2d365b] hover:bg-gray-50"
-                } ${
-                  pageNum === "..."
+                  } ${pageNum === "..."
                     ? "cursor-default hover:bg-white hover:border-gray-300 hover-lift-none"
                     : ""
-                }`}
+                  }`}
                 disabled={pageNum === "..."}
               >
                 {pageNum}
@@ -912,7 +908,7 @@ const DoctorForm = ({ doctor, onSubmit, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Basic validation
     if (!formData.name.trim()) {
       alert('Please enter doctor name');
@@ -958,7 +954,7 @@ const DoctorForm = ({ doctor, onSubmit, onCancel }) => {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
       <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
+        <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">
               {doctor ? "Edit Doctor" : "Add New Doctor"}
@@ -980,7 +976,7 @@ const DoctorForm = ({ doctor, onSubmit, onCancel }) => {
               <label className="block text-sm font-semibold text-[#2d365b]">
                 Doctor Photo
               </label>
-              
+
               {imagePreview ? (
                 <div className="relative">
                   <img
@@ -1083,7 +1079,7 @@ const DoctorForm = ({ doctor, onSubmit, onCancel }) => {
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-semibold text-[#2d365b] mb-2">
                   Address *
                 </label>
@@ -1096,7 +1092,7 @@ const DoctorForm = ({ doctor, onSubmit, onCancel }) => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
                   placeholder="Enter clinic address"
                 />
-              </div>
+              </div> */}
             </div>
 
             {/* Professional Information */}
@@ -1137,7 +1133,7 @@ const DoctorForm = ({ doctor, onSubmit, onCancel }) => {
                 </select>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-semibold text-[#2d365b] mb-2">
                   Status *
                 </label>
@@ -1151,7 +1147,7 @@ const DoctorForm = ({ doctor, onSubmit, onCancel }) => {
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
-              </div>
+              </div> */}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1381,11 +1377,10 @@ const ViewDoctorModal = ({ doctor, onClose, onEdit, onDelete }) => {
                 Status
               </h3>
               <div className="text-center p-4 bg-gray-50 rounded-xl border border-gray-200">
-                <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full ${
-                  doctor.status === 'active' 
-                    ? 'bg-green-100 text-green-800 border border-green-300' 
+                <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full ${doctor.status === 'active'
+                    ? 'bg-green-100 text-green-800 border border-green-300'
                     : 'bg-red-100 text-red-800 border border-red-300'
-                }`}>
+                  }`}>
                   <span className="font-semibold capitalize">{doctor.status}</span>
                 </div>
                 <div className="text-sm text-gray-600 mt-2">Current Status</div>

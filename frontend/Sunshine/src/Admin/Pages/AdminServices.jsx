@@ -617,10 +617,10 @@ const Services = () => {
                   placeholder="Search by service name, description, or category..."
                   className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
                 />
-                <FontAwesomeIcon
+                {/* <FontAwesomeIcon
                   icon={faSearch}
                   className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                />
+                /> */}
               </div>
             </div>
 
@@ -643,7 +643,7 @@ const Services = () => {
             </div>
 
             {/* Status Filter */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-semibold text-[#2d365b] mb-2">
                 Status
               </label>
@@ -658,7 +658,7 @@ const Services = () => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
           </div>
 
           {/* Filter Actions */}
@@ -697,9 +697,9 @@ const Services = () => {
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="text-xl font-bold">{service.name}</h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(service.status)}`}>
+                        {/* <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(service.status)}`}>
                           {service.status}
-                        </span>
+                        </span> */}
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getCategoryColor(service.category)}`}>
                           {service.category}
                         </span>
@@ -778,9 +778,9 @@ const Services = () => {
                             <div className="flex-1">
                               <div className="flex items-center space-x-2 mb-2">
                                 <h5 className="font-semibold text-gray-900">{subservice.name}</h5>
-                                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(subservice.status)}`}>
+                                {/* <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(subservice.status)}`}>
                                   {subservice.status}
-                                </span>
+                                </span> */}
                               </div>
                               <p className="text-gray-600 text-sm mb-3">{subservice.description}</p>
                             </div>
@@ -842,13 +842,13 @@ const Services = () => {
 
               {/* Service Action Buttons */}
               <div className="flex space-x-3 p-6 border-t border-gray-200">
-                <button
+                {/* <button
                   onClick={() => setViewService(service)}
                   className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition-all duration-300 flex items-center justify-center space-x-2 border border-blue-500"
                 >
                   <FontAwesomeIcon icon={faEye} />
                   <span>View Details</span>
-                </button>
+                </button> */}
                 <button
                   onClick={() => {
                     setEditingService(service);
@@ -1150,7 +1150,7 @@ const ServiceForm = ({ service, onSubmit, onCancel }) => {
                 </select>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-semibold text-[#2d365b] mb-2">
                   Status *
                 </label>
@@ -1164,7 +1164,7 @@ const ServiceForm = ({ service, onSubmit, onCancel }) => {
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
-              </div>
+              </div> */}
             </div>
 
             {/* Duration and Price */}
@@ -1387,7 +1387,7 @@ const SubserviceForm = ({ subservice, parentService, onSubmit, onCancel }) => {
             </div>
 
             {/* Status */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-semibold text-[#2d365b] mb-2">
                 Status *
               </label>
@@ -1401,7 +1401,7 @@ const SubserviceForm = ({ subservice, parentService, onSubmit, onCancel }) => {
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
-            </div>
+            </div> */}
 
             {/* Form Actions */}
             <div className="flex space-x-4 pt-4">
@@ -1440,16 +1440,16 @@ const ViewServiceModal = ({ service, onClose, onEdit, onDelete }) => {
     return icons[iconName] || faStethoscope;
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800 border border-green-300";
-      case "inactive":
-        return "bg-red-100 text-red-800 border border-red-300";
-      default:
-        return "bg-gray-100 text-gray-800 border border-gray-300";
-    }
-  };
+  // const getStatusColor = (status) => {
+  //   switch (status) {
+  //     case "active":
+  //       return "bg-green-100 text-green-800 border border-green-300";
+  //     case "inactive":
+  //       return "bg-red-100 text-red-800 border border-red-300";
+  //     default:
+  //       return "bg-gray-100 text-gray-800 border border-gray-300";
+  //   }
+  // };
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -1462,160 +1462,160 @@ const ViewServiceModal = ({ service, onClose, onEdit, onDelete }) => {
     return colors[category] || "bg-gray-100 text-gray-800";
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Service Details</h2>
-            <button
-              onClick={onClose}
-              className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300"
-            >
-              <FontAwesomeIcon icon={faXmark} />
-            </button>
-          </div>
-        </div>
+  // return (
+  //   <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
+  //     <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
+  //       {/* Header */}
+  //       <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
+  //         <div className="flex items-center justify-between">
+  //           <h2 className="text-2xl font-bold">Service Details</h2>
+  //           <button
+  //             onClick={onClose}
+  //             className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300"
+  //           >
+  //             <FontAwesomeIcon icon={faXmark} />
+  //           </button>
+  //         </div>
+  //       </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Service Header */}
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-              <FontAwesomeIcon
-                icon={getIconComponent(service.icon)}
-                className="text-white text-2xl"
-              />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-2">
-                <h3 className="text-2xl font-bold text-gray-900">{service.name}</h3>
-                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(service.status)}`}>
-                  {service.status}
-                </span>
-                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getCategoryColor(service.category)}`}>
-                  {service.category}
-                </span>
-              </div>
-              <p className="text-gray-600">{service.description}</p>
-            </div>
-          </div>
+  //       {/* Content */}
+  //       <div className="p-6 space-y-6">
+  //         {/* Service Header */}
+  //         <div className="flex items-center space-x-4">
+  //           <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
+  //             <FontAwesomeIcon
+  //               icon={getIconComponent(service.icon)}
+  //               className="text-white text-2xl"
+  //             />
+  //           </div>
+  //           <div className="flex-1">
+  //             <div className="flex items-center space-x-3 mb-2">
+  //               <h3 className="text-2xl font-bold text-gray-900">{service.name}</h3>
+  //               <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(service.status)}`}>
+  //                 {service.status}
+  //               </span>
+  //               <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getCategoryColor(service.category)}`}>
+  //                 {service.category}
+  //               </span>
+  //             </div>
+  //             <p className="text-gray-600">{service.description}</p>
+  //           </div>
+  //         </div>
 
-          {/* Service Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
-                Service Information
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Duration:</span>
-                  <span className="font-semibold">{service.duration}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Price Range:</span>
-                  <span className="font-semibold">{service.price}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Created Date:</span>
-                  <span className="font-semibold">
-                    {new Date(service.createdDate).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Total Subservices:</span>
-                  <span className="font-semibold">{service.subservices.length}</span>
-                </div>
-              </div>
-            </div>
+  //         {/* Service Details */}
+  //         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  //           <div className="space-y-4">
+  //             <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+  //               Service Information
+  //             </h3>
+  //             <div className="space-y-3">
+  //               <div className="flex items-center justify-between">
+  //                 <span className="text-gray-600">Duration:</span>
+  //                 <span className="font-semibold">{service.duration}</span>
+  //               </div>
+  //               <div className="flex items-center justify-between">
+  //                 <span className="text-gray-600">Price Range:</span>
+  //                 <span className="font-semibold">{service.price}</span>
+  //               </div>
+  //               <div className="flex items-center justify-between">
+  //                 <span className="text-gray-600">Created Date:</span>
+  //                 <span className="font-semibold">
+  //                   {new Date(service.createdDate).toLocaleDateString("en-US", {
+  //                     month: "long",
+  //                     day: "numeric",
+  //                     year: "numeric",
+  //                   })}
+  //                 </span>
+  //               </div>
+  //               <div className="flex items-center justify-between">
+  //                 <span className="text-gray-600">Total Subservices:</span>
+  //                 <span className="font-semibold">{service.subservices.length}</span>
+  //               </div>
+  //             </div>
+  //           </div>
 
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
-                Subservices Overview
-              </h3>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Active Subservices:</span>
-                  <span className="font-semibold text-green-600">
-                    {service.subservices.filter(sub => sub.status === 'active').length}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Inactive Subservices:</span>
-                  <span className="font-semibold text-red-600">
-                    {service.subservices.filter(sub => sub.status === 'inactive').length}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+  //           <div className="space-y-4">
+  //             <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+  //               Subservices Overview
+  //             </h3>
+  //             <div className="space-y-2">
+  //               <div className="flex items-center justify-between text-sm">
+  //                 <span className="text-gray-600">Active Subservices:</span>
+  //                 <span className="font-semibold text-green-600">
+  //                   {service.subservices.filter(sub => sub.status === 'active').length}
+  //                 </span>
+  //               </div>
+  //               <div className="flex items-center justify-between text-sm">
+  //                 <span className="text-gray-600">Inactive Subservices:</span>
+  //                 <span className="font-semibold text-red-600">
+  //                   {service.subservices.filter(sub => sub.status === 'inactive').length}
+  //                 </span>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
 
-          {/* Subservices List */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
-              Subservices ({service.subservices.length})
-            </h3>
-            <div className="space-y-3 max-h-60 overflow-y-auto">
-              {service.subservices.map((subservice) => (
-                <div
-                  key={subservice.id}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h4 className="font-semibold text-gray-900">{subservice.name}</h4>
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(subservice.status)}`}>
-                        {subservice.status}
-                      </span>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-2">{subservice.description}</p>
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span className="flex items-center space-x-1">
-                        <FontAwesomeIcon icon={faClock} className="w-3" />
-                        <span>{subservice.duration}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <FontAwesomeIcon icon={faMoneyBillWave} className="w-3" />
-                        <span>{subservice.price}</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+  //         {/* Subservices List */}
+  //         <div className="space-y-4">
+  //           <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+  //             Subservices ({service.subservices.length})
+  //           </h3>
+  //           <div className="space-y-3 max-h-60 overflow-y-auto">
+  //             {service.subservices.map((subservice) => (
+  //               <div
+  //                 key={subservice.id}
+  //                 className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200"
+  //               >
+  //                 <div className="flex-1">
+  //                   <div className="flex items-center space-x-2 mb-1">
+  //                     <h4 className="font-semibold text-gray-900">{subservice.name}</h4>
+  //                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(subservice.status)}`}>
+  //                       {subservice.status}
+  //                     </span>
+  //                   </div>
+  //                   <p className="text-gray-600 text-sm mb-2">{subservice.description}</p>
+  //                   <div className="flex items-center space-x-4 text-sm text-gray-500">
+  //                     <span className="flex items-center space-x-1">
+  //                       <FontAwesomeIcon icon={faClock} className="w-3" />
+  //                       <span>{subservice.duration}</span>
+  //                     </span>
+  //                     <span className="flex items-center space-x-1">
+  //                       <FontAwesomeIcon icon={faMoneyBillWave} className="w-3" />
+  //                       <span>{subservice.price}</span>
+  //                     </span>
+  //                   </div>
+  //                 </div>
+  //               </div>
+  //             ))}
+  //           </div>
+  //         </div>
 
-          {/* Action Buttons */}
-          <div className="flex space-x-4 pt-4 border-t border-gray-200">
-            <button
-              onClick={() => {
-                onEdit(service);
-              }}
-              className="flex-1 bg-[#2d365b] text-white py-3 rounded-xl font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2d365b]"
-            >
-              <FontAwesomeIcon icon={faEdit} className="mr-2" />
-              Edit Service
-            </button>
-            <button
-              onClick={() => {
-                onDelete({ type: 'service', id: service.id });
-                onClose();
-              }}
-              className="flex-1 bg-red-500 text-white py-3 rounded-xl font-semibold hover:bg-red-600 transition-all duration-300 border border-red-500"
-            >
-              <FontAwesomeIcon icon={faTrash} className="mr-2" />
-              Delete Service
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  //         {/* Action Buttons */}
+  //         <div className="flex space-x-4 pt-4 border-t border-gray-200">
+  //           <button
+  //             onClick={() => {
+  //               onEdit(service);
+  //             }}
+  //             className="flex-1 bg-[#2d365b] text-white py-3 rounded-xl font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2d365b]"
+  //           >
+  //             <FontAwesomeIcon icon={faEdit} className="mr-2" />
+  //             Edit Service
+  //           </button>
+  //           <button
+  //             onClick={() => {
+  //               onDelete({ type: 'service', id: service.id });
+  //               onClose();
+  //             }}
+  //             className="flex-1 bg-red-500 text-white py-3 rounded-xl font-semibold hover:bg-red-600 transition-all duration-300 border border-red-500"
+  //           >
+  //             <FontAwesomeIcon icon={faTrash} className="mr-2" />
+  //             Delete Service
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default Services;

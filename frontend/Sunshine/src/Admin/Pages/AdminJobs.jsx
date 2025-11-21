@@ -565,10 +565,10 @@ const Jobs = () => {
                   }
                   className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
                 />
-                <FontAwesomeIcon
+                {/* <FontAwesomeIcon
                   icon={faSearch}
                   className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                />
+                /> */}
               </div>
             </div>
 
