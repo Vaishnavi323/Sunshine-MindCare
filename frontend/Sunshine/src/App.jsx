@@ -20,17 +20,21 @@ import ChatBot from './User/Chatbot.jsx'
 
 import { AuthProvider, useAuth } from "./Admin/Auth/AuthContext";
 import Sidebar from "./Admin/Sidebar";
-import Navbar from "./Admin/Navbar";
+import Navbar from "./Admin/AdminNavbar.jsx";
 import Dashboard from "./Admin/Dashboard";
 import Login from "./Admin/Auth/Login";
 import Events from "./Admin/Pages/Events";
-import Initiatives from "./Admin/Pages/Initiatives";
+
 import Blogss from "./Admin/Pages/Blogss";
-import Gallery from "./Admin/Pages/Gallery";
+import AdminReview from "./Admin/Pages/AdminReview";
 import Hospitals from "./Admin/Pages/Hospitals";
 import Team from "./Admin/Pages/Team";
-import Donations from "./Admin/Pages/Donations";
-import Volunteers from "./Admin/Pages/Volunteers";
+import Donations from "./Admin/Pages/AdminJobs.jsx";
+import AdminService from "./Admin/Pages/AdminServices.jsx";
+import AdminAppoint from "./Admin/Pages/AdminAppoint";
+import AdminMessages from './Admin/Pages/AdminMessage.jsx';
+import AdminEnquiries from './Admin/Pages/AdminEnquiry.jsx';
+import AdminArticles from './Admin/Pages/AdminArticles.jsx'
 
 
 // Protected Route Component
@@ -69,13 +73,18 @@ const AdminLayout = () => {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/initiatives" element={<Initiatives />} />
+            
             <Route path="/Blogss" element={<Blogss />} />
-            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/Reviews" element={<AdminReview />} />
             <Route path="/hospitals" element={<Hospitals />} />
             <Route path="/team" element={<Team />} />
-            <Route path="/donations" element={<Donations />} />
-            <Route path="/volunteers" element={<Volunteers />} />
+            <Route path="/Jobs" element={<Donations />} />
+            <Route path="/Services" element={<AdminService />} />
+            <Route path="/AdminAppoint" element={<AdminAppoint />} />
+            <Route path="/AdminMessages" element={<AdminMessages />} />
+            <Route path="/AdminEnquiries" element={<AdminEnquiries />} />
+            <Route path="/AdminArticles" element={<AdminArticles/>} />
+            
           </Routes>
         </main>
       </div>
@@ -83,6 +92,7 @@ const AdminLayout = () => {
   );
 };
 
+//--------------------------User Routes------------------------------------------------
 
 function App() {
   return (
@@ -96,7 +106,7 @@ function App() {
       <Route path="AboutUs" element={<About/>} />
       <Route path="ServicePage" element={<Service/>} />
       <Route path="TeamPage" element={<MyTeam/>}/>
-      <Route path="BlogPage" element={<Blogss/>}/>
+      <Route path="BlogPage" element={<Blogs/>}/>
       <Route path="ContactUs" element={<Contact/>}/>
       <Route path="PastEvents" element={<Past/>}/>
       <Route path="UpcomingEvents" element={<Upcoming/>}/>

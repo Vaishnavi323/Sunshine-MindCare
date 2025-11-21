@@ -3,20 +3,7 @@ import CustomAlert from '../../CustomAlert/CustomAlert';
 
 const Hospitals = () => {
   const [hospitals, setHospitals] = useState([
-    {
-      id: 1,
-      name: 'Sunshine Mindcare',
-      type: 'Counseling Center',
-      location: 'Nashik',
-      contact: '+91 9876543210',
-      email: 'info@sunshinemindcare.com',
-      status: 'active',
-      events: 12,
-      staff: 8,
-      description: 'Leading counseling and mental health care center in Nashik.',
-      image: '🌞',
-      instagram: 'https://www.instagram.com/sunshinecounsellingnashik/'
-    },
+    
     {
       id: 2,
       name: 'Manoday Hospital',

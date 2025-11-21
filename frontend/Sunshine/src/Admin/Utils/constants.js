@@ -1,3 +1,4 @@
+import { faServicestack } from "@fortawesome/free-brands-svg-icons";
 import {
   faTachometerAlt,
   faCalendarAlt,
@@ -34,6 +35,11 @@ import {
   faHeart,
   faChartBar,
   faFileAlt,
+  faStar,
+  faSuitcase,
+  faMessage,
+  faEarListen,
+  faPaperclip,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const APP_CONFIG = {
@@ -73,14 +79,14 @@ export const SIDEBAR_MENU = [
     path: "/admin/Blogss",
   },
   {
-    title: "Content",
+    title: "Appointments",
     icon: faNewspaper,
-    path: "/admin/blogs",
+    path: "/admin/AdminAppoint",
   },
   {
-    title: "Media",
-    icon: faImages,
-    path: "/admin/gallery",
+    title: "Reviews",
+    icon: faStar,
+    path: "/admin/Reviews",
   },
   {
     title: "Hospitals",
@@ -93,19 +99,29 @@ export const SIDEBAR_MENU = [
     path: "/admin/team",
   },
   {
-    title: "Donations",
-    icon: faDonate,
-    path: "/admin/donations",
+    title: "Jobs",
+    icon: faSuitcase,
+    path: "/admin/Jobs",
   },
   {
-    title: "Volunteers",
-    icon: faUserPlus,
-    path: "/admin/volunteers",
+    title: "Services",
+    icon: faServicestack,
+    path: "/admin/Services",
   },
   {
-    title: "Reports",
-    icon: faChartLine,
-    path: "/admin/reports",
+    title: "Messages",
+    icon: faMessage,
+    path: "/admin/AdminMessages",
+  },
+  {
+    title: "Enquiries",
+    icon: faEarListen,
+    path: "/admin/AdminEnquiries",
+  },
+  {
+    title: "Articles",
+    icon: faPaperclip,
+    path: "/admin/AdminArticles",
   },
 ];
 

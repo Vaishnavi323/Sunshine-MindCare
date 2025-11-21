@@ -65,10 +65,10 @@ const SunshineFooter = () => {
           margin-bottom: 15px;
         }
         
-        .info-text {
+        .info-texts {
           font-size: 14px;
           line-height: 1.6;
-          opacity: 0.9;
+          color: #e0e0e0;
         }
         
         .logo-section {
@@ -235,7 +235,7 @@ const SunshineFooter = () => {
                                     </svg>
                                 </div>
                                 <h3 className="info-title">Location</h3>
-                                <p className="info-text">
+                                <p className="info-texts">
                                     Solitaire building, First & Second floor,<br />
                                     Keshavrao More Marg, Collage Road,<br />
                                     Nashik-422005
@@ -251,7 +251,7 @@ const SunshineFooter = () => {
                                     </svg>
                                 </div>
                                 <h3 className="info-title">Working Hours</h3>
-                                <p className="info-text">
+                                <p className="info-texts">
                                     Consultation by appointment only<br />
                                     Mon To Fri 10am - 8pm
                                 </p>
@@ -266,7 +266,7 @@ const SunshineFooter = () => {
                                     </svg>
                                 </div>
                                 <h3 className="info-title">Contact Us</h3>
-                                <p className="info-text">
+                                <p className="info-texts">
                                     info@sunshinemindcare.com<br />
                                     +91 8007869220<br />
                                     +91 9607899660
