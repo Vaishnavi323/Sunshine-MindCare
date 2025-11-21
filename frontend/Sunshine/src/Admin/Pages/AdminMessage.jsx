@@ -100,7 +100,7 @@ const AdminMessages = () => {
         
         {/* Header */}
         <div className="mb-8 animate-[fadeInUp_0.6s_ease-out]">
-          <h1 className="text-3xl md:text-4xl font-bold text-[#2d365b] mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#2a5298] mb-2">
             Messages
           </h1>
           <p className="text-gray-600 text-lg">
@@ -118,7 +118,7 @@ const AdminMessages = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-[#2d365b]">{messages.length}</h3>
+              <h3 className="text-3xl font-bold text-[#2a5298]">{messages.length}</h3>
               <p className="text-gray-500 font-medium">Total Messages</p>
             </div>
           </div>
@@ -131,7 +131,7 @@ const AdminMessages = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-[#2d365b]">{unreadCount}</h3>
+              <h3 className="text-3xl font-bold text-[#2a5298]">{unreadCount}</h3>
               <p className="text-gray-500 font-medium">Unread Messages</p>
             </div>
           </div>
@@ -144,7 +144,7 @@ const AdminMessages = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-[#2d365b]">{readCount}</h3>
+              <h3 className="text-3xl font-bold text-[#2a5298]">{readCount}</h3>
               <p className="text-gray-500 font-medium">Read Messages</p>
             </div>
           </div>
@@ -210,7 +210,7 @@ const AdminMessages = () => {
                         {getInitials(msg.name)}
                       </div>
                       <div>
-                        <h4 className="font-bold text-[#2d365b] flex items-center gap-2">
+                        <h4 className="font-bold text-[#2a5298] flex items-center gap-2">
                           {msg.name}
                           {!msg.isRead && (
                             <span className="px-2 py-0.5 bg-amber-500 text-white text-xs rounded-full font-semibold animate-pulse">
@@ -233,7 +233,7 @@ const AdminMessages = () => {
             ) : (
               <div className="bg-white rounded-xl p-12 shadow-md border border-gray-200 text-center">
                 <div className="text-6xl mb-4 opacity-50">📭</div>
-                <h3 className="text-xl font-bold text-[#2d365b] mb-2">No Messages Found</h3>
+                <h3 className="text-xl font-bold text-[#2a5298] mb-2">No Messages Found</h3>
                 <p className="text-gray-500">Try adjusting your search or filter criteria</p>
               </div>
             )}
@@ -276,7 +276,7 @@ const AdminMessages = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-[#2d365b] mb-2">Select a Message</h3>
+                <h3 className="text-xl font-bold text-[#2a5298] mb-2">Select a Message</h3>
                 <p className="text-gray-500 text-center">Click on any message from the list to view its full content</p>
               </div>
             )}

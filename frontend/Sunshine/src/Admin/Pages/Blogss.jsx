@@ -237,7 +237,7 @@ const Blogss = () => {
       <div className="max-w-7xl mx-auto mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="mb-6 lg:mb-0">
-            <h1 className="text-4xl font-bold text-[#2d365b] mb-3">
+            <h1 className="text-4xl font-bold text-[#2a5298] mb-3">
               Blog Management
             </h1>
             <p className="text-gray-600 text-lg">
@@ -248,7 +248,7 @@ const Blogss = () => {
           {/* Add Blog Button */}
           <button
             onClick={() => setShowForm(true)}
-            className="group relative bg-[#2d365b] text-white px-8 py-4 rounded-xl font-semibold shadow-md border border-[#2d365b] hover:bg-white hover:text-[#2d365b] transition-all duration-300 ease-in-out overflow-hidden"
+            className="group relative bg-[#2a5298] text-white px-8 py-4 rounded-xl font-semibold shadow-md border border-[#2a5298] hover:bg-white hover:text-[#2a5298] transition-all duration-300 ease-in-out overflow-hidden"
           >
             <div className="flex items-center space-x-3">
               <FontAwesomeIcon
@@ -266,12 +266,12 @@ const Blogss = () => {
           <div className="bg-white rounded-xl shadow-md border border-gray-300 p-6 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {blogs.length}
                 </div>
                 <div className="text-gray-600 font-medium">Total Blogs</div>
               </div>
-              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
+              <div className="w-16 h-16 bg-[#2a5298] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
                 <FontAwesomeIcon
                   icon={faFolder}
                   className="text-white text-2xl"
@@ -284,7 +284,7 @@ const Blogss = () => {
           <div className="bg-white rounded-xl shadow-md border border-gray-300 p-6 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {blogs.filter((b) => b.status === "published").length}
                 </div>
                 <div className="text-gray-600 font-medium">Published</div>
@@ -302,7 +302,7 @@ const Blogss = () => {
           <div className="bg-white rounded-xl shadow-md border border-gray-300 p-6 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {blogs.filter((b) => b.status === "draft").length}
                 </div>
                 <div className="text-gray-600 font-medium">Drafts</div>
@@ -320,7 +320,7 @@ const Blogss = () => {
           <div className="bg-white rounded-xl shadow-md border border-gray-300 p-6 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {categories.length - 1}
                 </div>
                 <div className="text-gray-600 font-medium">Categories</div>
@@ -340,7 +340,7 @@ const Blogss = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search Input */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Search Blogs
               </label>
               <div className="relative">
@@ -350,7 +350,7 @@ const Blogss = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search by title or description..."
-                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 />
                 
               </div>
@@ -358,13 +358,13 @@ const Blogss = () => {
 
             {/* Category Filter */}
             <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Category
               </label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
               >
                 {categories.map(category => (
                   <option key={category} value={category}>
@@ -376,13 +376,13 @@ const Blogss = () => {
 
             {/* Status Filter */}
             {/* <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Status
               </label>
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
               >
                 <option value="all">All Status</option>
                 <option value="published">Published</option>
@@ -399,7 +399,7 @@ const Blogss = () => {
             </div>
             <button
               onClick={handleResetFilters}
-              className="text-sm text-[#2d365b] font-semibold hover:text-[#1e2a4a] transition-colors duration-300"
+              className="text-sm text-[#2a5298] font-semibold hover:text-[#1e2a4a] transition-colors duration-300"
             >
               Reset Filters
             </button>
@@ -447,7 +447,7 @@ const Blogss = () => {
               {/* Blog Content */}
               <div className="p-5">
                 {/* Blog Title */}
-                <h3 className="text-lg font-bold text-[#2d365b] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
+                <h3 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
                   {blog.title}
                 </h3>
 
@@ -483,7 +483,7 @@ const Blogss = () => {
                 <div className="flex space-x-3 pt-4 border-t border-gray-200">
                   <button
                     onClick={() => handleEdit(blog)}
-                    className="flex-1 bg-[#2d365b] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2d365b]"
+                    className="flex-1 bg-[#2a5298] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2a5298]"
                   >
                     <FontAwesomeIcon icon={faEdit} />
                     <span>Edit</span>
@@ -504,8 +504,8 @@ const Blogss = () => {
         {/* Empty State */}
         {filteredBlogs.length === 0 && (
           <div className="text-center py-16 bg-white rounded-xl shadow-md border border-gray-300">
-            <div className="text-6xl mb-6 text-[#2d365b]">📝</div>
-            <h3 className="text-2xl font-bold text-[#2d365b] mb-4">
+            <div className="text-6xl mb-6 text-[#2a5298]">📝</div>
+            <h3 className="text-2xl font-bold text-[#2a5298] mb-4">
               No Blogs Found
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
@@ -516,7 +516,7 @@ const Blogss = () => {
             </p>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-[#2d365b] text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-white hover:text-[#2d365b] border border-[#2d365b] transition-all duration-300"
+              className="bg-[#2a5298] text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-white hover:text-[#2a5298] border border-[#2a5298] transition-all duration-300"
             >
               Create Your First Blog
             </button>
@@ -530,11 +530,11 @@ const Blogss = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300"
             >
               <FontAwesomeIcon
                 icon={faChevronLeft}
-                className="text-[#2d365b]"
+                className="text-[#2a5298]"
               />
             </button>
 
@@ -547,8 +547,8 @@ const Blogss = () => {
                 }
                 className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 ${
                   pageNum === currentPage
-                    ? "bg-[#2d365b] text-white shadow-md border border-[#2d365b]"
-                    : "bg-white text-gray-700 shadow-md border border-gray-300 hover:border-[#2d365b] hover:bg-gray-50"
+                    ? "bg-[#2a5298] text-white shadow-md border border-[#2a5298]"
+                    : "bg-white text-gray-700 shadow-md border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
                 } ${
                   pageNum === "..."
                     ? "cursor-default hover:bg-white hover:border-gray-300"
@@ -566,11 +566,11 @@ const Blogss = () => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300"
             >
               <FontAwesomeIcon
                 icon={faChevronRight}
-                className="text-[#2d365b]"
+                className="text-[#2a5298]"
               />
             </button>
           </div>
@@ -590,7 +590,7 @@ const Blogss = () => {
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-300 p-6 max-w-md w-full mx-auto transform animate-scale-in">
-            <h3 className="text-xl font-bold text-[#2d365b] mb-4">
+            <h3 className="text-xl font-bold text-[#2a5298] mb-4">
               Confirm Deletion
             </h3>
             <p className="text-gray-600 mb-6">
@@ -626,7 +626,7 @@ const Blogss = () => {
           >
             <button
               onClick={() => setImageModal(null)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 bg-[#2d365b] rounded-full flex items-center justify-center hover:bg-[#1e2a4a] transition-all duration-300 shadow-lg border border-[#2d365b]"
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-[#2a5298] rounded-full flex items-center justify-center hover:bg-[#1e2a4a] transition-all duration-300 shadow-lg border border-[#2a5298]"
             >
               <FontAwesomeIcon icon={faXmark} className="text-white text-lg" />
             </button>
@@ -640,7 +640,7 @@ const Blogss = () => {
             </div>
 
             <div className="p-6 bg-white border-t border-gray-200">
-              <h3 className="text-2xl font-bold text-[#2d365b] mb-3">
+              <h3 className="text-2xl font-bold text-[#2a5298] mb-3">
                 {imageModal.title}
               </h3>
               <div className="space-y-4">
@@ -649,7 +649,7 @@ const Blogss = () => {
                 <div className="flex items-center text-gray-600">
                   <FontAwesomeIcon
                     icon={faCalendarAlt}
-                    className="mr-3 w-4 text-[#2d365b]"
+                    className="mr-3 w-4 text-[#2a5298]"
                   />
                   <span className="font-medium">
                     {new Date(imageModal.date).toLocaleDateString("en-US", {
@@ -662,7 +662,7 @@ const Blogss = () => {
                 <div className="flex items-center text-gray-600">
                   <FontAwesomeIcon
                     icon={faFolder}
-                    className="mr-3 w-4 text-[#2d365b]"
+                    className="mr-3 w-4 text-[#2a5298]"
                   />
                   <span>{imageModal.category}</span>
                 </div>

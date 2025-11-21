@@ -85,7 +85,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#2d365b] text-white p-6">
+        <div className="bg-[#2a5298] text-white p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">
               {event ? "Edit Event" : "Create New Event"}
@@ -104,7 +104,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Image Upload Section */}
             <div className="space-y-4">
-              <label className="block text-sm font-semibold text-[#2d365b]">
+              <label className="block text-sm font-semibold text-[#2a5298]">
                 Event Image
               </label>
               
@@ -126,11 +126,11 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
               ) : (
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-[#2d365b] transition-all duration-300 group"
+                  className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-[#2a5298] transition-all duration-300 group"
                 >
                   <FontAwesomeIcon
                     icon={faImage}
-                    className="text-4xl text-gray-400 mb-4 group-hover:text-[#2d365b]"
+                    className="text-4xl text-gray-400 mb-4 group-hover:text-[#2a5298]"
                   />
                   <p className="text-gray-600 mb-2">
                     Click to upload event image
@@ -163,7 +163,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
 
             {/* Event Title */}
             <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Event Title *
               </label>
               <input
@@ -172,7 +172,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                 value={formData.title}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 placeholder="Enter event title"
               />
             </div>
@@ -180,7 +180,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
             {/* Date and Time */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Date *
                 </label>
                 <div className="relative">
@@ -190,7 +190,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                     value={formData.date}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300 pl-12"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12"
                   />
                   <FontAwesomeIcon
                     icon={faCalendarAlt}
@@ -200,7 +200,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Time *
                 </label>
                 <input
@@ -209,7 +209,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                   value={formData.time}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                   placeholder="e.g., 10:00 AM - 2:00 PM"
                 />
               </div>
@@ -218,7 +218,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
             {/* Venue and Hospital */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Venue *
                 </label>
                 <div className="relative">
@@ -228,7 +228,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                     value={formData.venue}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300 pl-12"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12"
                     placeholder="Enter venue"
                   />
                   <FontAwesomeIcon
@@ -239,7 +239,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
               </div>
 
               {/* <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Hospital *
                 </label>
                 <div className="relative">
@@ -248,7 +248,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                     value={formData.hospital}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300 pl-12 appearance-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12 appearance-none"
                   >
                     <option value="Sunshine">Sunshine</option>
                     <option value="Manoday">Manoday</option>
@@ -265,7 +265,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
             {/* Participants and Description */}
             {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Expected Participants
                 </label>
                 <div className="relative">
@@ -274,7 +274,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                     name="participants"
                     value={formData.participants}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300 pl-12"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12"
                     placeholder="Enter number"
                   />
                   <FontAwesomeIcon
@@ -287,7 +287,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Description *
               </label>
               <textarea
@@ -296,7 +296,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                 onChange={handleInputChange}
                 required
                 rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 placeholder="Enter event description"
               />
             </div>
@@ -312,7 +312,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-[#2d365b] text-white py-3 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2d365b]"
+                className="flex-1 bg-[#2a5298] text-white py-3 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2a5298]"
               >
                 {event ? "Update Event" : "Create Event"}
               </button>

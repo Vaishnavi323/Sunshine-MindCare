@@ -48,8 +48,8 @@
 //             ${hasChildren ? "justify-between" : ""}
 //             ${
 //               isActive
-//                 ? "bg-gradient-to-r from-[#2d365b] to-[#1e2a4b] text-white shadow-lg border-[#f47058]"
-//                 : "text-[#2d365b] bg-white hover:bg-[#f8fafc] border-gray-300 hover:border-[#7883ae]"
+//                 ? "bg-gradient-to-r from-[#2a5298] to-[#1e2a4b] text-white shadow-lg border-[#f47058]"
+//                 : "text-[#2a5298] bg-white hover:bg-[#f8fafc] border-gray-300 hover:border-[#7883ae]"
 //             }
 //           `}
 //           style={{
@@ -70,8 +70,8 @@
 //                 w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 border
 //                 ${
 //                   isActive
-//                     ? "bg-white text-[#2d365b] shadow-md border-[#f47058]"
-//                     : "bg-white text-[#2d365b] border-[#2d365b]/30 hover:border-[#2d365b]"
+//                     ? "bg-white text-[#2a5298] shadow-md border-[#f47058]"
+//                     : "bg-white text-[#2a5298] border-[#2a5298]/30 hover:border-[#2a5298]"
 //                 }
 //               `}
 //             >
@@ -83,7 +83,7 @@
 
 //             <span
 //               className={`font-semibold text-sm tracking-wide transition-all duration-300
-//               ${isActive ? "text-white scale-105" : "text-[#2d365b]"}`}
+//               ${isActive ? "text-white scale-105" : "text-[#2a5298]"}`}
 //             >
 //               {item.title}
 //             </span>
@@ -143,7 +143,7 @@
 
 //             <button
 //               onClick={toggleSidebar}
-//               className="lg:hidden p-2 text-[#7883ae] hover:text-[#2d365b] hover:bg-gray-100 rounded-xl transition-all duration-300 border hover:border-[#7883ae]"
+//               className="lg:hidden p-2 text-[#7883ae] hover:text-[#2a5298] hover:bg-gray-100 rounded-xl transition-all duration-300 border hover:border-[#7883ae]"
 //             >
 //               <FontAwesomeIcon icon={faTimes} className="text-lg" />
 //             </button>
@@ -238,8 +238,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             ${hasChildren ? "justify-between" : ""}
             ${
               isActive
-                ? "bg-gradient-to-r from-[#2d365b] to-[#1e2a4b] text-white shadow-lg border-[#f47058]"
-                : "text-[#2d365b] bg-white hover:bg-[#f8fafc] border-gray-300 hover:border-[#7883ae]"
+                ? "bg-gradient-to-r from-[#2a5298] to-[#1e3c72] text-white shadow-lg border-[#f47058]"
+                : "text-[#2a5298] bg-white hover:bg-[#f8fafc] border-gray-300 hover:border-[#7883ae]"
             }
           `}
           style={{
@@ -260,8 +260,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 transition-all duration-300 ease-out-cubic border
                 group-hover:scale-110 group-hover:shadow-md
                 ${isActive
-                  ? "bg-white text-[#2d365b] shadow-md border-[#f47058]"
-                  : "bg-white text-[#2d365b] border-[#2d365b]/30 hover:border-[#2d365b]"
+                  ? "bg-white text-[#2a5298] shadow-md border-[#f47058]"
+                  : "bg-white text-[#2a5298] border-[#2a5298]/30 hover:border-[#2a5298]"
                 }
               `}
             >
@@ -277,7 +277,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               className={`
                 font-semibold text-sm tracking-wide
                 transition-all duration-300 ease-out-cubic
-                ${isActive ? "text-white scale-105" : "text-[#2d365b] group-hover:translate-x-1"}
+                ${isActive ? "text-white scale-105" : "text-[#2a5298] group-hover:translate-x-1"}
               `}
             >
               {item.title}
@@ -290,7 +290,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               icon={isOpen ? faChevronDown : faChevronRight}
               className={`
                 text-xs transition-all duration-300 ease-out-cubic ml-2
-                ${isActive ? "text-white" : "text-[#7883ae] group-hover:text-[#2d365b]"}
+                ${isActive ? "text-white" : "text-[#7883ae] group-hover:text-[#2a5298]"}
                 ${isOpen ? "rotate-180" : ""}
               `}
             />
@@ -344,7 +344,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               className={`
                 lg:hidden p-2 text-[#7883ae] rounded-xl
                 transition-all duration-300 ease-out-cubic
-                hover:text-[#2d365b] hover:bg-gray-100 hover:scale-110
+                hover:text-[#2a5298] hover:bg-gray-100 hover:scale-110
                 border-2 border-transparent hover:border-[#7883ae]
               `}
             >

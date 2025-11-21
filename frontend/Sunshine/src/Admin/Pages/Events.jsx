@@ -294,7 +294,7 @@ const Events = () => {
       <div className="max-w-7xl mx-auto mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="mb-6 lg:mb-0">
-            <h1 className="text-4xl font-bold text-[#2d365b] mb-3">
+            <h1 className="text-4xl font-bold text-[#2a5298] mb-3">
               Events Management
             </h1>
             <p className="text-gray-600 text-lg">
@@ -305,7 +305,7 @@ const Events = () => {
           {/* Add Event Button */}
           <button
             onClick={() => setShowForm(true)}
-            className="group relative bg-[#2d365b] text-white px-8 py-4 rounded-xl font-semibold shadow-md border border-[#2d365b] hover:bg-white hover:text-[#2d365b] transition-all duration-300 ease-in-out overflow-hidden"
+            className="group relative bg-[#2a5298] text-white px-8 py-4 rounded-xl font-semibold shadow-md border border-[#2a5298] hover:bg-white hover:text-[#2a5298] transition-all duration-300 ease-in-out overflow-hidden"
           >
             <div className="flex items-center space-x-3">
               <FontAwesomeIcon
@@ -323,12 +323,12 @@ const Events = () => {
           <div className="bg-white rounded-xl shadow-md border border-gray-300 p-6 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {events.length}
                 </div>
                 <div className="text-gray-600 font-medium">Total Events</div>
               </div>
-              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
+              <div className="w-16 h-16 bg-[#2a5298] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
                 <FontAwesomeIcon
                   icon={faCalendarAlt}
                   className="text-white text-2xl"
@@ -341,12 +341,12 @@ const Events = () => {
           <div className="bg-white rounded-xl shadow-md border border-gray-300 p-6 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {events.filter((e) => e.status === "upcoming").length}
                 </div>
                 <div className="text-gray-600 font-medium">Upcoming Events</div>
               </div>
-              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
+              <div className="w-16 h-16 bg-[#2a5298] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
                 <FontAwesomeIcon
                   icon={faMapMarkerAlt}
                   className="text-white text-2xl"
@@ -359,14 +359,14 @@ const Events = () => {
           <div className="bg-white rounded-xl shadow-md border border-gray-300 p-6 transform hover:scale-105 transition-all duration-300 ease-in-out group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {events.filter((e) => e.status === "completed").length}
                 </div>
                 <div className="text-gray-600 font-medium">
                   Completed Events
                 </div>
               </div>
-              <div className="w-16 h-16 bg-[#2d365b] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
+              <div className="w-16 h-16 bg-[#2a5298] rounded-xl flex items-center justify-center group-hover:rotate-360 transition-transform duration-300">
                 <FontAwesomeIcon
                   icon={faCalendarAlt}
                   className="text-white text-2xl"
@@ -406,7 +406,7 @@ const Events = () => {
               {/* Event Content */}
               <div className="p-5">
                 {/* Event Title */}
-                <h3 className="text-lg font-bold text-[#2d365b] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
+                <h3 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
                   {event.title}
                 </h3>
 
@@ -414,7 +414,7 @@ const Events = () => {
                   <div className="flex items-center text-gray-700">
                     <FontAwesomeIcon
                       icon={faCalendarAlt}
-                      className="text-[#2d365b] mr-3 w-4"
+                      className="text-[#2a5298] mr-3 w-4"
                     />
                     <span className="font-medium">
                       {new Date(event.date).toLocaleDateString("en-US", {
@@ -428,7 +428,7 @@ const Events = () => {
                   <div className="flex items-center text-gray-700">
                     <FontAwesomeIcon
                       icon={faMapMarkerAlt}
-                      className="text-[#2d365b] mr-3 w-4"
+                      className="text-[#2a5298] mr-3 w-4"
                     />
                     <span className="line-clamp-1">{event.venue}</span>
                   </div>
@@ -441,7 +441,7 @@ const Events = () => {
                       e.stopPropagation();
                       handleEdit(event);
                     }}
-                    className="flex-1 bg-[#2d365b] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2d365b]"
+                    className="flex-1 bg-[#2a5298] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2a5298]"
                   >
                     <FontAwesomeIcon icon={faEdit} />
                     <span>Edit</span>
@@ -465,8 +465,8 @@ const Events = () => {
         {/* Empty State */}
         {events.length === 0 && (
           <div className="text-center py-16 bg-white rounded-xl shadow-md border border-gray-300">
-            <div className="text-6xl mb-6 text-[#2d365b]">Calendar</div>
-            <h3 className="text-2xl font-bold text-[#2d365b] mb-4">
+            <div className="text-6xl mb-6 text-[#2a5298]">Calendar</div>
+            <h3 className="text-2xl font-bold text-[#2a5298] mb-4">
               No Events Found
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
@@ -475,7 +475,7 @@ const Events = () => {
             </p>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-[#2d365b] text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-white hover:text-[#2d365b] border border-[#2d365b] transition-all duration-300"
+              className="bg-[#2a5298] text-white px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-white hover:text-[#2a5298] border border-[#2a5298] transition-all duration-300"
             >
               Create Your First Event
             </button>
@@ -489,11 +489,11 @@ const Events = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300"
             >
               <FontAwesomeIcon
                 icon={faChevronLeft}
-                className="text-[#2d365b]"
+                className="text-[#2a5298]"
               />
             </button>
 
@@ -506,8 +506,8 @@ const Events = () => {
                 }
                 className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 ${
                   pageNum === currentPage
-                    ? "bg-[#2d365b] text-white shadow-md border border-[#2d365b]"
-                    : "bg-white text-gray-700 shadow-md border border-gray-300 hover:border-[#2d365b] hover:bg-gray-50"
+                    ? "bg-[#2a5298] text-white shadow-md border border-[#2a5298]"
+                    : "bg-white text-gray-700 shadow-md border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
                 } ${
                   pageNum === "..."
                     ? "cursor-default hover:bg-white hover:border-gray-300"
@@ -525,11 +525,11 @@ const Events = () => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300"
             >
               <FontAwesomeIcon
                 icon={faChevronRight}
-                className="text-[#2d365b]"
+                className="text-[#2a5298]"
               />
             </button>
           </div>
@@ -567,7 +567,7 @@ const Events = () => {
           >
             <button
               onClick={() => setImageModal(null)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 bg-[#2d365b] rounded-full flex items-center justify-center hover:bg-[#1e2a4a] transition-all duration-300 shadow-lg border border-[#2d365b]"
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-[#2a5298] rounded-full flex items-center justify-center hover:bg-[#1e2a4a] transition-all duration-300 shadow-lg border border-[#2a5298]"
             >
               <FontAwesomeIcon icon={faXmark} className="text-white text-lg" />
             </button>
@@ -581,14 +581,14 @@ const Events = () => {
             </div>
 
             <div className="p-6 bg-white border-t border-gray-200">
-              <h3 className="text-2xl font-bold text-[#2d365b] mb-3">
+              <h3 className="text-2xl font-bold text-[#2a5298] mb-3">
                 {imageModal.title}
               </h3>
               <div className="space-y-2">
                 <div className="flex items-center text-gray-600">
                   <FontAwesomeIcon
                     icon={faCalendarAlt}
-                    className="mr-3 w-4 text-[#2d365b]"
+                    className="mr-3 w-4 text-[#2a5298]"
                   />
                   <span className="font-medium">
                     {new Date(imageModal.date).toLocaleDateString("en-US", {
@@ -601,7 +601,7 @@ const Events = () => {
                 <div className="flex items-center text-gray-600">
                   <FontAwesomeIcon
                     icon={faMapMarkerAlt}
-                    className="mr-3 w-4 text-[#2d365b]"
+                    className="mr-3 w-4 text-[#2a5298]"
                   />
                   <span>{imageModal.venue}</span>
                 </div>

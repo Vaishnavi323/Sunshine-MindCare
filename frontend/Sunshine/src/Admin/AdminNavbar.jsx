@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useAuth } from "./Auth/AuthContext";
+import { useAuth } from "../Admin/Auth/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
@@ -70,7 +70,7 @@ const Navbar = ({ toggleSidebar }) => {
         <div className="flex items-center space-x-6">
           <button
             onClick={toggleSidebar}
-            className="lg:hidden p-3 rounded-lg text-gray-600 hover:text-[#2d365b] hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
+            className="lg:hidden p-3 rounded-lg text-gray-600 hover:text-[#2a5298] hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
           >
             <FontAwesomeIcon icon={faBars} className="text-lg" />
           </button>
@@ -91,7 +91,7 @@ const Navbar = ({ toggleSidebar }) => {
           <div className="relative" ref={notificationRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-3 rounded-lg text-gray-600 hover:text-[#2d365b] hover:bg-gray-100 transition-all duration-300 transform hover:scale-110 group"
+              className="relative p-3 rounded-lg text-gray-600 hover:text-[#2a5298] hover:bg-gray-100 transition-all duration-300 transform hover:scale-110 group"
             >
               <div className="relative">
                 <FontAwesomeIcon
@@ -101,7 +101,7 @@ const Navbar = ({ toggleSidebar }) => {
 
                 {/* Notification Count (slightly more right & up) */}
                 {unreadCount > 0 && (
-                  <span className="absolute -top-3 -right-3 w-7 h-7 bg-[#2d365b] text-white text-xs rounded-full flex items-center justify-center border-2 border-white font-bold shadow-lg transform transition-all duration-300 group-hover:scale-110">
+                  <span className="absolute -top-3 -right-3 w-7 h-7 bg-[#2a5298] text-white text-xs rounded-full flex items-center justify-center border-2 border-white font-bold shadow-lg transform transition-all duration-300 group-hover:scale-110">
                     {unreadCount}
                   </span>
                 )}
@@ -128,7 +128,7 @@ const Navbar = ({ toggleSidebar }) => {
                     {unreadCount > 0 && (
                       <button
                         onClick={markAllAsRead}
-                        className="text-sm text-[#2d365b] hover:text-[#1e2a4b] font-semibold px-3 py-1 rounded-lg bg-[#2d365b]/10 hover:bg-[#2d365b]/20 transition-all duration-300"
+                        className="text-sm text-[#2a5298] hover:text-[#1e2a4b] font-semibold px-3 py-1 rounded-lg bg-[#2a5298]/10 hover:bg-[#2a5298]/20 transition-all duration-300"
                       >
                         Mark all read
                       </button>
@@ -152,8 +152,8 @@ const Navbar = ({ toggleSidebar }) => {
                           <div
                             className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
                               notification.unread
-                                ? "bg-gradient-to-br from-[#2d365b] to-[#1e2a4b] text-white shadow-md"
-                                : "bg-gray-100 text-gray-600 group-hover:bg-[#2d365b] group-hover:text-white"
+                                ? "bg-gradient-to-br from-[#2a5298] to-[#1e2a4b] text-white shadow-md"
+                                : "bg-gray-100 text-gray-600 group-hover:bg-[#2a5298] group-hover:text-white"
                             }`}
                           >
                             <FontAwesomeIcon
@@ -165,7 +165,7 @@ const Navbar = ({ toggleSidebar }) => {
 
                         <div className="flex-1 min-w-0">
                           <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-bold text-gray-800 text-base leading-tight group-hover:text-[#2d365b] transition-colors">
+                            <h4 className="font-bold text-gray-800 text-base leading-tight group-hover:text-[#2a5298] transition-colors">
                               {notification.title}
                             </h4>
                             <div className="flex items-center space-x-2">
@@ -173,7 +173,7 @@ const Navbar = ({ toggleSidebar }) => {
                                 {notification.time}
                               </span>
                               {notification.unread && (
-                                <div className="w-2 h-2 bg-[#2d365b] rounded-full animate-pulse"></div>
+                                <div className="w-2 h-2 bg-[#2a5298] rounded-full animate-pulse"></div>
                               )}
                             </div>
                           </div>
@@ -195,16 +195,16 @@ const Navbar = ({ toggleSidebar }) => {
               onClick={() => setShowDropdown(!showDropdown)}
               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 group"
             >
-              <div className="w-10 h-10 bg-[#2d365b] rounded-lg flex items-center justify-center text-white font-bold shadow-lg">
+              <div className="w-10 h-10 bg-[#2a5298] rounded-lg flex items-center justify-center text-white font-bold shadow-lg">
                 <FontAwesomeIcon icon={faUserShield} className="text-lg" />
               </div>
-              <p className="hidden md:block text-sm font-semibold text-gray-800 group-hover:text-[#2d365b]">
+              <p className="hidden md:block text-sm font-semibold text-gray-800 group-hover:text-[#2a5298]">
                 Admin
               </p>
               <FontAwesomeIcon
                 icon={faChevronDown}
                 className={`w-3 h-3 text-gray-500 transition-all duration-300 ${
-                  showDropdown ? "rotate-180 text-[#2d365b]" : ""
+                  showDropdown ? "rotate-180 text-[#2a5298]" : ""
                 }`}
               />
             </button>
@@ -216,9 +216,9 @@ const Navbar = ({ toggleSidebar }) => {
                 {/* UPDATED — Compact Logout Button */}
                 <button
                   onClick={logout}
-                  className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-[#2d365b] transition-all duration-300 group"
+                  className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-[#2a5298] transition-all duration-300 group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mr-3 group-hover:bg-[#2d365b] group-hover:text-white transition-all duration-300">
+                  <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mr-3 group-hover:bg-[#2a5298] group-hover:text-white transition-all duration-300">
                     <FontAwesomeIcon icon={faSignOutAlt} className="text-md" />
                   </div>
 
@@ -402,7 +402,7 @@ export default Navbar;
 //         <div className="flex items-center space-x-6">
 //           <button
 //             onClick={toggleSidebar}
-//             className="lg:hidden p-3 rounded-lg text-gray-600 hover:text-[#2d365b] hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
+//             className="lg:hidden p-3 rounded-lg text-gray-600 hover:text-[#2a5298] hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
 //           >
 //             <FontAwesomeIcon icon={faBars} className="text-lg" />
 //           </button>
@@ -424,7 +424,7 @@ export default Navbar;
 //           <div className="relative" ref={notificationRef}>
 //             <button
 //               onClick={() => setShowNotifications(!showNotifications)}
-//               className="relative p-3 rounded-lg text-gray-600 hover:text-[#2d365b] hover:bg-gray-100 transition-all duration-300 transform hover:scale-110 group"
+//               className="relative p-3 rounded-lg text-gray-600 hover:text-[#2a5298] hover:bg-gray-100 transition-all duration-300 transform hover:scale-110 group"
 //             >
 //               <div className="relative">
 //                 <FontAwesomeIcon
@@ -432,7 +432,7 @@ export default Navbar;
 //                   className="text-2xl transition-all duration-300 group-hover:animate-bell-ring"
 //                 />
 //                 {unreadCount > 0 && (
-//                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#2d365b] text-white text-xs rounded-full flex items-center justify-center border border-white font-bold transform transition-all duration-300 group-hover:scale-110">
+//                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#2a5298] text-white text-xs rounded-full flex items-center justify-center border border-white font-bold transform transition-all duration-300 group-hover:scale-110">
 //                     {unreadCount}
 //                   </span>
 //                 )}
@@ -459,7 +459,7 @@ export default Navbar;
 //                     {unreadCount > 0 && (
 //                       <button
 //                         onClick={markAllAsRead}
-//                         className="text-sm text-white bg-[#2d365b] hover:bg-[#1e2a4b] font-semibold px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
+//                         className="text-sm text-white bg-[#2a5298] hover:bg-[#1e2a4b] font-semibold px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
 //                       >
 //                         Mark all read
 //                       </button>
@@ -484,8 +484,8 @@ export default Navbar;
 //                         <div className="flex-shrink-0">
 //                           <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg ${
 //                             notification.unread 
-//                               ? "bg-gradient-to-br from-[#2d365b] to-[#1e2a4b] text-white shadow-md" 
-//                               : "bg-gray-100 text-gray-600 group-hover:bg-[#2d365b] group-hover:text-white"
+//                               ? "bg-gradient-to-br from-[#2a5298] to-[#1e2a4b] text-white shadow-md" 
+//                               : "bg-gray-100 text-gray-600 group-hover:bg-[#2a5298] group-hover:text-white"
 //                           }`}>
 //                             <FontAwesomeIcon
 //                               icon={notification.icon}
@@ -497,7 +497,7 @@ export default Navbar;
 //                         {/* Notification Content */}
 //                         <div className="flex-1 min-w-0">
 //                           <div className="flex justify-between items-start mb-2">
-//                             <h4 className="font-bold text-gray-800 text-base leading-tight group-hover:text-[#2d365b] transition-colors">
+//                             <h4 className="font-bold text-gray-800 text-base leading-tight group-hover:text-[#2a5298] transition-colors">
 //                               {notification.title}
 //                             </h4>
 //                             <div className="flex items-center space-x-2">
@@ -505,7 +505,7 @@ export default Navbar;
 //                                 {notification.time}
 //                               </span>
 //                               {notification.unread && (
-//                                 <div className="w-2 h-2 bg-[#2d365b] rounded-full animate-pulse"></div>
+//                                 <div className="w-2 h-2 bg-[#2a5298] rounded-full animate-pulse"></div>
 //                               )}
 //                             </div>
 //                           </div>
@@ -527,18 +527,18 @@ export default Navbar;
 //               onClick={() => setShowDropdown(!showDropdown)}
 //               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 group"
 //             >
-//               <div className="w-10 h-10 bg-[#2d365b] rounded-lg flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
+//               <div className="w-10 h-10 bg-[#2a5298] rounded-lg flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
 //                 <FontAwesomeIcon icon={faUserShield} className="text-lg" />
 //               </div>
 //               <div className="hidden md:block text-left">
-//                 <p className="text-sm font-semibold text-gray-800 group-hover:text-[#2d365b] transition-colors">
+//                 <p className="text-sm font-semibold text-gray-800 group-hover:text-[#2a5298] transition-colors">
 //                   Admin
 //                 </p>
 //               </div>
 //               <FontAwesomeIcon
 //                 icon={faChevronDown}
 //                 className={`w-3 h-3 text-gray-500 transition-all duration-300 transform ${
-//                   showDropdown ? "rotate-180 text-[#2d365b]" : "group-hover:text-[#2d365b]"
+//                   showDropdown ? "rotate-180 text-[#2a5298]" : "group-hover:text-[#2a5298]"
 //                 }`}
 //               />
 //             </button>
@@ -551,9 +551,9 @@ export default Navbar;
                 
 //                 <button
 //                   onClick={logout}
-//                   className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-[#2d365b] transition-all duration-300 group transform hover:translate-x-1"
+//                   className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-[#2a5298] transition-all duration-300 group transform hover:translate-x-1"
 //                 >
-//                   <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mr-3 group-hover:bg-[#2d365b] group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+//                   <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mr-3 group-hover:bg-[#2a5298] group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
 //                     <FontAwesomeIcon icon={faSignOutAlt} className="text-sm" />
 //                   </div>
 //                   <span className="font-semibold text-sm">Logout</span>

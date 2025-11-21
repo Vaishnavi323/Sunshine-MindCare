@@ -121,9 +121,9 @@ const CustomNavbar = () => {
                     height: 66px;
                     width: 140px;
                 }
-                 
+                
 
-                   
+            
                 .nav-link-custom {
                     color: #ffffff !important;
                     font-size: 0.95rem;

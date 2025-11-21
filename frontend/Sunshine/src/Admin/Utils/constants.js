@@ -50,13 +50,13 @@ export const APP_CONFIG = {
     sunshine: "https://www.instagram.com/sunshinecounsellingnashik/",
   },
   theme: {
-    primary: "#2d365b", // Dark Blue
+    primary: "#1e3c72", // Dark Blue
     secondary: "#f47058", // Coral Orange
-    accent: "#7883ae", // Light Blue
+    accent: "#2a5298", // Light Blue
     background: "#f8fafc",
     text: {
-      primary: "#2d365b",
-      secondary: "#64748b",
+      primary: "#1e3c72",
+      secondary: "#2a5298",
       light: "#94a3b8",
     },
   },

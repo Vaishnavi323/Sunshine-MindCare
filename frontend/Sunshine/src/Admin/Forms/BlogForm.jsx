@@ -113,7 +113,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                 className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden"
             >
                 {/* Header */}
-                <div className="bg-[#2d365b] text-white p-6">
+                <div className="bg-[#2a5298] text-white p-6">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold">
                             {blog ? "Edit Blog" : "Create New Blog"}
@@ -132,7 +132,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Image Upload Section */}
                         <div className="space-y-4">
-                            <label className="block text-sm font-semibold text-[#2d365b]">
+                            <label className="block text-sm font-semibold text-[#2a5298]">
                                 Blog Image *
                             </label>
 
@@ -154,11 +154,11 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                             ) : (
                                 <div
                                     onClick={triggerFileInput}
-                                    className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-[#2d365b] transition-all duration-300 group"
+                                    className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-[#2a5298] transition-all duration-300 group"
                                 >
                                     <FontAwesomeIcon
                                         icon={faImage}
-                                        className="text-4xl text-gray-400 mb-4 group-hover:text-[#2d365b]"
+                                        className="text-4xl text-gray-400 mb-4 group-hover:text-[#2a5298]"
                                     />
                                     <p className="text-gray-600 mb-2">
                                         Click to upload blog image
@@ -181,7 +181,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
 
                         {/* Blog Title */}
                         <div>
-                            <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                            <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                 Blog Title *
                             </label>
                             <input
@@ -190,7 +190,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                                 value={formData.title}
                                 onChange={handleInputChange}
                                 required
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 placeholder="Enter blog title"
                             />
                         </div>
@@ -198,7 +198,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                         {/* Category and Status */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Category *
                                 </label>
                                 <div className="relative">
@@ -207,7 +207,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                                         value={formData.category}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300 pl-12 appearance-none"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12 appearance-none"
                                     >
                                         {categories.map(category => (
                                             <option key={category} value={category}>{category}</option>
@@ -221,7 +221,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Status *
                                 </label>
                                 <div className="relative">
@@ -230,7 +230,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                                         value={formData.status}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300 pl-12 appearance-none"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12 appearance-none"
                                     >
                                         <option value="draft">Draft</option>
                                         <option value="published">Published</option>
@@ -246,7 +246,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
 
                         {/* Description */}
                         <div>
-                            <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                            <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                 Description *
                             </label>
                             <textarea
@@ -255,7 +255,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                                 onChange={handleInputChange}
                                 required
                                 rows="6"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 placeholder="Write your blog content here..."
                             />
                             <div className="text-sm text-gray-500 mt-2">
@@ -274,7 +274,7 @@ const BlogForm = ({ blog, onSubmit, onCancel }) => {
                             </button>
                             <button
                                 type="submit"
-                                className="flex-1 bg-[#2d365b] text-white py-3 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2d365b]"
+                                className="flex-1 bg-[#2a5298] text-white py-3 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2a5298]"
                             >
                                 {blog ? "Update Blog" : "Create Blog"}
                             </button>

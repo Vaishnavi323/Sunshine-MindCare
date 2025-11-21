@@ -437,7 +437,7 @@ const AdminAppoint = () => {
             <div className="max-w-7xl mx-auto mb-8 animate-fade-in">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
                     <div className="mb-6 lg:mb-0">
-                        <h1 className="text-4xl font-bold text-[#2d365b] mb-3 bg-gradient-to-r from-[#2d365b] to-[#4f46e5] bg-clip-text text-transparent">
+                        <h1 className="text-4xl font-bold text-[#2a5298] mb-3 bg-gradient-to-r from-[#2a5298] to-[#4f46e5] bg-clip-text text-transparent">
                             Appointment Management
                         </h1>
                         <p className="text-gray-600 text-lg">
@@ -448,7 +448,7 @@ const AdminAppoint = () => {
                     {/* Add Appointment Button */}
                     {/* <button
                         onClick={() => setShowForm(true)}
-                        className="group relative bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-500 ease-out overflow-hidden hover-lift"
+                        className="group relative bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-500 ease-out overflow-hidden hover-lift"
                     >
                         <div className="flex items-center space-x-3 relative z-10">
                             <FontAwesomeIcon
@@ -457,7 +457,7 @@ const AdminAppoint = () => {
                             />
                             <span className="text-lg">Add New Appointment</span>
                         </div>
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] to-[#2d365b] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] to-[#2a5298] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </button> */}
                 </div>
 
@@ -467,7 +467,7 @@ const AdminAppoint = () => {
                     <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                                     {appointments.length}
                                 </div>
                                 <div className="text-gray-600 font-medium">Total Appointments</div>
@@ -541,7 +541,7 @@ const AdminAppoint = () => {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {/* Search Input */}
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                            <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                 Search Appointments
                             </label>
                             <div className="relative">
@@ -550,7 +550,7 @@ const AdminAppoint = () => {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     placeholder="Search by patient, email, or doctor..."
-                                    className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 />
                                 {/* <FontAwesomeIcon
                                     icon={faSearch}
@@ -561,13 +561,13 @@ const AdminAppoint = () => {
 
                         {/* Status Filter */}
                         <div>
-                            <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                            <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                 Status
                             </label>
                             <select
                                 value={selectedStatus}
                                 onChange={(e) => setSelectedStatus(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                             >
                                 {statuses.map(status => (
                                     <option key={status} value={status}>
@@ -579,14 +579,14 @@ const AdminAppoint = () => {
 
                         {/* Date Filter */}
                         <div>
-                            <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                            <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                 Date
                             </label>
                             <input
                                 type="date"
                                 value={selectedDate}
                                 onChange={(e) => setSelectedDate(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                             />
                         </div>
                     </div>
@@ -598,7 +598,7 @@ const AdminAppoint = () => {
                         </div>
                         <button
                             onClick={handleResetFilters}
-                            className="text-sm text-[#2d365b] font-semibold hover:text-[#1e2a4a] transition-colors duration-300 flex items-center space-x-2"
+                            className="text-sm text-[#2a5298] font-semibold hover:text-[#1e2a4a] transition-colors duration-300 flex items-center space-x-2"
                         >
                             <FontAwesomeIcon icon={faFilter} />
                             <span>Reset Filters</span>
@@ -615,7 +615,7 @@ const AdminAppoint = () => {
                             style={{ animationDelay: `${index * 0.1}s` }}
                         >
                             {/* Appointment Header */}
-                            <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] p-4 text-white">
+                            <div className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] p-4 text-white">
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center space-x-2">
                                         <FontAwesomeIcon icon={getStatusIcon(appointment.status)} />
@@ -646,7 +646,7 @@ const AdminAppoint = () => {
                                 {/* Appointment Details */}
                                 <div className="space-y-3 mb-4">
                                     <div className="flex items-center text-gray-700">
-                                        <FontAwesomeIcon icon={faCalendarAlt} className="text-[#2d365b] mr-3 w-4" />
+                                        <FontAwesomeIcon icon={faCalendarAlt} className="text-[#2a5298] mr-3 w-4" />
                                         <span className="font-medium">
                                             {new Date(appointment.date).toLocaleDateString("en-US", {
                                                 weekday: 'short',
@@ -658,12 +658,12 @@ const AdminAppoint = () => {
                                     </div>
 
                                     <div className="flex items-center text-gray-700">
-                                        <FontAwesomeIcon icon={faClock} className="text-[#2d365b] mr-3 w-4" />
+                                        <FontAwesomeIcon icon={faClock} className="text-[#2a5298] mr-3 w-4" />
                                         <span>{appointment.time} • {appointment.duration}</span>
                                     </div>
 
                                     <div className="flex items-center text-gray-700">
-                                        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2d365b] mr-3 w-4" />
+                                        <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2a5298] mr-3 w-4" />
                                         <span className="text-sm truncate">{appointment.address}</span>
                                     </div>
                                 </div>
@@ -700,7 +700,7 @@ const AdminAppoint = () => {
                                     </button>
                                     <button
                                         onClick={() => handleEdit(appointment)}
-                                        className="flex-1 bg-[#2d365b] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2d365b]"
+                                        className="flex-1 bg-[#2a5298] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2a5298]"
                                     >
                                         <FontAwesomeIcon icon={faEdit} />
                                         <span>Edit</span>
@@ -749,8 +749,8 @@ const AdminAppoint = () => {
                 {/* Empty State */}
                 {filteredAppointments.length === 0 && (
                     <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-200 animate-scale-in">
-                        <div className="text-6xl mb-6 text-[#2d365b]">📅</div>
-                        <h3 className="text-2xl font-bold text-[#2d365b] mb-4">
+                        <div className="text-6xl mb-6 text-[#2a5298]">📅</div>
+                        <h3 className="text-2xl font-bold text-[#2a5298] mb-4">
                             No Appointments Found
                         </h3>
                         <p className="text-gray-600 mb-8 max-w-md mx-auto">
@@ -761,7 +761,7 @@ const AdminAppoint = () => {
                         </p>
                         <button
                             onClick={() => setShowForm(true)}
-                            className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
+                            className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
                         >
                             Schedule New Appointment
                         </button>
@@ -775,11 +775,11 @@ const AdminAppoint = () => {
                         <button
                             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1}
-                            className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300 hover-lift"
+                            className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300 hover-lift"
                         >
                             <FontAwesomeIcon
                                 icon={faChevronLeft}
-                                className="text-[#2d365b]"
+                                className="text-[#2a5298]"
                             />
                         </button>
 
@@ -791,8 +791,8 @@ const AdminAppoint = () => {
                                     typeof pageNum === "number" && setCurrentPage(pageNum)
                                 }
                                 className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 hover-lift ${pageNum === currentPage
-                                        ? "bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white shadow-lg border border-[#2d365b]"
-                                        : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2d365b] hover:bg-gray-50"
+                                        ? "bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white shadow-lg border border-[#2a5298]"
+                                        : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
                                     } ${pageNum === "..."
                                         ? "cursor-default hover:bg-white hover:border-gray-300 hover-lift-none"
                                         : ""
@@ -809,11 +809,11 @@ const AdminAppoint = () => {
                                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                             }
                             disabled={currentPage === totalPages}
-                            className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300 hover-lift"
+                            className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300 hover-lift"
                         >
                             <FontAwesomeIcon
                                 icon={faChevronRight}
-                                className="text-[#2d365b]"
+                                className="text-[#2a5298]"
                             />
                         </button>
                     </div>
@@ -833,7 +833,7 @@ const AdminAppoint = () => {
             {deleteConfirm && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl border border-gray-300 p-6 max-w-md w-full mx-auto animate-scale-in">
-                        <h3 className="text-xl font-bold text-[#2d365b] mb-4">
+                        <h3 className="text-xl font-bold text-[#2a5298] mb-4">
                             Confirm Deletion
                         </h3>
                         <p className="text-gray-600 mb-6">
@@ -938,7 +938,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
             <div className="relative w-full max-w-2xl max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
+                <div className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white p-6">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold">
                             {appointment ? "Edit Appointment" : "Create New Appointment"}
@@ -958,7 +958,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                         {/* Patient Information */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Patient Name *
                                 </label>
                                 <input
@@ -967,13 +967,13 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.patientName}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                     placeholder="Enter patient name"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Patient Email *
                                 </label>
                                 <input
@@ -982,7 +982,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.patientEmail}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                     placeholder="Enter patient email"
                                 />
                             </div>
@@ -990,7 +990,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Patient Phone *
                                 </label>
                                 <input
@@ -999,13 +999,13 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.patientPhone}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                     placeholder="Enter patient phone"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Address *
                                 </label>
                                 <select
@@ -1013,7 +1013,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.address}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 >
                                     {addresses.map(address => (
                                         <option key={address} value={address}>{address}</option>
@@ -1025,7 +1025,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                         {/* Doctor Information */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Doctor *
                                 </label>
                                 <select
@@ -1033,7 +1033,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.doctorName}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 >
                                     {doctors.map(doctor => (
                                         <option key={doctor.name} value={doctor.name}>
@@ -1044,7 +1044,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Appointment Type *
                                 </label>
                                 <select
@@ -1052,7 +1052,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.type}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 >
                                     {appointmentTypes.map(type => (
                                         <option key={type} value={type}>{type}</option>
@@ -1064,7 +1064,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                         {/* Date and Time */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Date *
                                 </label>
                                 <input
@@ -1073,12 +1073,12 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.date}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Time *
                                 </label>
                                 <input
@@ -1087,12 +1087,12 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.time}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Duration *
                                 </label>
                                 <select
@@ -1100,7 +1100,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.duration}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 >
                                     {durations.map(duration => (
                                         <option key={duration} value={duration}>{duration}</option>
@@ -1112,7 +1112,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                         {/* Status and Notes */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                     Status *
                                 </label>
                                 <select
@@ -1120,7 +1120,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                     value={formData.status}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 >
                                     <option value="pending">Pending</option>
                                     <option value="confirmed">Confirmed</option>
@@ -1132,7 +1132,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
 
                         {/* Notes */}
                         <div>
-                            <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                            <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                                 Notes
                             </label>
                             <textarea
@@ -1140,7 +1140,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                                 value={formData.notes}
                                 onChange={handleInputChange}
                                 rows="3"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                                 placeholder="Additional notes about the appointment..."
                             />
                         </div>
@@ -1156,7 +1156,7 @@ const AppointmentForm = ({ appointment, onSubmit, onCancel }) => {
                             </button>
                             <button
                                 type="submit"
-                                className="flex-1 bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 border border-[#2d365b]"
+                                className="flex-1 bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 border border-[#2a5298]"
                             >
                                 {appointment ? "Update Appointment" : "Create Appointment"}
                             </button>
@@ -1174,7 +1174,7 @@ const ViewAppointmentModal = ({ appointment, onClose }) => {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
             <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
+                <div className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white p-6">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold">Appointment Details</h2>
                         <button
@@ -1191,26 +1191,26 @@ const ViewAppointmentModal = ({ appointment, onClose }) => {
                     {/* Patient Information */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
-                            <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                            <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                                 Patient Information
                             </h3>
                             <div className="space-y-3">
                                 <div className="flex items-center space-x-3">
-                                    <FontAwesomeIcon icon={faUser} className="text-[#2d365b] w-4" />
+                                    <FontAwesomeIcon icon={faUser} className="text-[#2a5298] w-4" />
                                     <div>
                                         <div className="font-semibold">{appointment.patientName}</div>
                                         <div className="text-sm text-gray-600">Patient</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                    <FontAwesomeIcon icon={faEnvelope} className="text-[#2d365b] w-4" />
+                                    <FontAwesomeIcon icon={faEnvelope} className="text-[#2a5298] w-4" />
                                     <div>
                                         <div className="font-medium">{appointment.patientEmail}</div>
                                         <div className="text-sm text-gray-600">Email</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                    <FontAwesomeIcon icon={faPhone} className="text-[#2d365b] w-4" />
+                                    <FontAwesomeIcon icon={faPhone} className="text-[#2a5298] w-4" />
                                     <div>
                                         <div className="font-medium">{appointment.patientPhone}</div>
                                         <div className="text-sm text-gray-600">Phone</div>
@@ -1220,26 +1220,26 @@ const ViewAppointmentModal = ({ appointment, onClose }) => {
                         </div>
 
                         <div className="space-y-4">
-                            <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                            <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                                 Doctor Information
                             </h3>
                             <div className="space-y-3">
                                 <div className="flex items-center space-x-3">
-                                    <FontAwesomeIcon icon={faUserMd} className="text-[#2d365b] w-4" />
+                                    <FontAwesomeIcon icon={faUserMd} className="text-[#2a5298] w-4" />
                                     <div>
                                         <div className="font-semibold">{appointment.doctorName}</div>
                                         <div className="text-sm text-gray-600">Doctor</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                    <FontAwesomeIcon icon={faStethoscope} className="text-[#2d365b] w-4" />
+                                    <FontAwesomeIcon icon={faStethoscope} className="text-[#2a5298] w-4" />
                                     <div>
                                         <div className="font-medium">{appointment.doctorSpecialization}</div>
                                         <div className="text-sm text-gray-600">Specialization</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2d365b] w-4" />
+                                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2a5298] w-4" />
                                     <div>
                                         <div className="font-medium">{appointment.address}</div>
                                         <div className="text-sm text-gray-600">Location</div>
@@ -1251,7 +1251,7 @@ const ViewAppointmentModal = ({ appointment, onClose }) => {
 
                     {/* Appointment Details */}
                     <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                        <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                             Appointment Details
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1303,7 +1303,7 @@ const ViewAppointmentModal = ({ appointment, onClose }) => {
                     {/* Notes */}
                     {appointment.notes && (
                         <div className="space-y-4">
-                            <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                            <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                                 Additional Notes
                             </h3>
                             <div className="p-4 bg-yellow-50 rounded-xl border border-yellow-200">

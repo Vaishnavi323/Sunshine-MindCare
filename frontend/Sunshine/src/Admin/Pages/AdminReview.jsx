@@ -272,7 +272,7 @@ const Reviews = () => {
       <div className="max-w-7xl mx-auto mb-8 animate-fade-in">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="mb-6 lg:mb-0">
-            <h1 className="text-4xl font-bold text-[#2d365b] mb-3 bg-gradient-to-r from-[#2d365b] to-[#4f46e5] bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-[#2a5298] mb-3 bg-gradient-to-r from-[#2a5298] to-[#4f46e5] bg-clip-text text-transparent">
               Review Management
             </h1>
             <p className="text-gray-600 text-lg">
@@ -287,7 +287,7 @@ const Reviews = () => {
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {stats.total}
                 </div>
                 <div className="text-gray-600 font-medium">Total Reviews</div>
@@ -343,7 +343,7 @@ const Reviews = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search Input */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Search Reviews
               </label>
               <div className="relative">
@@ -352,7 +352,7 @@ const Reviews = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search by patient, comment, or doctor..."
-                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 />
 
               </div>
@@ -360,13 +360,13 @@ const Reviews = () => {
 
             {/* Rating Filter */}
             <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Rating
               </label>
               <select
                 value={selectedRating}
                 onChange={(e) => setSelectedRating(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
               >
                 {ratings.map(rating => (
                   <option key={rating} value={rating}>
@@ -387,7 +387,7 @@ const Reviews = () => {
             </div>
             <button
               onClick={handleResetFilters}
-              className="text-sm text-[#2d365b] font-semibold hover:text-[#1e2a4a] transition-colors duration-300 flex items-center space-x-2"
+              className="text-sm text-[#2a5298] font-semibold hover:text-[#1e2a4a] transition-colors duration-300 flex items-center space-x-2"
             >
               <FontAwesomeIcon icon={faFilter} />
               <span>Reset Filters</span>
@@ -404,7 +404,7 @@ const Reviews = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Review Header */}
-              <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] p-3 text-white">
+              <div className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] p-3 text-white">
                 {/* <div className="flex items-center justify-between mb-3">
                   {review.verified && (
                     <span className="px-2 py-1 bg-green-500 rounded-full text-xs font-semibold">
@@ -440,11 +440,11 @@ const Reviews = () => {
                 {/* Doctor and Service */}
                 {/* <div className="space-y-2 mb-4">
                     <div className="flex items-center text-gray-700">
-                      <FontAwesomeIcon icon={faUserMd} className="text-[#2d365b] mr-3 w-4" />
+                      <FontAwesomeIcon icon={faUserMd} className="text-[#2a5298] mr-3 w-4" />
                       <span className="font-medium">{review.doctor}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
-                      <FontAwesomeIcon icon={faStethoscope} className="text-[#2d365b] mr-3 w-4" />
+                      <FontAwesomeIcon icon={faStethoscope} className="text-[#2a5298] mr-3 w-4" />
                       <span>{review.service}</span>
                     </div>
                   </div> */}
@@ -496,8 +496,8 @@ const Reviews = () => {
         {/* Empty State */}
         {filteredReviews.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-200 animate-scale-in">
-            <div className="text-6xl mb-6 text-[#2d365b]">💬</div>
-            <h3 className="text-2xl font-bold text-[#2d365b] mb-4">
+            <div className="text-6xl mb-6 text-[#2a5298]">💬</div>
+            <h3 className="text-2xl font-bold text-[#2a5298] mb-4">
               No Reviews Found
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
@@ -516,11 +516,11 @@ const Reviews = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300 hover-lift"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300 hover-lift"
             >
               <FontAwesomeIcon
                 icon={faChevronLeft}
-                className="text-[#2d365b]"
+                className="text-[#2a5298]"
               />
             </button>
 
@@ -532,8 +532,8 @@ const Reviews = () => {
                   typeof pageNum === "number" && setCurrentPage(pageNum)
                 }
                 className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 hover-lift ${pageNum === currentPage
-                    ? "bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white shadow-lg border border-[#2d365b]"
-                    : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2d365b] hover:bg-gray-50"
+                    ? "bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white shadow-lg border border-[#2a5298]"
+                    : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
                   } ${pageNum === "..."
                     ? "cursor-default hover:bg-white hover:border-gray-300 hover-lift-none"
                     : ""
@@ -550,11 +550,11 @@ const Reviews = () => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300 hover-lift"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300 hover-lift"
             >
               <FontAwesomeIcon
                 icon={faChevronRight}
-                className="text-[#2d365b]"
+                className="text-[#2a5298]"
               />
             </button>
           </div>
@@ -565,7 +565,7 @@ const Reviews = () => {
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-300 p-6 max-w-md w-full mx-auto animate-scale-in">
-            <h3 className="text-xl font-bold text-[#2d365b] mb-4">
+            <h3 className="text-xl font-bold text-[#2a5298] mb-4">
               Confirm Deletion
             </h3>
             <p className="text-gray-600 mb-6">

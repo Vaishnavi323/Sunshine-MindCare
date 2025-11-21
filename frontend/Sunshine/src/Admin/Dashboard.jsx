@@ -90,7 +90,7 @@ const dashboardStyles = {
     cursor: "pointer",
   },
   statCardHover: {
-    border: "3px solid #2d365b",
+    border: "3px solid #2a5298",
     transform: "translateY(-8px) scale(1.02)",
     boxShadow: "0 25px 50px rgba(45, 54, 91, 0.15)",
   },
@@ -100,7 +100,7 @@ const dashboardStyles = {
     left: "-100%",
     width: "100%",
     height: "100%",
-    background: "linear-gradient(90deg, #2d365b 0%, #1e2a4b 100%)",
+    background: "linear-gradient(135deg, #2a5298 0%, #1e3c72 100%)",
     transition: "left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
     zIndex: 1,
   },
@@ -123,7 +123,7 @@ const dashboardStyles = {
       "linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.2) 50%)",
   },
   iconContainer: {
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    background: "linear-gradient(135deg, #2a5298 0%, #1e3c72 100%)",
     borderRadius: "18px",
     width: "70px",
     height: "70px",
@@ -139,7 +139,7 @@ const dashboardStyles = {
   },
   iconContainerHover: {
     background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-    color: "#2d365b",
+    color: "#2a5298",
     transform: "scale(1.1) rotate(5deg)",
   },
   dataCard: {
@@ -474,7 +474,7 @@ const StatsCard = ({ title, value, icon, delay = 0 }) => {
           >
             <h3
               className={`text-3xl font-bold mb-2 transition-all duration-500 ${
-                isHovered ? "text-white transform scale-105" : "text-[#2d365b]"
+                isHovered ? "text-white transform scale-105" : "text-[#2a5298]"
               }`}
             >
               {hasAnimated ? formatValue(animatedValue) : "0"}
@@ -531,12 +531,12 @@ const DataItem = ({ icon, title, value, time, color, delay = 0 }) => {
       <div className="flex-1">
         <p
           className={`text-sm font-semibold transition-colors duration-400 ${
-            isHovered ? "text-[#667eea]" : "text-[#2d365b]"
+            isHovered ? "text-[#667eea]" : "text-[#2a5298]"
           }`}
         >
           {title}
         </p>
-        <p className="text-lg font-bold text-[#2d365b] mt-1 transition-all duration-400">
+        <p className="text-lg font-bold text-[#2a5298] mt-1 transition-all duration-400">
           {value}
         </p>
         <p className="text-xs text-[#7883ae] mt-1 transition-colors duration-400">
@@ -681,7 +681,7 @@ const Dashboard = () => {
               >
                 💙
               </div>
-              <h1 className="text-4xl font-bold text-[#2d365b] mb-4 animate-text-wave">
+              <h1 className="text-4xl font-bold text-[#2a5298] mb-4 animate-text-wave">
                 Sunshine Mindcare 
               </h1>
               <p className="text-xl text-[#7883ae]">
@@ -766,7 +766,7 @@ const Dashboard = () => {
                 animation: "slideInFromLeft 0.8s ease-out 0.4s both",
               }}
             >
-              <h3 className="text-xl font-semibold text-[#2d365b] mb-4 flex items-center">
+              <h3 className="text-xl font-semibold text-[#2a5298] mb-4 flex items-center">
                 <FontAwesomeIcon
                   icon={faCalendarAlt}
                   className="mr-3 text-[#667eea] animate-text-wave"
@@ -787,7 +787,7 @@ const Dashboard = () => {
                 animation: "fadeInUp 0.8s ease-out 0.5s both",
               }}
             >
-              <h3 className="text-xl font-semibold text-[#2d365b] mb-4 flex items-center">
+              <h3 className="text-xl font-semibold text-[#2a5298] mb-4 flex items-center">
                 <FontAwesomeIcon
                   icon={faUserMd}
                   className="mr-3 text-[#3b82f6] animate-text-wave"
@@ -808,7 +808,7 @@ const Dashboard = () => {
                 animation: "slideInFromRight 0.8s ease-out 0.6s both",
               }}
             >
-              <h3 className="text-xl font-semibold text-[#2d365b] mb-4 flex items-center">
+              <h3 className="text-xl font-semibold text-[#2a5298] mb-4 flex items-center">
                 <FontAwesomeIcon
                   icon={faStethoscope}
                   className="mr-3 text-[#f59e0b] animate-text-wave"

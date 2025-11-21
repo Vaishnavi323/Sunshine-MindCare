@@ -406,7 +406,7 @@ const Jobs = () => {
       <div className="max-w-7xl mx-auto mb-8 animate-fade-in">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="mb-6 lg:mb-0">
-            <h1 className="text-4xl font-bold text-[#2d365b] mb-3 bg-gradient-to-r from-[#2d365b] to-[#4f46e5] bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-[#2a5298] mb-3 bg-gradient-to-r from-[#2a5298] to-[#4f46e5] bg-clip-text text-transparent">
               Jobs Management
             </h1>
             <p className="text-gray-600 text-lg">
@@ -417,7 +417,7 @@ const Jobs = () => {
           {/* Add Job Button */}
           <button
             onClick={() => setShowJobForm(true)}
-            className="group relative bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-500 ease-out overflow-hidden hover-lift"
+            className="group relative bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-500 ease-out overflow-hidden hover-lift"
           >
             <div className="flex items-center space-x-3 relative z-10">
               <FontAwesomeIcon
@@ -426,7 +426,7 @@ const Jobs = () => {
               />
               <span className="text-lg">Post New Job</span>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] to-[#2d365b] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] to-[#2a5298] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </button>
         </div>
 
@@ -436,7 +436,7 @@ const Jobs = () => {
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                <div className="text-3xl font-bold text-[#2a5298] mb-2">
                   {stats.totalJobs}
                 </div>
                 <div className="text-gray-600 font-medium">Total Jobs</div>
@@ -518,8 +518,8 @@ const Jobs = () => {
               }}
               className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all duration-300 ${
                 activeTab === "jobs"
-                  ? "bg-[#2d365b] text-white shadow-md"
-                  : "text-gray-600 hover:text-[#2d365b] hover:bg-gray-50"
+                  ? "bg-[#2a5298] text-white shadow-md"
+                  : "text-gray-600 hover:text-[#2a5298] hover:bg-gray-50"
               }`}
             >
               <FontAwesomeIcon icon={faBriefcase} className="mr-2" />
@@ -535,8 +535,8 @@ const Jobs = () => {
               }}
               className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all duration-300 ${
                 activeTab === "applications"
-                  ? "bg-[#2d365b] text-white shadow-md"
-                  : "text-gray-600 hover:text-[#2d365b] hover:bg-gray-50"
+                  ? "bg-[#2a5298] text-white shadow-md"
+                  : "text-gray-600 hover:text-[#2a5298] hover:bg-gray-50"
               }`}
             >
               <FontAwesomeIcon icon={faUsers} className="mr-2" />
@@ -550,7 +550,7 @@ const Jobs = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search Input */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Search {activeTab === "jobs" ? "Jobs" : "Applications"}
               </label>
               <div className="relative">
@@ -563,7 +563,7 @@ const Jobs = () => {
                       ? "Search by job title or department..." 
                       : "Search by applicant name or email..."
                   }
-                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 />
                 {/* <FontAwesomeIcon
                   icon={faSearch}
@@ -574,13 +574,13 @@ const Jobs = () => {
 
             {/* Status Filter */}
             <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Status
               </label>
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
               >
                 {activeTab === "jobs" 
                   ? statuses.map(status => (
@@ -600,13 +600,13 @@ const Jobs = () => {
             {/* Department Filter (only for jobs) */}
             {activeTab === "jobs" && (
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Department
                 </label>
                 <select
                   value={selectedDepartment}
                   onChange={(e) => setSelectedDepartment(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 >
                   {departments.map(dept => (
                     <option key={dept} value={dept}>
@@ -625,7 +625,7 @@ const Jobs = () => {
             </div>
             <button
               onClick={handleResetFilters}
-              className="text-sm text-[#2d365b] font-semibold hover:text-[#1e2a4a] transition-colors duration-300 flex items-center space-x-2"
+              className="text-sm text-[#2a5298] font-semibold hover:text-[#1e2a4a] transition-colors duration-300 flex items-center space-x-2"
             >
               <FontAwesomeIcon icon={faFilter} />
               <span>Reset Filters</span>
@@ -643,7 +643,7 @@ const Jobs = () => {
                 style={{animationDelay: `${index * 0.1}s`}}
               >
                 {/* Job Header */}
-                <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] p-3 text-white">
+                <div className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] p-3 text-white">
                   <div className="flex items-center justify-between mb-3">
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(job.status)}`}>
                       {job.status}
@@ -660,19 +660,19 @@ const Jobs = () => {
                   {/* Job Details */}
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center text-gray-700">
-                      <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2d365b] mr-3 w-4" />
+                      <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2a5298] mr-3 w-4" />
                       <span>{job.location}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
-                      <FontAwesomeIcon icon={faMoneyBillWave} className="text-[#2d365b] mr-3 w-4" />
+                      <FontAwesomeIcon icon={faMoneyBillWave} className="text-[#2a5298] mr-3 w-4" />
                       <span>{job.salary}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
-                      <FontAwesomeIcon icon={faClock} className="text-[#2d365b] mr-3 w-4" />
+                      <FontAwesomeIcon icon={faClock} className="text-[#2a5298] mr-3 w-4" />
                       <span>{job.experience} experience</span>
                     </div>
                     <div className="flex items-center text-gray-700">
-                      <FontAwesomeIcon icon={faUsers} className="text-[#2d365b] mr-3 w-4" />
+                      <FontAwesomeIcon icon={faUsers} className="text-[#2a5298] mr-3 w-4" />
                       <span>{job.applications} applications</span>
                     </div>
                   </div>
@@ -708,7 +708,7 @@ const Jobs = () => {
                         setEditingJob(job);
                         setShowJobForm(true);
                       }}
-                      className="flex-1 bg-[#2d365b] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2d365b]"
+                      className="flex-1 bg-[#2a5298] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2a5298]"
                     >
                       <FontAwesomeIcon icon={faEdit} />
                       <span>Edit</span>
@@ -739,7 +739,7 @@ const Jobs = () => {
                   style={{animationDelay: `${index * 0.1}s`}}
                 >
                   {/* Application Header */}
-                  <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] p-3 text-white">
+                  <div className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] p-3 text-white">
                     <div className="flex items-center justify-between mb-2">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(application.status)}`}>
                         {application.status}
@@ -754,19 +754,19 @@ const Jobs = () => {
                     {/* Applicant Details */}
                     <div className="space-y-3 mb-4">
                       <div className="flex items-center text-gray-700">
-                        <FontAwesomeIcon icon={faEnvelope} className="text-[#2d365b] mr-3 w-4" />
+                        <FontAwesomeIcon icon={faEnvelope} className="text-[#2a5298] mr-3 w-4" />
                         <span className="truncate">{application.applicantEmail}</span>
                       </div>
                       <div className="flex items-center text-gray-700">
-                        <FontAwesomeIcon icon={faPhone} className="text-[#2d365b] mr-3 w-4" />
+                        <FontAwesomeIcon icon={faPhone} className="text-[#2a5298] mr-3 w-4" />
                         <span>{application.applicantPhone}</span>
                       </div>
                       <div className="flex items-center text-gray-700">
-                        <FontAwesomeIcon icon={faBriefcase} className="text-[#2d365b] mr-3 w-4" />
+                        <FontAwesomeIcon icon={faBriefcase} className="text-[#2a5298] mr-3 w-4" />
                         <span>{application.experience} experience</span>
                       </div>
                       <div className="flex items-center text-gray-700">
-                        <FontAwesomeIcon icon={faUser} className="text-[#2d365b] mr-3 w-4" />
+                        <FontAwesomeIcon icon={faUser} className="text-[#2a5298] mr-3 w-4" />
                         <span className="text-sm">{application.education}</span>
                       </div>
                     </div>
@@ -830,10 +830,10 @@ const Jobs = () => {
         {/* Empty State */}
         {currentItems.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-200 animate-scale-in">
-            <div className="text-6xl mb-6 text-[#2d365b]">
+            <div className="text-6xl mb-6 text-[#2a5298]">
               {activeTab === "jobs" ? "💼" : "📄"}
             </div>
-            <h3 className="text-2xl font-bold text-[#2d365b] mb-4">
+            <h3 className="text-2xl font-bold text-[#2a5298] mb-4">
               No {activeTab === "jobs" ? "Jobs" : "Applications"} Found
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
@@ -847,7 +847,7 @@ const Jobs = () => {
             {activeTab === "jobs" && (
               <button
                 onClick={() => setShowJobForm(true)}
-                className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
+                className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
               >
                 Post Your First Job
               </button>
@@ -862,11 +862,11 @@ const Jobs = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300 hover-lift"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300 hover-lift"
             >
               <FontAwesomeIcon
                 icon={faChevronLeft}
-                className="text-[#2d365b]"
+                className="text-[#2a5298]"
               />
             </button>
 
@@ -879,8 +879,8 @@ const Jobs = () => {
                 }
                 className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 hover-lift ${
                   pageNum === currentPage
-                    ? "bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white shadow-lg border border-[#2d365b]"
-                    : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2d365b] hover:bg-gray-50"
+                    ? "bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white shadow-lg border border-[#2a5298]"
+                    : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
                 } ${
                   pageNum === "..."
                     ? "cursor-default hover:bg-white hover:border-gray-300 hover-lift-none"
@@ -898,11 +898,11 @@ const Jobs = () => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300 hover-lift"
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2a5298] transition-all duration-300 hover-lift"
             >
               <FontAwesomeIcon
                 icon={faChevronRight}
-                className="text-[#2d365b]"
+                className="text-[#2a5298]"
               />
             </button>
           </div>
@@ -925,7 +925,7 @@ const Jobs = () => {
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-300 p-6 max-w-md w-full mx-auto animate-scale-in">
-            <h3 className="text-xl font-bold text-[#2d365b] mb-4">
+            <h3 className="text-xl font-bold text-[#2a5298] mb-4">
               Confirm Deletion
             </h3>
             <p className="text-gray-600 mb-6">
@@ -1038,7 +1038,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
       <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
+        <div className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">
               {job ? "Edit Job" : "Post New Job"}
@@ -1058,7 +1058,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Job Title *
                 </label>
                 <input
@@ -1067,13 +1067,13 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                   value={formData.title}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                   placeholder="Enter job title"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Department *
                 </label>
                 <select
@@ -1081,7 +1081,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                   value={formData.department}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 >
                   {departments.map(dept => (
                     <option key={dept} value={dept}>{dept}</option>
@@ -1092,7 +1092,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Job Type *
                 </label>
                 <select
@@ -1100,7 +1100,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                   value={formData.type}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 >
                   {jobTypes.map(type => (
                     <option key={type} value={type}>{type}</option>
@@ -1109,7 +1109,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Location *
                 </label>
                 <input
@@ -1118,13 +1118,13 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                   value={formData.location}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                   placeholder="Enter location"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Application Deadline *
                 </label>
                 <input
@@ -1133,14 +1133,14 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                   value={formData.deadline}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Salary Range *
                 </label>
                 <input
@@ -1149,13 +1149,13 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                   value={formData.salary}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                   placeholder="e.g., ₹60,000 - ₹80,000/month"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                   Experience Required *
                 </label>
                 <input
@@ -1164,7 +1164,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                   value={formData.experience}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                   placeholder="e.g., 3+ years"
                 />
               </div>
@@ -1172,7 +1172,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
 
             {/* Job Description */}
             <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Job Description *
               </label>
               <textarea
@@ -1181,14 +1181,14 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                 onChange={handleInputChange}
                 required
                 rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                 placeholder="Describe the job responsibilities and expectations..."
               />
             </div>
 
             {/* Requirements */}
             {/* <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Requirements
               </label>
               <div className="space-y-2">
@@ -1210,12 +1210,12 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
                     value={requirementInput}
                     onChange={(e) => setRequirementInput(e.target.value)}
                     placeholder="Add a requirement..."
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                   />
                   <button
                     type="button"
                     onClick={handleAddRequirement}
-                    className="px-6 py-3 bg-[#2d365b] text-white rounded-xl font-semibold hover:bg-[#1e2a4a] transition-all duration-300"
+                    className="px-6 py-3 bg-[#2a5298] text-white rounded-xl font-semibold hover:bg-[#1e2a4a] transition-all duration-300"
                   >
                     Add
                   </button>
@@ -1225,14 +1225,14 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
 
             {/* Status */}
             <div>
-              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
                 Status
               </label>
               <select
                 name="status"
                 value={formData.status}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
               >
                 <option value="active">Active</option>
                 <option value="closed">Closed</option>
@@ -1250,7 +1250,7 @@ const JobForm = ({ job, onSubmit, onCancel }) => {
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 border border-[#2d365b]"
+                className="flex-1 bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 border border-[#2a5298]"
               >
                 {job ? "Update Job" : "Post Job"}
               </button>
@@ -1268,7 +1268,7 @@ const ViewApplicationModal = ({ application, job, onClose, onStatusUpdate, onDel
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
       <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
+        <div className="bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Application Details</h2>
             <button
@@ -1285,26 +1285,26 @@ const ViewApplicationModal = ({ application, job, onClose, onStatusUpdate, onDel
           {/* Applicant Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+              <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                 Applicant Information
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <FontAwesomeIcon icon={faUser} className="text-[#2d365b] w-4" />
+                  <FontAwesomeIcon icon={faUser} className="text-[#2a5298] w-4" />
                   <div>
                     <div className="font-semibold">{application.applicantName}</div>
                     <div className="text-sm text-gray-600">Full Name</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FontAwesomeIcon icon={faEnvelope} className="text-[#2d365b] w-4" />
+                  <FontAwesomeIcon icon={faEnvelope} className="text-[#2a5298] w-4" />
                   <div>
                     <div className="font-medium">{application.applicantEmail}</div>
                     <div className="text-sm text-gray-600">Email</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FontAwesomeIcon icon={faPhone} className="text-[#2d365b] w-4" />
+                  <FontAwesomeIcon icon={faPhone} className="text-[#2a5298] w-4" />
                   <div>
                     <div className="font-medium">{application.applicantPhone}</div>
                     <div className="text-sm text-gray-600">Phone</div>
@@ -1314,26 +1314,26 @@ const ViewApplicationModal = ({ application, job, onClose, onStatusUpdate, onDel
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+              <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                 Job Information
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <FontAwesomeIcon icon={faBriefcase} className="text-[#2d365b] w-4" />
+                  <FontAwesomeIcon icon={faBriefcase} className="text-[#2a5298] w-4" />
                   <div>
                     <div className="font-semibold">{job?.title}</div>
                     <div className="text-sm text-gray-600">Position</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2d365b] w-4" />
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2a5298] w-4" />
                   <div>
                     <div className="font-medium">{job?.location}</div>
                     <div className="text-sm text-gray-600">Location</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FontAwesomeIcon icon={faClock} className="text-[#2d365b] w-4" />
+                  <FontAwesomeIcon icon={faClock} className="text-[#2a5298] w-4" />
                   <div>
                     <div className="font-medium">
                       Applied: {new Date(application.appliedDate).toLocaleDateString("en-US", {
@@ -1352,7 +1352,7 @@ const ViewApplicationModal = ({ application, job, onClose, onStatusUpdate, onDel
           {/* Qualifications */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+              <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                 Education
               </h3>
               <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
@@ -1361,7 +1361,7 @@ const ViewApplicationModal = ({ application, job, onClose, onStatusUpdate, onDel
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+              <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                 Experience
               </h3>
               <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
@@ -1372,7 +1372,7 @@ const ViewApplicationModal = ({ application, job, onClose, onStatusUpdate, onDel
 
           {/* Cover Letter */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+            <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
               Cover Letter
             </h3>
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
@@ -1382,7 +1382,7 @@ const ViewApplicationModal = ({ application, job, onClose, onStatusUpdate, onDel
 
           {/* Resume */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+            <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
               Resume
             </h3>
             <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
@@ -1413,7 +1413,7 @@ const ViewApplicationModal = ({ application, job, onClose, onStatusUpdate, onDel
 
             {application.notes && (
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                <h3 className="text-lg font-semibold text-[#2a5298] border-b pb-2">
                   Admin Notes
                 </h3>
                 <div className="p-3 bg-yellow-50 rounded-xl border border-yellow-200">
