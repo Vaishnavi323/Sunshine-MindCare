@@ -1,274 +1,1448 @@
-import React, { useState } from 'react';
-import CustomAlert from '../../CustomAlert/CustomAlert';
+import React, { useState, useRef, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlus,
+  faEdit,
+  faTrash,
+  faUser,
+  faSearch,
+  faFilter,
+  faEye,
+  faChevronLeft,
+  faChevronRight,
+  faXmark,
+  faStethoscope,
+  faGraduationCap,
+  faAward,
+  faCalendarAlt,
+  faEnvelope,
+  faPhone,
+  faMapMarkerAlt,
+  faStar,
+  faUserMd,
+  faUserTie,
+  faUserGraduate,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Team = () => {
-  const [teamMembers, setTeamMembers] = useState([
+  const [doctors, setDoctors] = useState([
     {
       id: 1,
-      name: 'Dr. Sarah Johnson',
-      role: 'Founder & CEO',
-      email: 'sarah@empathyfoundation.org',
-      phone: '+91 9876543210',
-      department: 'Leadership',
-      joinDate: '2020-01-15',
-      status: 'active',
-      avatar: '👩‍⚕️'
+      name: "Dr. Priya Sharma",
+      email: "priya.sharma@sunshine.com",
+      phone: "+91 9876543210",
+      specialization: "Psychiatry",
+      category: "founder",
+      experience: "15 years",
+      qualification: "MD Psychiatry, MBBS",
+      description: "Founder and chief psychiatrist with extensive experience in mental health treatment and research.",
+      address: "Sunshine Mindcare, Nashik",
+      joiningDate: "2018-05-15",
+      status: "active",
+      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop",
+      rating: 4.9,
+      patients: 1200
     },
     {
       id: 2,
-      name: 'Dr. Mike Chen',
-      role: 'Head of Counseling',
-      email: 'mike@empathyfoundation.org',
-      phone: '+91 9876543211',
-      department: 'Counseling',
-      joinDate: '2020-03-20',
-      status: 'active',
-      avatar: '👨‍⚕️'
+      name: "Dr. Amit Patel",
+      email: "amit.patel@sunshine.com",
+      phone: "+91 9876543211",
+      specialization: "Clinical Psychology",
+      category: "senior",
+      experience: "12 years",
+      qualification: "PhD Clinical Psychology, MPhil",
+      description: "Senior clinical psychologist specializing in cognitive behavioral therapy and trauma counseling.",
+      address: "Sunshine Mindcare, Nashik",
+      joiningDate: "2019-08-20",
+      status: "active",
+      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop",
+      rating: 4.8,
+      patients: 950
     },
     {
       id: 3,
-      name: 'Priya Sharma',
-      role: 'Program Manager',
-      email: 'priya@empathyfoundation.org',
-      phone: '+91 9876543212',
-      department: 'Operations',
-      joinDate: '2021-06-10',
-      status: 'active',
-      avatar: '👩‍💼'
+      name: "Dr. Sneha Reddy",
+      email: "sneha.reddy@sunshine.com",
+      phone: "+91 9876543212",
+      specialization: "Counseling Psychology",
+      category: "senior",
+      experience: "10 years",
+      qualification: "MA Counseling Psychology, PG Diploma",
+      description: "Experienced counseling psychologist with expertise in relationship and family therapy.",
+      address: "Manoday Center, Pune",
+      joiningDate: "2020-03-10",
+      status: "active",
+      image: "https://images.unsplash.com/photo-1594824947933-d0501ba2fe65?w=300&h=300&fit=crop",
+      rating: 4.7,
+      patients: 800
+    },
+    {
+      id: 4,
+      name: "Dr. Michael Chen",
+      email: "michael.chen@sunshine.com",
+      phone: "+91 9876543213",
+      specialization: "Psychiatry",
+      category: "senior",
+      experience: "8 years",
+      qualification: "MD Psychiatry, MBBS",
+      description: "Psychiatrist specializing in adult mental health and pharmacological treatments.",
+      address: "Sunshine Mindcare, Nashik",
+      joiningDate: "2021-01-15",
+      status: "active",
+      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop",
+      rating: 4.6,
+      patients: 600
+    },
+    {
+      id: 5,
+      name: "Dr. Lisa Wang",
+      email: "lisa.wang@sunshine.com",
+      phone: "+91 9876543214",
+      specialization: "Therapy",
+      category: "junior",
+      experience: "4 years",
+      qualification: "MA Clinical Psychology",
+      description: "Therapist specializing in anxiety disorders and stress management techniques.",
+      address: "Manoday Center, Pune",
+      joiningDate: "2022-06-01",
+      status: "active",
+      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop",
+      rating: 4.5,
+      patients: 350
+    },
+    {
+      id: 6,
+      name: "Dr. Robert Davis",
+      email: "robert.davis@sunshine.com",
+      phone: "+91 9876543215",
+      specialization: "Child Psychology",
+      category: "junior",
+      experience: "3 years",
+      qualification: "MSc Child Psychology",
+      description: "Child psychologist with expertise in developmental disorders and behavioral therapy.",
+      address: "Sunshine Mindcare, Nashik",
+      joiningDate: "2023-02-14",
+      status: "active",
+      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop",
+      rating: 4.4,
+      patients: 200
+    },
+    {
+      id: 7,
+      name: "Dr. Anjali Kapoor",
+      email: "anjali.kapoor@sunshine.com",
+      phone: "+91 9876543216",
+      specialization: "Neuropsychology",
+      category: "other",
+      experience: "6 years",
+      qualification: "PhD Neuropsychology",
+      description: "Neuropsychologist specializing in brain-behavior relationships and cognitive assessments.",
+      address: "Sunshine Mindcare, Nashik",
+      joiningDate: "2021-11-05",
+      status: "inactive",
+      image: "https://images.unsplash.com/photo-1594824947933-d0501ba2fe65?w=300&h=300&fit=crop",
+      rating: 4.7,
+      patients: 450
     }
   ]);
+
   const [alert, setAlert] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    role: '',
-    email: '',
-    phone: '',
-    department: '',
-    joinDate: ''
+  const [editingDoctor, setEditingDoctor] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [viewDoctor, setViewDoctor] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedSpecialization, setSelectedSpecialization] = useState("all");
+  const doctorsPerPage = 6;
+
+  // Get unique categories, statuses, and specializations
+  const categories = ["all", "founder", "senior", "junior", "other"];
+  const statuses = ["all", "active", "inactive"];
+  const specializations = ["all", ...new Set(doctors.map(doctor => doctor.specialization))];
+
+  // Filter doctors based on search and filters
+  const filteredDoctors = doctors.filter(doctor => {
+    const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         doctor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || doctor.category === selectedCategory;
+    const matchesStatus = selectedStatus === "all" || doctor.status === selectedStatus;
+    const matchesSpecialization = selectedSpecialization === "all" || doctor.specialization === selectedSpecialization;
+    
+    return matchesSearch && matchesCategory && matchesStatus && matchesSpecialization;
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newMember = {
-      id: teamMembers.length + 1,
-      ...formData,
-      status: 'active',
-      avatar: '👤'
-    };
-    setTeamMembers([...teamMembers, newMember]);
-    setShowForm(false);
-    setFormData({
-      name: '', role: '', email: '', phone: '', department: '', joinDate: ''
-    });
-    setAlert({
-      type: 'success',
-      message: 'Team member added successfully!'
-    });
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredDoctors.length / doctorsPerPage);
+  const indexOfLastDoctor = currentPage * doctorsPerPage;
+  const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
+  const currentDoctors = filteredDoctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
 
   const handleDelete = (id) => {
-    setTeamMembers(teamMembers.filter(member => member.id !== id));
+    setDoctors(doctors.filter((doctor) => doctor.id !== id));
     setAlert({
-      type: 'success',
-      message: 'Team member removed successfully!'
+      type: "success",
+      message: "Doctor deleted successfully!",
     });
-  };
+    setDeleteConfirm(null);
 
-  const getDepartmentColor = (department) => {
-    switch (department) {
-      case 'Leadership': return 'bg-purple-100 text-purple-800';
-      case 'Counseling': return 'bg-blue-100 text-blue-800';
-      case 'Operations': return 'bg-green-100 text-green-800';
-      case 'Marketing': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+    // Adjust current page if needed after deletion
+    if (currentDoctors.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
+  const handleEdit = (doctor) => {
+    setEditingDoctor(doctor);
+    setShowForm(true);
+  };
+
+  const handleFormSubmit = (formData) => {
+    if (editingDoctor) {
+      setDoctors(
+        doctors.map((doctor) =>
+          doctor.id === editingDoctor.id ? { ...doctor, ...formData } : doctor
+        )
+      );
+      setAlert({
+        type: "success",
+        message: "Doctor updated successfully!",
+      });
+    } else {
+      const newDoctor = {
+        id: doctors.length > 0 ? Math.max(...doctors.map((d) => d.id)) + 1 : 1,
+        ...formData,
+        joiningDate: new Date().toISOString().split('T')[0],
+        rating: 4.0,
+        patients: 0
+      };
+      setDoctors([...doctors, newDoctor]);
+      setAlert({
+        type: "success",
+        message: "Doctor added successfully!",
+      });
+    }
+    setShowForm(false);
+    setEditingDoctor(null);
+  };
+
+  const handleFormCancel = () => {
+    setShowForm(false);
+    setEditingDoctor(null);
+  };
+
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case "founder":
+        return "bg-purple-100 text-purple-800 border border-purple-300";
+      case "senior":
+        return "bg-blue-100 text-blue-800 border border-blue-300";
+      case "junior":
+        return "bg-green-100 text-green-800 border border-green-300";
+      case "other":
+        return "bg-orange-100 text-orange-800 border border-orange-300";
+      default:
+        return "bg-gray-100 text-gray-800 border border-gray-300";
+    }
+  };
+
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case "founder":
+        return faAward;
+      case "senior":
+        return faUserTie;
+      case "junior":
+        return faUserGraduate;
+      case "other":
+        return faUsers;
+      default:
+        return faUserMd;
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "active":
+        return "bg-green-100 text-green-800 border border-green-300";
+      case "inactive":
+        return "bg-red-100 text-red-800 border border-red-300";
+      default:
+        return "bg-gray-100 text-gray-800 border border-gray-300";
+    }
+  };
+
+  const renderStars = (rating) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <FontAwesomeIcon
+        key={index}
+        icon={faStar}
+        className={index < Math.floor(rating) ? "text-yellow-400" : "text-gray-300"}
+      />
+    ));
+  };
+
+  // Dynamic pagination generation
+  const getPaginationNumbers = () => {
+    const pages = [];
+    const showEllipsis = totalPages > 7;
+
+    if (!showEllipsis) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1, 2, 3);
+      if (currentPage > 4) pages.push("...");
+      if (currentPage > 3 && currentPage < totalPages - 2) {
+        pages.push(currentPage - 1, currentPage, currentPage + 1);
+      }
+      if (currentPage < totalPages - 3) pages.push("...");
+      pages.push(totalPages - 2, totalPages - 1, totalPages);
+    }
+
+    return [...new Set(pages)].sort((a, b) => a - b);
+  };
+
+  // Reset filters
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setSelectedCategory("all");
+    setSelectedStatus("all");
+    setSelectedSpecialization("all");
+    setCurrentPage(1);
+  };
+
+  // Calculate statistics
+  const stats = {
+    total: doctors.length,
+    active: doctors.filter(d => d.status === "active").length,
+    founders: doctors.filter(d => d.category === "founder").length,
+    senior: doctors.filter(d => d.category === "senior").length,
+    junior: doctors.filter(d => d.category === "junior").length,
+    other: doctors.filter(d => d.category === "other").length,
+  };
+
+  // Animation styles
+  const animationStyles = `
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    .animate-slide-in-up {
+      animation: slideInUp 0.6s ease-out;
+    }
+    
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+    
+    .animate-scale-in {
+      animation: scaleIn 0.5s ease-out;
+    }
+    
+    .hover-lift {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .hover-lift:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+  `;
+
   return (
-    <div className="p-6 animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-100 p-6">
+      <style>{animationStyles}</style>
+      
+      {/* Alert */}
       {alert && (
-        <CustomAlert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert(null)}
+        <div className="fixed top-4 right-4 z-50 animate-fade-in">
+          <div className="px-6 py-4 rounded-xl shadow-lg border bg-green-100 text-green-800 border-green-300">
+            <div className="flex items-center space-x-3">
+              <FontAwesomeIcon icon={faCheck} className="text-lg" />
+              <span className="font-semibold">{alert.message}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header Section */}
+      <div className="max-w-7xl mx-auto mb-8 animate-fade-in">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+          <div className="mb-6 lg:mb-0">
+            <h1 className="text-4xl font-bold text-[#2d365b] mb-3 bg-gradient-to-r from-[#2d365b] to-[#4f46e5] bg-clip-text text-transparent">
+              Doctors Management
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Manage medical professionals and their categories
+            </p>
+          </div>
+
+          {/* Add Doctor Button */}
+          <button
+            onClick={() => setShowForm(true)}
+            className="group relative bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-500 ease-out overflow-hidden hover-lift"
+          >
+            <div className="flex items-center space-x-3 relative z-10">
+              <FontAwesomeIcon
+                icon={faPlus}
+                className="transition-transform duration-500 group-hover:rotate-180"
+              />
+              <span className="text-lg">Add New Doctor</span>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] to-[#2d365b] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          </button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Total Doctors */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-3xl font-bold text-[#2d365b] mb-2">
+                  {stats.total}
+                </div>
+                <div className="text-gray-600 font-medium">Total Doctors</div>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
+                <FontAwesomeIcon
+                  icon={faUserMd}
+                  className="text-white text-2xl"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Active Doctors */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{animationDelay: '0.1s'}}>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-3xl font-bold text-green-600 mb-2">
+                  {stats.active}
+                </div>
+                <div className="text-gray-600 font-medium">Active</div>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center">
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="text-white text-2xl"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Senior Doctors */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{animationDelay: '0.2s'}}>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">
+                  {stats.senior}
+                </div>
+                <div className="text-gray-600 font-medium">Senior Doctors</div>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
+                <FontAwesomeIcon
+                  icon={faUserTie}
+                  className="text-white text-2xl"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Junior Doctors */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover-lift animate-slide-in-up" style={{animationDelay: '0.3s'}}>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-3xl font-bold text-green-600 mb-2">
+                  {stats.junior}
+                </div>
+                <div className="text-gray-600 font-medium">Junior Doctors</div>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center">
+                <FontAwesomeIcon
+                  icon={faUserGraduate}
+                  className="text-white text-2xl"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Search and Filters */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 mb-8 animate-scale-in">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Search Input */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                Search Doctors
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search by name, email, or specialization..."
+                  className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                />
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                />
+              </div>
+            </div>
+
+            {/* Category Filter */}
+            <div>
+              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                Category
+              </label>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+              >
+                {categories.map(category => (
+                  <option key={category} value={category}>
+                    {category === "all" ? "All Categories" : category.charAt(0).toUpperCase() + category.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Status Filter */}
+            <div>
+              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                Status
+              </label>
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+              >
+                {statuses.map(status => (
+                  <option key={status} value={status}>
+                    {status === "all" ? "All Status" : status.charAt(0).toUpperCase() + status.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Specialization Filter */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                Specialization
+              </label>
+              <select
+                value={selectedSpecialization}
+                onChange={(e) => setSelectedSpecialization(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+              >
+                {specializations.map(spec => (
+                  <option key={spec} value={spec}>
+                    {spec === "all" ? "All Specializations" : spec}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Filter Actions */}
+          <div className="flex justify-between items-center mt-4">
+            <div className="text-sm text-gray-600">
+              Showing {filteredDoctors.length} of {doctors.length} doctors
+            </div>
+            <button
+              onClick={handleResetFilters}
+              className="text-sm text-[#2d365b] font-semibold hover:text-[#1e2a4a] transition-colors duration-300 flex items-center space-x-2"
+            >
+              <FontAwesomeIcon icon={faFilter} />
+              <span>Reset Filters</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Doctors Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+          {currentDoctors.map((doctor, index) => (
+            <div
+              key={doctor.id}
+              className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover-lift group animate-slide-in-up"
+              style={{animationDelay: `${index * 0.1}s`}}
+            >
+              {/* Doctor Header */}
+              <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] p-4 text-white">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <FontAwesomeIcon icon={getCategoryIcon(doctor.category)} />
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getCategoryColor(doctor.category)}`}>
+                      {doctor.category}
+                    </span>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(doctor.status)}`}>
+                    {doctor.status}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold truncate">{doctor.name}</h3>
+                <p className="text-sm opacity-90 truncate">{doctor.specialization}</p>
+              </div>
+
+              {/* Doctor Content */}
+              <div className="p-5">
+                {/* Doctor Image and Basic Info */}
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-gray-200">
+                    <img
+                      src={doctor.image}
+                      alt={doctor.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-1 mb-1">
+                      {renderStars(doctor.rating)}
+                      <span className="text-sm text-gray-600 ml-1">({doctor.rating})</span>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {doctor.experience} experience
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {doctor.patients} patients
+                    </div>
+                  </div>
+                </div>
+
+                {/* Doctor Details */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center text-gray-700">
+                    <FontAwesomeIcon icon={faEnvelope} className="text-[#2d365b] mr-3 w-4" />
+                    <span className="truncate text-sm">{doctor.email}</span>
+                  </div>
+                  <div className="flex items-center text-gray-700">
+                    <FontAwesomeIcon icon={faPhone} className="text-[#2d365b] mr-3 w-4" />
+                    <span className="text-sm">{doctor.phone}</span>
+                  </div>
+                  <div className="flex items-center text-gray-700">
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2d365b] mr-3 w-4" />
+                    <span className="text-sm truncate">{doctor.address}</span>
+                  </div>
+                </div>
+
+                {/* Qualification */}
+                <div className="mb-4">
+                  <div className="flex items-center text-gray-700 mb-1">
+                    <FontAwesomeIcon icon={faGraduationCap} className="text-[#2d365b] mr-3 w-4" />
+                    <span className="text-sm font-semibold">Qualification</span>
+                  </div>
+                  <p className="text-gray-600 text-sm line-clamp-2">{doctor.qualification}</p>
+                </div>
+
+                {/* Description */}
+                <div className="mb-4">
+                  <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                    {doctor.description}
+                  </p>
+                </div>
+
+                {/* Joining Date */}
+                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                  <div className="flex items-center">
+                    <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
+                    <span>
+                      Joined: {new Date(doctor.joiningDate).toLocaleDateString("en-US", {
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-2 pt-4 border-t border-gray-200">
+                  <button
+                    onClick={() => setViewDoctor(doctor)}
+                    className="flex-1 bg-blue-500 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition-all duration-300 flex items-center justify-center space-x-2 border border-blue-500"
+                  >
+                    <FontAwesomeIcon icon={faEye} />
+                    <span>View</span>
+                  </button>
+                  <button
+                    onClick={() => handleEdit(doctor)}
+                    className="flex-1 bg-[#2d365b] text-white py-2 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 flex items-center justify-center space-x-2 border border-[#2d365b]"
+                  >
+                    <FontAwesomeIcon icon={faEdit} />
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    onClick={() => setDeleteConfirm(doctor.id)}
+                    className="flex-1 bg-white text-red-600 py-2 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 flex items-center justify-center space-x-2 border border-red-300"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {filteredDoctors.length === 0 && (
+          <div className="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-200 animate-scale-in">
+            <div className="text-6xl mb-6 text-[#2d365b]">👨‍⚕️</div>
+            <h3 className="text-2xl font-bold text-[#2d365b] mb-4">
+              No Doctors Found
+            </h3>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+              {searchTerm || selectedCategory !== "all" || selectedStatus !== "all" || selectedSpecialization !== "all"
+                ? "Try adjusting your search filters to find more doctors."
+                : "Get started by adding your first doctor to the system."
+              }
+            </p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
+            >
+              Add Your First Doctor
+            </button>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center space-x-2 mt-12 animate-fade-in">
+            {/* Previous Button */}
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300 hover-lift"
+            >
+              <FontAwesomeIcon
+                icon={faChevronLeft}
+                className="text-[#2d365b]"
+              />
+            </button>
+
+            {/* Page Numbers */}
+            {getPaginationNumbers().map((pageNum, index) => (
+              <button
+                key={index}
+                onClick={() =>
+                  typeof pageNum === "number" && setCurrentPage(pageNum)
+                }
+                className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 hover-lift ${
+                  pageNum === currentPage
+                    ? "bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white shadow-lg border border-[#2d365b]"
+                    : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2d365b] hover:bg-gray-50"
+                } ${
+                  pageNum === "..."
+                    ? "cursor-default hover:bg-white hover:border-gray-300 hover-lift-none"
+                    : ""
+                }`}
+                disabled={pageNum === "..."}
+              >
+                {pageNum}
+              </button>
+            ))}
+
+            {/* Next Button */}
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className="w-12 h-12 flex items-center justify-center bg-white rounded-xl shadow-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:border-[#2d365b] transition-all duration-300 hover-lift"
+            >
+              <FontAwesomeIcon
+                icon={faChevronRight}
+                className="text-[#2d365b]"
+              />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Doctor Form Modal */}
+      {showForm && (
+        <DoctorForm
+          doctor={editingDoctor}
+          onSubmit={handleFormSubmit}
+          onCancel={handleFormCancel}
         />
       )}
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Team Management</h1>
-          <p className="text-gray-600">Manage foundation team members and staff</p>
+      {/* Delete Confirmation */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-300 p-6 max-w-md w-full mx-auto animate-scale-in">
+            <h3 className="text-xl font-bold text-[#2d365b] mb-4">
+              Confirm Deletion
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this doctor? This action cannot be undone.
+            </p>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300 border border-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(deleteConfirm)}
+                className="flex-1 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 border border-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
-        <button
-          onClick={() => setShowForm(true)}
-          className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition-colors"
-        >
-          + Add Team Member
-        </button>
-      </div>
+      )}
 
-      {/* Add Team Member Form Modal */}
-      {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Add Team Member</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+      {/* View Doctor Modal */}
+      {viewDoctor && (
+        <ViewDoctorModal
+          doctor={viewDoctor}
+          onClose={() => setViewDoctor(null)}
+          onEdit={handleEdit}
+          onDelete={setDeleteConfirm}
+        />
+      )}
+    </div>
+  );
+};
+
+// Doctor Form Component
+const DoctorForm = ({ doctor, onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState({
+    name: doctor?.name || "",
+    email: doctor?.email || "",
+    phone: doctor?.phone || "",
+    specialization: doctor?.specialization || "Psychiatry",
+    category: doctor?.category || "senior",
+    experience: doctor?.experience || "",
+    qualification: doctor?.qualification || "",
+    description: doctor?.description || "",
+    address: doctor?.address || "",
+    status: doctor?.status || "active",
+    image: doctor?.image || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop",
+  });
+
+  const [imagePreview, setImagePreview] = useState(doctor?.image || "");
+  const fileInputRef = useRef(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setFormData((prev) => ({
+          ...prev,
+          image: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview("");
+    setFormData((prev) => ({
+      ...prev,
+      image: "",
+    }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!formData.name.trim()) {
+      alert('Please enter doctor name');
+      return;
+    }
+    if (!formData.email.trim()) {
+      alert('Please enter doctor email');
+      return;
+    }
+    if (!formData.phone.trim()) {
+      alert('Please enter doctor phone');
+      return;
+    }
+    if (!formData.specialization.trim()) {
+      alert('Please enter specialization');
+      return;
+    }
+    if (!formData.qualification.trim()) {
+      alert('Please enter qualification');
+      return;
+    }
+
+    onSubmit(formData);
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const categories = ["founder", "senior", "junior", "other"];
+  const specializations = [
+    "Psychiatry",
+    "Clinical Psychology",
+    "Counseling Psychology",
+    "Therapy",
+    "Child Psychology",
+    "Neuropsychology",
+    "Forensic Psychology",
+    "Health Psychology"
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">
+              {doctor ? "Edit Doctor" : "Add New Doctor"}
+            </h2>
+            <button
+              onClick={onCancel}
+              className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300"
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+          </div>
+        </div>
+
+        {/* Form Content */}
+        <div className="p-6 max-h-[70vh] overflow-y-auto">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Image Upload Section */}
+            <div className="space-y-4">
+              <label className="block text-sm font-semibold text-[#2d365b]">
+                Doctor Photo
+              </label>
+              
+              {imagePreview ? (
+                <div className="relative">
+                  <img
+                    src={imagePreview}
+                    alt="Doctor preview"
+                    className="w-32 h-32 object-cover rounded-2xl border-2 border-gray-300 mx-auto"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute top-0 right-0 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-all duration-300 transform -translate-y-1 -translate-x-1"
+                  >
+                    <FontAwesomeIcon icon={faXmark} className="text-sm" />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onClick={triggerFileInput}
+                  className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center cursor-pointer hover:border-[#2d365b] transition-all duration-300 group"
+                >
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="text-4xl text-gray-400 mb-4 group-hover:text-[#2d365b]"
+                  />
+                  <p className="text-gray-600 mb-2">
+                    Click to upload doctor photo
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    PNG, JPG, JPEG up to 5MB
+                  </p>
+                </div>
+              )}
+
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
+
+              {!imagePreview && (
+                <button
+                  type="button"
+                  onClick={triggerFileInput}
+                  className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 flex items-center justify-center space-x-2 border border-gray-300"
+                >
+                  <FontAwesomeIcon icon={faUser} />
+                  <span>Choose Photo</span>
+                </button>
+              )}
+            </div>
+
+            {/* Basic Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Full Name *
+                </label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg"
+                  onChange={handleInputChange}
                   required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  placeholder="Enter doctor's full name"
                 />
               </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Role</label>
-                <input
-                  type="text"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Email *
+                </label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg"
+                  onChange={handleInputChange}
                   required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  placeholder="Enter email address"
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Phone</label>
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Phone Number *
+                </label>
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg"
+                  onChange={handleInputChange}
                   required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  placeholder="Enter phone number"
                 />
               </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Department</label>
-                <select
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg"
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Address *
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
                   required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  placeholder="Enter clinic address"
+                />
+              </div>
+            </div>
+
+            {/* Professional Information */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Category *
+                </label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
                 >
-                  <option value="">Select Department</option>
-                  <option value="Leadership">Leadership</option>
-                  <option value="Counseling">Counseling</option>
-                  <option value="Operations">Operations</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Volunteer">Volunteer</option>
+                  {categories.map(category => (
+                    <option key={category} value={category}>
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </option>
+                  ))}
                 </select>
               </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700">Join Date</label>
-                <input
-                  type="date"
-                  name="joinDate"
-                  value={formData.joinDate}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded-lg"
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Specialization *
+                </label>
+                <select
+                  name="specialization"
+                  value={formData.specialization}
+                  onChange={handleInputChange}
                   required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                >
+                  {specializations.map(spec => (
+                    <option key={spec} value={spec}>{spec}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Status *
+                </label>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Experience *
+                </label>
+                <input
+                  type="text"
+                  name="experience"
+                  value={formData.experience}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  placeholder="e.g., 5 years"
                 />
               </div>
-              <div className="flex space-x-3">
-                <button
-                  type="submit"
-                  className="flex-1 bg-primary-500 text-white py-2 rounded-lg hover:bg-primary-600"
-                >
-                  Add Member
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
-      {/* Team Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {teamMembers.map((member) => (
-          <div key={member.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 card-hover">
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="text-3xl">{member.avatar}</div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
-                <p className="text-gray-600">{member.role}</p>
+                <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                  Qualification *
+                </label>
+                <input
+                  type="text"
+                  name="qualification"
+                  value={formData.qualification}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                  placeholder="e.g., MD Psychiatry, MBBS"
+                />
               </div>
             </div>
 
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center text-sm text-gray-600">
-                <span className="mr-2">✉️</span>
-                {member.email}
-              </div>
-              <div className="flex items-center text-sm text-gray-600">
-                <span className="mr-2">📞</span>
-                {member.phone}
-              </div>
-              <div className="flex items-center text-sm">
-                <span className={`px-2 py-1 rounded-full text-xs ${getDepartmentColor(member.department)}`}>
-                  {member.department}
-                </span>
-              </div>
-              <div className="flex items-center text-sm text-gray-600">
-                <span className="mr-2">📅</span>
-                Joined {new Date(member.joinDate).toLocaleDateString()}
-              </div>
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-semibold text-[#2d365b] mb-2">
+                Professional Description *
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                required
+                rows="4"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2d365b] focus:border-transparent transition-all duration-300"
+                placeholder="Describe the doctor's expertise, experience, and specializations..."
+              />
             </div>
 
-            <div className="flex space-x-2">
-              <button className="flex-1 bg-primary-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-primary-600 transition-colors">
-                Edit
-              </button>
-              <button 
-                onClick={() => handleDelete(member.id)}
-                className="flex-1 bg-red-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-red-600 transition-colors"
+            {/* Form Actions */}
+            <div className="flex space-x-4 pt-4">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 border border-gray-300"
               >
-                Remove
+                Cancel
               </button>
+              <button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 border border-[#2d365b]"
+              >
+                {doctor ? "Update Doctor" : "Add Doctor"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// View Doctor Modal Component
+const ViewDoctorModal = ({ doctor, onClose, onEdit, onDelete }) => {
+  const renderStars = (rating) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <FontAwesomeIcon
+        key={index}
+        icon={faStar}
+        className={index < Math.floor(rating) ? "text-yellow-400 text-xl" : "text-gray-300 text-xl"}
+      />
+    ));
+  };
+
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case "founder":
+        return faAward;
+      case "senior":
+        return faUserTie;
+      case "junior":
+        return faUserGraduate;
+      case "other":
+        return faUsers;
+      default:
+        return faUserMd;
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-gray-300 overflow-hidden animate-scale-in">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#2d365b] to-[#4f46e5] text-white p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Doctor Details</h2>
+            <button
+              onClick={onClose}
+              className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300"
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Doctor Header */}
+          <div className="flex items-center space-x-6">
+            <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-gray-200">
+              <img
+                src={doctor.image}
+                alt={doctor.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center space-x-3 mb-2">
+                <h3 className="text-2xl font-bold text-gray-900">{doctor.name}</h3>
+                <div className="flex items-center space-x-1">
+                  {renderStars(doctor.rating)}
+                  <span className="text-lg font-semibold text-gray-600 ml-1">({doctor.rating})</span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={getCategoryIcon(doctor.category)} className="text-[#2d365b]" />
+                  <span className="font-semibold text-gray-700 capitalize">{doctor.category}</span>
+                </div>
+                <span className="text-gray-500">•</span>
+                <span className="text-gray-600">{doctor.specialization}</span>
+              </div>
             </div>
           </div>
-        ))}
-      </div>
 
-      {/* Empty State */}
-      {teamMembers.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">👥</div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Team Members Found</h3>
-          <p className="text-gray-600">Get started by adding your first team member.</p>
+          {/* Contact Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                Contact Information
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <FontAwesomeIcon icon={faEnvelope} className="text-[#2d365b] w-4" />
+                  <div>
+                    <div className="font-medium">{doctor.email}</div>
+                    <div className="text-sm text-gray-600">Email</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <FontAwesomeIcon icon={faPhone} className="text-[#2d365b] w-4" />
+                  <div>
+                    <div className="font-medium">{doctor.phone}</div>
+                    <div className="text-sm text-gray-600">Phone</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="text-[#2d365b] w-4" />
+                  <div>
+                    <div className="font-medium">{doctor.address}</div>
+                    <div className="text-sm text-gray-600">Address</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                Professional Information
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <FontAwesomeIcon icon={faStethoscope} className="text-[#2d365b] w-4" />
+                  <div>
+                    <div className="font-medium">{doctor.specialization}</div>
+                    <div className="text-sm text-gray-600">Specialization</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <FontAwesomeIcon icon={faAward} className="text-[#2d365b] w-4" />
+                  <div>
+                    <div className="font-medium">{doctor.experience}</div>
+                    <div className="text-sm text-gray-600">Experience</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <FontAwesomeIcon icon={faCalendarAlt} className="text-[#2d365b] w-4" />
+                  <div>
+                    <div className="font-medium">
+                      {new Date(doctor.joiningDate).toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </div>
+                    <div className="text-sm text-gray-600">Joining Date</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Qualifications and Description */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                Qualifications
+              </h3>
+              <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                <p className="text-gray-700">{doctor.qualification}</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+                Status
+              </h3>
+              <div className="text-center p-4 bg-gray-50 rounded-xl border border-gray-200">
+                <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full ${
+                  doctor.status === 'active' 
+                    ? 'bg-green-100 text-green-800 border border-green-300' 
+                    : 'bg-red-100 text-red-800 border border-red-300'
+                }`}>
+                  <span className="font-semibold capitalize">{doctor.status}</span>
+                </div>
+                <div className="text-sm text-gray-600 mt-2">Current Status</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Professional Description */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-[#2d365b] border-b pb-2">
+              Professional Description
+            </h3>
+            <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <p className="text-gray-700 leading-relaxed">{doctor.description}</p>
+            </div>
+          </div>
+
+          {/* Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="text-center p-4 bg-blue-50 rounded-xl border border-blue-200">
+              <FontAwesomeIcon icon={faUser} className="text-blue-600 text-xl mb-2" />
+              <div className="font-semibold text-blue-800">{doctor.patients}</div>
+              <div className="text-sm text-blue-600">Total Patients</div>
+            </div>
+
+            <div className="text-center p-4 bg-green-50 rounded-xl border border-green-200">
+              <FontAwesomeIcon icon={faStar} className="text-green-600 text-xl mb-2" />
+              <div className="font-semibold text-green-800">{doctor.rating}/5</div>
+              <div className="text-sm text-green-600">Average Rating</div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex space-x-4 pt-4 border-t border-gray-200">
+            <button
+              onClick={() => {
+                onEdit(doctor);
+                onClose();
+              }}
+              className="flex-1 bg-[#2d365b] text-white py-3 rounded-xl font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2d365b]"
+            >
+              <FontAwesomeIcon icon={faEdit} className="mr-2" />
+              Edit Doctor
+            </button>
+            <button
+              onClick={() => {
+                onDelete(doctor.id);
+                onClose();
+              }}
+              className="flex-1 bg-red-500 text-white py-3 rounded-xl font-semibold hover:bg-red-600 transition-all duration-300 border border-red-500"
+            >
+              <FontAwesomeIcon icon={faTrash} className="mr-2" />
+              Delete Doctor
+            </button>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

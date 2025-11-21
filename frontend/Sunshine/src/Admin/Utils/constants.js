@@ -1,3 +1,4 @@
+import { faServicestack } from "@fortawesome/free-brands-svg-icons";
 import {
   faTachometerAlt,
   faCalendarAlt,
@@ -36,6 +37,8 @@ import {
   faFileAlt,
   faStar,
   faSuitcase,
+  faMessage,
+  faEarListen,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const APP_CONFIG = {
@@ -100,14 +103,19 @@ export const SIDEBAR_MENU = [
     path: "/admin/Jobs",
   },
   {
-    title: "Volunteers",
-    icon: faUserPlus,
-    path: "/admin/volunteers",
+    title: "Services",
+    icon: faServicestack,
+    path: "/admin/Services",
   },
   {
-    title: "Reports",
-    icon: faChartLine,
-    path: "/admin/reports",
+    title: "Messages",
+    icon: faMessage,
+    path: "/admin/AdminMessages",
+  },
+  {
+    title: "Enquiries",
+    icon: faEarListen,
+    path: "/admin/AdminEnquiries",
   },
 ];
 

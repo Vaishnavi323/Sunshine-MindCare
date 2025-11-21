@@ -24,14 +24,16 @@ import Navbar from "./Admin/AdminNavbar.jsx";
 import Dashboard from "./Admin/Dashboard";
 import Login from "./Admin/Auth/Login";
 import Events from "./Admin/Pages/Events";
-import Initiatives from "./Admin/Pages/Initiatives";
+
 import Blogss from "./Admin/Pages/Blogss";
 import AdminReview from "./Admin/Pages/AdminReview";
 import Hospitals from "./Admin/Pages/Hospitals";
 import Team from "./Admin/Pages/Team";
 import Donations from "./Admin/Pages/AdminJobs.jsx";
-import Volunteers from "./Admin/Pages/Volunteers";
+import Volunteers from "./Admin/Pages/AdminServices.jsx";
 import AdminAppoint from "./Admin/Pages/AdminAppoint";
+import AdminMessages from './Admin/Pages/AdminMessage.jsx';
+import AdminEnquiries from './Admin/Pages/AdminEnquiry.jsx';
 
 
 // Protected Route Component
@@ -70,14 +72,16 @@ const AdminLayout = () => {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/initiatives" element={<Initiatives />} />
+            
             <Route path="/Blogss" element={<Blogss />} />
             <Route path="/Reviews" element={<AdminReview />} />
             <Route path="/hospitals" element={<Hospitals />} />
             <Route path="/team" element={<Team />} />
             <Route path="/Jobs" element={<Donations />} />
-            <Route path="/volunteers" element={<Volunteers />} />
+            <Route path="/Services" element={<Volunteers />} />
             <Route path="/AdminAppoint" element={<AdminAppoint />} />
+            <Route path="/AdminMessages" element={<AdminMessages />} />
+            <Route path="/AdminEnquiries" element={<AdminEnquiries />} />
           </Routes>
         </main>
       </div>
