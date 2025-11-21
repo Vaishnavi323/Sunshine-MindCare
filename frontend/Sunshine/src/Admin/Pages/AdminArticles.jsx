@@ -4,23 +4,27 @@ const AdminArticles = () => {
     const [articles, setArticles] = useState([
         {
             id: 1,
-            image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop",
-            createdDate: "2024-11-15T10:30:00"
+                image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop",
+                title: "Understanding Mental Health",
+                createdDate: "2024-11-15T10:30:00"
         },
         {
             id: 2,
-            image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=400&fit=crop",
-            createdDate: "2024-11-14T15:45:00"
+                image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=400&fit=crop",
+                title: "Stress Management Techniques",
+                createdDate: "2024-11-14T15:45:00"
         },
         {
             id: 3,
-            image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop",
-            createdDate: "2024-11-13T09:20:00"
+                image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop",
+                title: "Mindfulness Meditation Guide",
+                createdDate: "2024-11-13T09:20:00"
         },
         {
             id: 4,
-            image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&h=400&fit=crop",
-            createdDate: "2024-11-12T14:10:00"
+                image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&h=400&fit=crop",
+                title: "Nutrition and Mental Health",
+                createdDate: "2024-11-12T14:10:00"
         }
     ]);
 
@@ -39,10 +43,11 @@ const AdminArticles = () => {
         });
     };
 
-    const handleAddArticle = (imageData) => {
+    const handleAddArticle = ({ image, title }) => {
         const newArticle = {
             id: Date.now(),
-            image: imageData,
+            image,
+            title: title || 'Untitled Article',
             createdDate: new Date().toISOString()
         };
         setArticles([newArticle, ...articles]);
@@ -117,9 +122,9 @@ const AdminArticles = () => {
                                 {/* Card Footer */}
                                 <div className="p-4">
                                     <div className="flex items-center justify-between">
-                                        <div className="text-sm text-gray-500">
-                                            <p className="font-medium">Uploaded</p>
-                                            <p>{formatDate(article.createdDate)}</p>
+                                        <div>
+                                            <div className="font-semibold text-gray-800 truncate">{article.title}</div>
+                                            <div className="text-sm text-gray-500 mt-1">Uploaded • {formatDate(article.createdDate)}</div>
                                         </div>
                                         <button
                                             onClick={() => setDeleteConfirm(article.id)}
@@ -197,10 +202,11 @@ const AdminArticles = () => {
                         </button>
                         <img
                             src={viewImage.image}
-                            alt="Article Full View"
+                            alt={viewImage.title || 'Article Full View'}
                             className="w-full h-auto rounded-xl shadow-2xl"
                         />
                         <div className="mt-4 text-center text-white">
+                            <h3 className="text-lg font-semibold mb-1">{viewImage.title}</h3>
                             <p className="text-sm opacity-80">Uploaded: {formatDate(viewImage.createdDate)}</p>
                         </div>
                     </div>
@@ -213,6 +219,7 @@ const AdminArticles = () => {
 // Add Article Modal Component
 const AddArticleModal = ({ onAdd, onCancel }) => {
     const [imagePreview, setImagePreview] = useState("");
+    const [title, setTitle] = useState("");
     const [isDragging, setIsDragging] = useState(false);
     const fileRef = useRef(null);
 
@@ -261,7 +268,11 @@ const AddArticleModal = ({ onAdd, onCancel }) => {
             alert('Please upload an image');
             return;
         }
-        onAdd(imagePreview);
+        if (!title.trim()) {
+            alert('Please enter a title for the article');
+            return;
+        }
+        onAdd({ image: imagePreview, title: title.trim() });
     };
 
     const handleRemoveImage = () => {
@@ -287,6 +298,10 @@ const AddArticleModal = ({ onAdd, onCancel }) => {
 
                 {/* Content */}
                 <div className="p-6">
+                    <div className="mb-4">
+                        <label className="block text-sm font-semibold text-[#1f1f35] mb-2">Article Title</label>
+                        <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" placeholder="Enter article title" className="w-full px-4 py-3 border border-gray-300 rounded-lg" />
+                    </div>
                     {/* Image Upload Area */}
                     <div
                         onClick={() => !imagePreview && fileRef.current?.click()}
