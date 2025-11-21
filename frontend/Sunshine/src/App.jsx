@@ -39,20 +39,22 @@ import AdminArticles from './Admin/Pages/AdminArticles.jsx'
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+  // const { user, loading } = useAuth();
+  const token = sessionStorage.getItem("admin_token");
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return user ? children : <Navigate to="/login" replace />;
+  // if (token) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center">
+  //       <div className="text-center">
+  //         <div className="w-16 h-16 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+  //         <p className="text-gray-600">Loading...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+  // console.log()
+  // console.log(token ? "gotin" : "didnotget in");
+  return token ? children : <Navigate to="/login" replace /> ;
 };
 
 // Admin Layout Component

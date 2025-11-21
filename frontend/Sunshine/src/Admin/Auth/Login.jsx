@@ -428,7 +428,8 @@ const Login = () => {
 
     try {
       const result = await login(credentials.username, credentials.password);
-      if (!result.success) {
+      console.log(result);
+      if (!result.status) {
         showCustomAlert(
           "error",
           result.error || "Login failed. Please check your credentials."
