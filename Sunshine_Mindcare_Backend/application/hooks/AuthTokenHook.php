@@ -14,6 +14,11 @@ class AuthTokenHook
 		'eventcontroller/past',
 		'eventcontroller/upcoming',
 		'blogcontroller/list',
+		'feedbackcontroller/add',
+		'feedbackcontroller/get',
+		'feedbackcontroller/update',
+		'feedbackcontroller/getApproved',
+		'jobcontroller/list',
 
 		
     ];

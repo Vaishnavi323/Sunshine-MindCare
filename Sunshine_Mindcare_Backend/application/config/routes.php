@@ -75,4 +75,11 @@ $route['blog/add'] = 'BlogController/add';
 $route['blog/list'] ='BlogController/list';
 $route['blog/delete'] = 'BlogController/delete';
 $route['job/add'] = 'JobController/add';
-
+$route['job/list'] = 'JobController/list';
+$route['job/update'] = 'JobController/update';
+$route['job/delete'] = 'JobController/delete';
+$route['feedback/add'] = 'FeedbackController/add';
+$route['feedback/get'] = 'FeedbackController/get';
+$route['feedback/approve'] = 'FeedbackController/update';
+$route['feedback/getapproved'] = 'FeedbackController/getApproved';
+$route['feedback/getall'] = 'FeedbackController/getAll';
