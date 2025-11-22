@@ -27,4 +27,14 @@ class EventModel extends CI_Model {
 		public function deleteEvent($id) {
 			return $this->db->delete('events', ['id' => $id]);
 		}
+
+		public function getUpcomingEvents() {
+    $today = date('Y-m-d');
+    return $this->db->where('date >=', $today)->get('events')->result_array();
+}
+
+public function getPastEvents() {
+    $today = date('Y-m-d');
+    return $this->db->where('date <', $today)->get('events')->result_array();
+}
 }

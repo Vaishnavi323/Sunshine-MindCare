@@ -11,6 +11,8 @@ class AuthTokenHook
 		'appointmentcontroller/get',
 		'articlecontroller/list',
         'eventcontroller/list',
+		'eventcontroller/past',
+		'eventcontroller/upcoming',
 		'blogcontroller/list',
 
 		

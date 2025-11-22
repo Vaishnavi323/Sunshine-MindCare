@@ -58,5 +58,26 @@ class EventController extends CI_Controller {
             $this->api->send_response(400, $response['message'], $response['message']);
         }
     }
+
+	public function upcoming() {
+    $this->api->request_method('GET');
+    $response = $this->eventlib->listUpcomingEvents();
+
+    if ($response['success']) 
+        $this->api->send_response(200, "Upcoming events fetched", null, null, $response['data']);
+    else 
+        $this->api->send_response(404, $response['message'], $response['message']);
+}
+
+public function past() {
+    $this->api->request_method('GET');
+    $response = $this->eventlib->listPastEvents();
+
+    if ($response['success']) 
+        $this->api->send_response(200, "Past events fetched", null, null, $response['data']);
+    else 
+        $this->api->send_response(404, $response['message'], $response['message']);
+}
+
 }
 
