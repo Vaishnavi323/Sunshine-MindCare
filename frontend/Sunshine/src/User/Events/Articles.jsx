@@ -7,88 +7,50 @@ const PublishedArticles = () => {
     const [loading, setLoading] = useState(true);
     const [selectedArticle, setSelectedArticle] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [error, setError] = useState(null);
 
-    // Mock data - Replace this with your API call
+    // Real API call
     useEffect(() => {
         const fetchArticles = async () => {
             try {
                 setLoading(true);
+                setError(null);
                 
-                // Mock data structure for published articles - only images
-                const mockArticles = [
-                    {
-                        id: 1,
-                        title: "Mental Health Awareness in Modern Society",
-                        newspaper: "The Daily Times",
-                        date: "2024-01-15",
-                        image: "/api/placeholder/400/500",
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/article/list`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
                     },
-                    {
-                        id: 2,
-                        title: "Breaking the Stigma: Talking About Mental Health",
-                        newspaper: "Health Chronicle",
-                        date: "2024-01-10",
-                        image: "/api/placeholder/400/500",
-                    },
-                    {
-                        id: 3,
-                        title: "The Rise of Telepsychiatry During Pandemic",
-                        newspaper: "Medical Gazette",
-                        date: "2024-01-05",
-                        image: "/api/placeholder/400/500",
-                    },
-                    {
-                        id: 4,
-                        title: "Mindfulness Practices for Daily Life",
-                        newspaper: "Wellness Weekly",
-                        date: "2023-12-20",
-                        image: "/api/placeholder/400/500",
-                    },
-                    {
-                        id: 5,
-                        title: "Youth Mental Health Crisis: A Call to Action",
-                        newspaper: "Education Today",
-                        date: "2023-12-15",
-                        image: "/api/placeholder/400/500",
-                    },
-                    {
-                        id: 6,
-                        title: "Corporate Wellness: Investing in Employee Mental Health",
-                        newspaper: "Business Digest",
-                        date: "2023-12-10",
-                        image: "/api/placeholder/400/500",
-                    },
-                    {
-                        id: 7,
-                        title: "Traditional Healing Meets Modern Therapy",
-                        newspaper: "Cultural Review",
-                        date: "2023-12-05",
-                        image: "/api/placeholder/400/500",
-                    },
-                    {
-                        id: 8,
-                        title: "The Science of Happiness and Well-being",
-                        newspaper: "Science Journal",
-                        date: "2023-11-28",
-                        image: "/api/placeholder/400/500",
-                    },
-                    {
-                        id: 9,
-                        title: "Mental Health Legislation and Policy Changes",
-                        newspaper: "Policy Watch",
-                        date: "2023-11-20",
-                        image: "/api/placeholder/400/500",
-                    }
-                ];
+                });
 
-                // Simulate API delay
-                setTimeout(() => {
-                    setArticles(mockArticles);
-                    setLoading(false);
-                }, 1000);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.status) {
+                    // Transform API data to match your component structure
+                    const transformedArticles = data.error.map(article => ({
+                        id: article.id,
+                        title: `Article ${article.id}`,
+                        newspaper: "Sunshine MindCare",
+                        date: article.created_at,
+                        image: `${import.meta.env.VITE_BACKEND_URL}/uploads/articles/${article.image}`,
+                        originalImage: article.image
+                    }));
+                    
+                    setArticles(transformedArticles);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch articles');
+                }
                 
             } catch (error) {
                 console.error('Error fetching articles:', error);
+                setError(error.message);
+                // Fallback to empty array if API fails
+                setArticles([]);
+            } finally {
                 setLoading(false);
             }
         };
@@ -120,6 +82,31 @@ const PublishedArticles = () => {
                         <Col lg={8} className="text-center">
                             <div className="loading-spinner"></div>
                             <p>Loading published articles...</p>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="articles-error">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="error-icon">
+                                <i className="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h3>Error Loading Articles</h3>
+                            <p>{error}</p>
+                            <button 
+                                className="retry-btn"
+                                onClick={() => window.location.reload()}
+                            >
+                                <i className="fas fa-redo"></i>
+                                Try Again
+                            </button>
                         </Col>
                     </Row>
                 </Container>
@@ -159,11 +146,21 @@ const PublishedArticles = () => {
                                 >
                                     <div className="card-image-container">
                                         <div className="article-image">
-                                            {/* Newspaper image */}
-                                            <div className="newspaper-image">
-                                                <div className="image-overlay-text">
-                                                    <div className="newspaper-name">{article.newspaper}</div>
-                                                    <div className="article-date">{formatDate(article.date)}</div>
+                                            {/* Real newspaper image from API */}
+                                            <div 
+                                                className="newspaper-image"
+                                                style={{ 
+                                                    backgroundImage: `url(${article.image})`,
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center',
+                                                    backgroundRepeat: 'no-repeat'
+                                                }}
+                                            >
+                                                <div className="image-overlay">
+                                                    <div className="image-overlay-text">
+                                                        <div className="newspaper-name">{article.newspaper}</div>
+                                                        <div className="article-date">{formatDate(article.date)}</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -179,7 +176,7 @@ const PublishedArticles = () => {
                         ))}
                     </Row>
 
-                    {/* Load More Button */}
+                    {/* Load More Button - You can implement pagination later */}
                     {articles.length > 0 && (
                         <Row className="mt-5">
                             <Col className="text-center">
@@ -193,7 +190,7 @@ const PublishedArticles = () => {
             </section>
 
             {/* Empty State */}
-            {articles.length === 0 && !loading && (
+            {articles.length === 0 && !loading && !error && (
                 <section className="empty-state py-5">
                     <Container>
                         <Row className="justify-content-center text-center">
@@ -222,25 +219,35 @@ const PublishedArticles = () => {
                 {selectedArticle && (
                     <>
                         <Modal.Header closeButton>
-                            <Modal.Title>{selectedArticle.title}</Modal.Title>
+                            <Modal.Title>Article {selectedArticle.id}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="modal-content">
                                 <div className="modal-image">
-                                    <div className="newspaper-image-modal">
-                                        <div className="image-overlay-text-modal">
-                                            <div className="newspaper-name">{selectedArticle.newspaper}</div>
-                                            <div className="article-date">{formatDate(selectedArticle.date)}</div>
+                                    <div 
+                                        className="newspaper-image-modal"
+                                        style={{ 
+                                            backgroundImage: `url(${selectedArticle.image})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat'
+                                        }}
+                                    >
+                                        <div className="image-overlay-modal">
+                                            <div className="image-overlay-text-modal">
+                                                <div className="newspaper-name">{selectedArticle.newspaper}</div>
+                                                <div className="article-date">{formatDate(selectedArticle.date)}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="modal-actions">
                                     <button 
                                         className="view-original-btn"
-                                        onClick={() => window.open('#', '_blank')}
+                                        onClick={() => window.open(selectedArticle.image, '_blank')}
                                     >
                                         <i className="fas fa-external-link-alt"></i>
-                                        View Original Article
+                                        View Full Image
                                     </button>
                                 </div>
                             </div>
@@ -344,11 +351,6 @@ const PublishedArticles = () => {
                 .article-image {
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
                     transition: transform 0.3s ease;
                     position: relative;
                 }
@@ -361,7 +363,6 @@ const PublishedArticles = () => {
                 .newspaper-image {
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(135deg, #8b9dc3 0%, #3b5998 100%);
                     display: flex;
                     align-items: flex-end;
                     justify-content: flex-start;
@@ -369,15 +370,14 @@ const PublishedArticles = () => {
                     padding: 20px;
                 }
 
-                .newspaper-image::before {
-                    content: '';
+                .image-overlay {
                     position: absolute;
-                    top: 0;
+                    bottom: 0;
                     left: 0;
                     right: 0;
-                    bottom: 0;
-                    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-                    opacity: 0.3;
+                    background: linear-gradient(transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+                    padding: 20px;
+                    color: white;
                 }
 
                 .image-overlay-text {
@@ -446,7 +446,6 @@ const PublishedArticles = () => {
                 .newspaper-image-modal {
                     width: 100%;
                     height: 500px;
-                    background: linear-gradient(135deg, #8b9dc3 0%, #3b5998 100%);
                     display: flex;
                     align-items: flex-end;
                     justify-content: flex-start;
@@ -455,15 +454,14 @@ const PublishedArticles = () => {
                     border-radius: 10px;
                 }
 
-                .newspaper-image-modal::before {
-                    content: '';
+                .image-overlay-modal {
                     position: absolute;
-                    top: 0;
+                    bottom: 0;
                     left: 0;
                     right: 0;
-                    bottom: 0;
-                    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-                    opacity: 0.3;
+                    background: linear-gradient(transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+                    padding: 30px;
+                    color: white;
                 }
 
                 .image-overlay-text-modal {
@@ -536,6 +534,50 @@ const PublishedArticles = () => {
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
+                }
+
+                /* Error State */
+                .articles-error {
+                    min-height: 50vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                }
+
+                .error-icon {
+                    font-size: 4rem;
+                    color: #dc3545;
+                    margin-bottom: 1.5rem;
+                }
+
+                .articles-error h3 {
+                    color: #dc3545;
+                    margin-bottom: 1rem;
+                }
+
+                .articles-error p {
+                    color: #6c757d;
+                    margin-bottom: 2rem;
+                }
+
+                .retry-btn {
+                    background: linear-gradient(45deg, #dc3545, #e35d6a);
+                    border: none;
+                    padding: 10px 25px;
+                    font-weight: 600;
+                    border-radius: 25px;
+                    color: white;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin: 0 auto;
+                }
+
+                .retry-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
                 }
 
                 /* Empty State */
