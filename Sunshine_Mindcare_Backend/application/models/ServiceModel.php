@@ -30,4 +30,16 @@ class ServiceModel extends CI_Model
 	{
 		return $this->db->get_where('sub_services', ['service_id' => $service_id])->result();
 	}
+	// Update service
+public function updateService($id, $data)
+{
+    return $this->db->where('id', $id)->update('services', $data);
+}
+
+// Soft delete service (status = 0)
+public function softDeleteService($id)
+{
+    return $this->db->where('id', $id)->update('services', ['status' => 0]);
+}
+
 }

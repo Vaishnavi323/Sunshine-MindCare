@@ -26,3 +26,11 @@ $hook['post_controller_constructor'][] = array(
     'filename' => 'AuthTokenHook.php',
     'filepath' => 'hooks'
 );
+
+$hook['post_controller_constructor'][] = array(
+    'class'    => 'DynamicFixHook',
+    'function' => 'fixDynamicProperties',
+    'filename' => 'DynamicFixHook.php',
+    'filepath' => 'hooks'
+);
+

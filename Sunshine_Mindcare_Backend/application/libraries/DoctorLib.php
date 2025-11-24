@@ -23,10 +23,10 @@ class DoctorLib {
             return ['status' => false, 'error' => $this->CI->upload->display_errors()];
         } else {
             $file_data = $this->CI->upload->data();
-            return [
-                'status' => true,
-                'file_path' => base_url($upload_path . '/' . $file_data['file_name'])
-            ];
+           return [
+    'status' => true,
+    'file_path' => base_url('uploads/doctors/' . $file_data['file_name'])
+];
         }
     }
 }

@@ -32,4 +32,19 @@ class EnquireController extends CI_Controller {
         $result = $this->EnquireModel->getInternships();
         echo json_encode(["status" => true, "data" => $result]);
     }
+	public function delete($id) {
+    if (!$id) {
+        echo json_encode(["status" => false, "message" => "ID is required"]);
+        return;
+    }
+
+    $deleted = $this->EnquireModel->deleteInternship($id);
+
+    if ($deleted) {
+        echo json_encode(["status" => true, "message" => "Internship enquiry deleted permanently"]);
+    } else {
+        echo json_encode(["status" => false, "message" => "Failed to delete or ID not found"]);
+    }
+}
+
 }

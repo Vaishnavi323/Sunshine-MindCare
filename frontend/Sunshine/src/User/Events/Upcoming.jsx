@@ -21,8 +21,8 @@ const UpcomingEvents = () => {
                     },
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                if (!status == false) {
+                    throw new Error(`HTTP error! status: ${response.message}`);
                 }
 
                 const data = await response.json();

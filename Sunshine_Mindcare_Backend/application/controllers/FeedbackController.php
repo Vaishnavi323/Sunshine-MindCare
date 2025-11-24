@@ -68,4 +68,32 @@ public function getAll()
     else
         $this->api->send_response(404, $response['message'], $response['message']);
 }
+
+public function delete($id)
+{
+    header('Content-Type: application/json');
+
+    if (!$id) {
+        echo json_encode([
+            'status' => false,
+            'message' => 'Feedback ID is required'
+        ]);
+        return;
+    }
+
+    $deleted = $this->FeedbackModel->deleteFeedback($id);
+
+    if ($deleted) {
+        echo json_encode([
+            'status' => true,
+            'message' => 'Feedback deleted successfully'
+        ]);
+    } else {
+        echo json_encode([
+            'status' => false,
+            'message' => 'Failed to delete feedback or ID not found'
+        ]);
+    }
+}
+
 }
