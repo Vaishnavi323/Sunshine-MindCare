@@ -632,7 +632,7 @@ const Login = () => {
             {/* Footer Note */}
             <div className="text-center mt-6">
               <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "14px" }}>
-                Secure access to Empathy Foundation admin panel
+                Secure access to Sunshine Mindcare admin panel
               </p>
             </div>
           </div>
