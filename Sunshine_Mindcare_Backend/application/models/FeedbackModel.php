@@ -24,4 +24,8 @@ public function getAllFeedback()
         ->get('feedback_reviews')
         ->result_array();
 }
+public function deleteFeedback($id) {
+    return $this->db->where('id', $id)->delete('feedback_reviews');
+}
+
 }

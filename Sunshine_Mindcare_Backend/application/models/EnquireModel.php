@@ -19,4 +19,7 @@ class EnquireModel extends CI_Model {
     public function getInternships() {
         return $this->db->order_by('id', 'DESC')->get('enquires')->result_array();
     }
+	public function deleteInternship($id) {
+    return $this->db->where('id', $id)->delete('enquires');
+}
 }

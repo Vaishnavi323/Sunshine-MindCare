@@ -83,4 +83,26 @@ public function add()
 		}
 	}
 
+
+	public function update($id)
+{
+    $input = json_decode(file_get_contents('php://input'), true);
+    $updated = $this->ServiceModel->updateService($id, $input);
+
+    echo json_encode([
+        'status' => $updated,
+        'message' => $updated ? 'Service updated successfully' : 'Failed to update service'
+    ]);
+}
+
+public function delete($id)
+{
+    $deleted = $this->ServiceModel->softDeleteService($id);
+
+    echo json_encode([
+        'status' => $deleted,
+        'message' => $deleted ? 'Service soft deleted (inactive)' : 'Failed to delete service'
+    ]);
+}
+
 }

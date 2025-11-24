@@ -20,8 +20,11 @@ class AuthTokenHook
 		'feedbackcontroller/getApproved',
 		'jobcontroller/list',
 		'doctorcontroller/get',
-		'enquirecontroler/list',
+		'enquirecontroller/list',
 		'enquirecontroller/add',
+		'contactcontroller/add',
+		'contactcontroller/list',
+		'feedbackcontroller/delete',
 
 		
     ];

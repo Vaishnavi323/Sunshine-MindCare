@@ -66,4 +66,26 @@ public function add()
 
         $this->api->send_response(200, "Sub Services fetched", $response['data']);
     }
+
+	public function update($id)
+{
+    $input = json_decode(file_get_contents('php://input'), true);
+    $updated = $this->SubServiceModel->updateSubService($id, $input);
+
+    echo json_encode([
+        'status' => $updated,
+        'message' => $updated ? 'SubService updated successfully' : 'Failed to update sub-service'
+    ]);
+}
+
+public function delete($id)
+{
+    $deleted = $this->SubServiceModel->softDeleteSubService($id);
+
+    echo json_encode([
+        'status' => $deleted,
+        'message' => $deleted ? 'SubService soft deleted (inactive)' : 'Failed to delete sub-service'
+    ]);
+}
+
 }

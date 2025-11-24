@@ -83,7 +83,19 @@ $route['feedback/get'] = 'FeedbackController/get';
 $route['feedback/approve'] = 'FeedbackController/update';
 $route['feedback/getapproved'] = 'FeedbackController/getApproved';
 $route['feedback/getall'] = 'FeedbackController/getAll';
+$route['feedback/delete/(:num)'] = 'FeedbackController/delete/$1';
+
 $route['doctor/add'] = 'DoctorController/add';
 $route['doctor/list'] = 'DoctorController/list';
 $route['enquires/add'] = 'EnquireController/add';
 $route['enquires/list'] = 'EnquireController/list';
+$route['enquire/delete/(:num)'] = 'EnquireController/delete/$1';
+
+$route['contact/add'] = 'ContactController/add';
+$route['contact/list'] = 'ContactController/list';
+$route['service/update/(:num)'] = 'ServiceController/update/$1';
+$route['service/delete/(:num)'] = 'ServiceController/delete/$1';
+
+$route['subservice/update/(:num)'] = 'SubServiceController/update/$1';
+$route['subservice/delete/(:num)'] = 'SubServiceController/delete/$1';
+

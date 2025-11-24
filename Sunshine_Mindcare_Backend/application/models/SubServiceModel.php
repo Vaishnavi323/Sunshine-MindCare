@@ -18,4 +18,16 @@ class SubServiceModel extends CI_Model
     {
         return $this->db->get('sub_services')->result_array();
     }
+	// Update sub-service
+public function updateSubService($id, $data)
+{
+    return $this->db->where('id', $id)->update('sub_services', $data);
+}
+
+// Soft delete sub-service
+public function softDeleteSubService($id)
+{
+    return $this->db->where('id', $id)->update('sub_services', ['status' => 0]);
+}
+
 }
