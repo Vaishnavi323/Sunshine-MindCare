@@ -11,6 +11,14 @@ class JobController extends CI_Controller {
 	public function add() {
 		$this->api->request_method('POST');
 		$input = $this->input->post();
+
+		$input = json_decode($this->input->raw_input_stream, true);
+    if (empty($input)) {
+        $input = $this->input->post(); 
+    }
+
+    log_message('error', 'Job Add Input: ' . print_r($input, true)); // Debug
+
 		$input['created_at'] = date('Y-m-d H:i:s');
 
 		$response = $this->joblib->addJob($input);

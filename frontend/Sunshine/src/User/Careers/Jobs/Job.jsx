@@ -38,22 +38,26 @@ const Job = () => {
                     // Transform API data to match your component structure
                     const transformedJobs = data.error.map(job => ({
                         id: job.id,
-                        title: job.heading || `Job Position ${job.id}`,
-                        department: job.department || 'General',
+                        title: (job.heading && job.heading.trim() !== '') ? job.heading : `Job Position ${job.id}`,
+                        department: (job.department && job.department.trim() !== '') ? job.department : 'General',
                         type: job.type === 'fulltime' ? 'Full-time' : 
                               job.type === 'parttime' ? 'Part-time' : 
-                              job.type === 'internship' ? 'Internship' : 'Full-time',
-                        experience: job.experience || 'Not specified',
-                        location: job.location || 'Multiple Locations',
-                        salary: job.salary_lpa ? `₹${job.salary_lpa} LPA` : 'Competitive Salary',
-                        description: job.description || 'Join our team and contribute to mental healthcare excellence.',
-                        requirements: job.requirements ? 
+                              job.type === 'internship' ? 'Internship' : 
+                              job.type === 'contract' ? 'Contract' : 'Full-time',
+                        experience: (job.experience && job.experience.trim() !== '') ? job.experience : 'Not specified',
+                        location: (job.location && job.location.trim() !== '') ? job.location : 'Multiple Locations',
+                        salary: (job.salary_lpa && job.salary_lpa.trim() !== '') ? `₹${job.salary_lpa} LPA` : 'Competitive Salary',
+                        description: (job.description && job.description.trim() !== '') ? job.description : 'Join our team and contribute to mental healthcare excellence. We are looking for passionate professionals who want to make a difference.',
+                        requirements: (job.requirements && job.requirements.trim() !== '') ? 
                             job.requirements.split(',').map(req => req.trim()).filter(req => req) : 
-                            ['Psychology degree or related field', 'Strong communication skills', 'Empathetic approach'],
-                        postedDate: job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : '2024-01-01',
-                        applyLink: "#",
-                        featured: Math.random() > 0.7 // Random featured status for demo
+                            ['Relevant degree or certification', 'Strong communication skills', 'Empathetic approach', 'Team player'],
+                        postedDate: job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+                        applyLink: "#apply",
+                        featured: job.id % 3 === 0 // Every 3rd job will be featured
                     }));
+                    
+                    // Filter out invalid jobs (optional - uncomment if needed)
+                    // const validJobs = transformedJobs.filter(job => job.title !== `Job Position ${job.id}`);
                     
                     setJobs(transformedJobs);
                 } else {
@@ -503,14 +507,14 @@ const Job = () => {
                             <Button variant="secondary" onClick={handleCloseModal}>
                                 Close
                             </Button>
-                            <Button 
+                            {/* <Button 
                                 variant="primary" 
                                 href={selectedJob.applyLink}
                                 target="_blank"
                                 className="apply-now-btn"
                             >
                                 Apply Now
-                            </Button>
+                            </Button> */}
                         </Modal.Footer>
                     </>
                 )}
