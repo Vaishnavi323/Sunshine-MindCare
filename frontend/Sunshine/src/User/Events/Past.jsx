@@ -5,61 +5,52 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const PastEvents = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Mock data - Replace this with your API call
+    // Real API call
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 setLoading(true);
+                setError(null);
                 
-                // Mock data structure
-                const mockEvents = [
-                    {
-                        id: 1,
-                        title: "WOMEN'S DAY 2023 IN ASSOCIATION WITH REVIVE SKIN AND HAIR CLINIC",
-                        date: "2023-03-08",
-                        image: "/api/placeholder/400/250",
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/event/past`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
                     },
-                    {
-                        id: 2,
-                        title: "WORLD MENTAL HEALTH DAY EVENT 2023",
-                        date: "2023-10-10",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 3,
-                        title: "MINDFULNESS MEDITATION WORKSHOP",
-                        date: "2023-07-15",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 4,
-                        title: "YOUTH MENTAL HEALTH SUMMIT 2023",
-                        date: "2023-11-20",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 5,
-                        title: "STRESS MANAGEMENT SEMINAR",
-                        date: "2023-05-12",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 6,
-                        title: "ANXIETY AWARENESS CAMPAIGN",
-                        date: "2023-09-18",
-                        image: "/api/placeholder/400/250",
-                    }
-                ];
+                });
 
-                // Simulate API delay
-                setTimeout(() => {
-                    setEvents(mockEvents);
-                    setLoading(false);
-                }, 1000);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.status) {
+                    // Transform API data to match your component structure
+                    const transformedEvents = data.data.map(event => ({
+                        id: event.id,
+                        title: event.heading,
+                        venue: event.venue,
+                        date: event.date,
+                        time: event.time,
+                        description: event.description,
+                        image: event.image_url || `${import.meta.env.VITE_BACKEND_URL}/${event.image}`,
+                        created_at: event.created_at
+                    }));
+                    
+                    setEvents(transformedEvents);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch past events');
+                }
                 
             } catch (error) {
-                console.error('Error fetching events:', error);
+                console.error('Error fetching past events:', error);
+                setError(error.message);
+                // Fallback to empty array if API fails
+                setEvents([]);
+            } finally {
                 setLoading(false);
             }
         };
@@ -73,6 +64,13 @@ const PastEvents = () => {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
+    // Format time
+    const formatTime = (timeString) => {
+        if (!timeString || timeString === '00:00:00') return '';
+        const time = new Date(`2000-01-01T${timeString}`);
+        return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
+
     if (loading) {
         return (
             <div className="events-loading">
@@ -81,6 +79,31 @@ const PastEvents = () => {
                         <Col lg={8} className="text-center">
                             <div className="loading-spinner"></div>
                             <p>Loading past events...</p>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="events-error">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="error-icon">
+                                <i className="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h3>Error Loading Events</h3>
+                            <p>{error}</p>
+                            <button 
+                                className="retry-btn"
+                                onClick={() => window.location.reload()}
+                            >
+                                <i className="fas fa-redo"></i>
+                                Try Again
+                            </button>
                         </Col>
                     </Row>
                 </Container>
@@ -118,19 +141,43 @@ const PastEvents = () => {
                                     style={{ animationDelay: `${index * 0.1}s` }}
                                 >
                                     <div className="card-image-container">
-                                        <div className="event-image">
-                                            {/* Image placeholder - replace with actual image */}
-                                            <div className="image-placeholder">
+                                        <div 
+                                            className="event-image"
+                                            style={{
+                                                backgroundImage: `url(${event.image})`,
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center',
+                                                backgroundRepeat: 'no-repeat'
+                                            }}
+                                        >
+                                            {/* Fallback icon if image fails to load */}
+                                            <div className="image-fallback">
                                                 <i className="fas fa-calendar-alt"></i>
                                             </div>
                                         </div>
                                         <div className="event-date-overlay">
                                             {formatDate(event.date)}
+                                            {event.time && event.time !== '00:00:00' && (
+                                                <div className="event-time">
+                                                    {formatTime(event.time)}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     
                                     <Card.Body className="p-4">
                                         <h3 className="event-title">{event.title}</h3>
+                                        {event.venue && (
+                                            <div className="event-venue">
+                                                <i className="fas fa-map-marker-alt"></i>
+                                                {event.venue}
+                                            </div>
+                                        )}
+                                        {event.description && (
+                                            <p className="event-description">
+                                                {event.description}
+                                            </p>
+                                        )}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -151,7 +198,7 @@ const PastEvents = () => {
             </section>
 
             {/* Empty State */}
-            {events.length === 0 && !loading && (
+            {events.length === 0 && !loading && !error && (
                 <section className="empty-state py-5">
                     <Container>
                         <Row className="justify-content-center text-center">
@@ -263,21 +310,34 @@ const PastEvents = () => {
                 .event-image {
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(135deg, #3567c3 0%, #2a5298 100%);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     color: white;
                     transition: transform 0.3s ease;
+                    position: relative;
                 }
 
                 .event-card:hover .event-image {
                     transform: scale(1.05);
                 }
 
-                .image-placeholder {
+                .image-fallback {
                     font-size: 3rem;
                     opacity: 0.8;
+                    display: none;
+                }
+
+                .event-image:not([style*="background-image"]),
+                .event-image[style*="background-image: url(null)"],
+                .event-image[style*="background-image: url(undefined)"] {
+                    background: linear-gradient(135deg, #3567c3 0%, #2a5298 100%) !important;
+                }
+
+                .event-image:not([style*="background-image"]) .image-fallback,
+                .event-image[style*="background-image: url(null)"] .image-fallback,
+                .event-image[style*="background-image: url(undefined)"] .image-fallback {
+                    display: flex;
                 }
 
                 .event-date-overlay {
@@ -291,12 +351,43 @@ const PastEvents = () => {
                     font-size: 0.85rem;
                     font-weight: 600;
                     backdrop-filter: blur(10px);
+                    text-align: center;
+                }
+
+                .event-time {
+                    font-size: 0.75rem;
+                    opacity: 0.9;
+                    margin-top: 2px;
                 }
 
                 .event-title {
                     color: #2a5298;
                     font-size: 1.2rem;
                     font-weight: 600;
+                    line-height: 1.4;
+                    margin: 0 0 10px 0;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .event-venue {
+                    color: #666;
+                    font-size: 0.9rem;
+                    margin-bottom: 10px;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+
+                .event-venue i {
+                    color: #ff6b35;
+                }
+
+                .event-description {
+                    color: #666;
+                    font-size: 0.9rem;
                     line-height: 1.4;
                     margin: 0;
                     display: -webkit-box;
@@ -344,6 +435,50 @@ const PastEvents = () => {
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
+                }
+
+                /* Error State */
+                .events-error {
+                    min-height: 50vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                }
+
+                .error-icon {
+                    font-size: 4rem;
+                    color: #dc3545;
+                    margin-bottom: 1.5rem;
+                }
+
+                .events-error h3 {
+                    color: #dc3545;
+                    margin-bottom: 1rem;
+                }
+
+                .events-error p {
+                    color: #6c757d;
+                    margin-bottom: 2rem;
+                }
+
+                .retry-btn {
+                    background: linear-gradient(45deg, #dc3545, #e35d6a);
+                    border: none;
+                    padding: 10px 25px;
+                    font-weight: 600;
+                    border-radius: 25px;
+                    color: white;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin: 0 auto;
+                }
+
+                .retry-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
                 }
 
                 /* Empty State */

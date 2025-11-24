@@ -12,138 +12,146 @@ const Job = () => {
         type: '',
         experience: ''
     });
+    const [error, setError] = useState(null);
 
-    // Mock data - Replace with API call
+    // Real API call
     useEffect(() => {
         const fetchJobs = async () => {
             try {
                 setLoading(true);
+                setError(null);
                 
-                const mockJobs = [
-                    {
-                        id: 1,
-                        title: "Clinical Psychologist",
-                        department: "Clinical",
-                        type: "Full-time",
-                        experience: "3-5 years",
-                        location: "Mumbai, India",
-                        salary: "₹8-12 LPA",
-                        description: "We are seeking a licensed Clinical Psychologist to join our team. The ideal candidate will have experience in therapeutic interventions and psychological assessments.",
-                        requirements: [
-                            "PhD or PsyD in Clinical Psychology",
-                            "Valid license to practice",
-                            "Experience with CBT, DBT, and other therapeutic modalities",
-                            "Strong assessment and diagnostic skills"
-                        ],
-                        postedDate: "2024-01-15",
-                        applyLink: "#"
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/list`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
                     },
-                    {
-                        id: 2,
-                        title: "Counseling Psychologist",
-                        department: "Counseling",
-                        type: "Full-time",
-                        experience: "2-4 years",
-                        location: "Delhi, India",
-                        salary: "₹6-9 LPA",
-                        description: "Join our counseling team to provide individual and group therapy sessions. Help clients navigate life challenges and mental health concerns.",
-                        requirements: [
-                            "Master's in Counseling Psychology",
-                            "2+ years of counseling experience",
-                            "Empathic and compassionate approach",
-                            "Excellent communication skills"
-                        ],
-                        postedDate: "2024-01-12",
-                        applyLink: "#"
-                    },
-                    {
-                        id: 3,
-                        title: "Intern - Psychology",
-                        department: "Training",
-                        type: "Internship",
-                        experience: "0-1 years",
-                        location: "Bangalore, India",
-                        salary: "Stipend Provided",
-                        description: "Perfect opportunity for psychology students to gain hands-on experience in a clinical setting under expert supervision.",
-                        requirements: [
-                            "Currently pursuing Psychology degree",
-                            "Strong interest in clinical work",
-                            "Willingness to learn and grow",
-                            "Good observational skills"
-                        ],
-                        postedDate: "2024-01-10",
-                        applyLink: "#"
-                    },
-                    {
-                        id: 4,
-                        title: "Mental Health Counselor",
-                        department: "Counseling",
-                        type: "Part-time",
-                        experience: "1-3 years",
-                        location: "Hyderabad, India",
-                        salary: "₹4-6 LPA",
-                        description: "Provide mental health counseling services to individuals and groups. Flexible part-time position with remote options.",
-                        requirements: [
-                            "Master's in Psychology or related field",
-                            "Counseling certification preferred",
-                            "Experience with teletherapy",
-                            "Flexible schedule availability"
-                        ],
-                        postedDate: "2024-01-08",
-                        applyLink: "#"
-                    },
-                    {
-                        id: 5,
-                        title: "Research Psychologist",
-                        department: "Research",
-                        type: "Full-time",
-                        experience: "4-6 years",
-                        location: "Pune, India",
-                        salary: "₹10-15 LPA",
-                        description: "Lead research projects in mental health interventions. Collaborate with clinical team to implement evidence-based practices.",
-                        requirements: [
-                            "PhD in Psychology with research focus",
-                            "Published research papers",
-                            "Experience with statistical analysis",
-                            "Strong analytical skills"
-                        ],
-                        postedDate: "2024-01-05",
-                        applyLink: "#"
-                    },
-                    {
-                        id: 6,
-                        title: "Child Psychologist",
-                        department: "Pediatric",
-                        type: "Full-time",
-                        experience: "3-5 years",
-                        location: "Chennai, India",
-                        salary: "₹7-11 LPA",
-                        description: "Specialize in child and adolescent psychology. Work with young clients and their families to address developmental and emotional concerns.",
-                        requirements: [
-                            "Specialization in Child Psychology",
-                            "Experience with play therapy",
-                            "Patience and creativity",
-                            "Family therapy experience"
-                        ],
-                        postedDate: "2024-01-03",
-                        applyLink: "#"
-                    }
-                ];
+                });
 
-                // Simulate API delay
-                setTimeout(() => {
-                    setJobs(mockJobs);
-                    setLoading(false);
-                }, 1500);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.status) {
+                    // Transform API data to match your component structure
+                    const transformedJobs = data.error.map(job => ({
+                        id: job.id,
+                        title: job.heading || `Job Position ${job.id}`,
+                        department: job.department || 'General',
+                        type: job.type === 'fulltime' ? 'Full-time' : 
+                              job.type === 'parttime' ? 'Part-time' : 
+                              job.type === 'internship' ? 'Internship' : 'Full-time',
+                        experience: job.experience || 'Not specified',
+                        location: job.location || 'Multiple Locations',
+                        salary: job.salary_lpa ? `₹${job.salary_lpa} LPA` : 'Competitive Salary',
+                        description: job.description || 'Join our team and contribute to mental healthcare excellence.',
+                        requirements: job.requirements ? 
+                            job.requirements.split(',').map(req => req.trim()).filter(req => req) : 
+                            ['Psychology degree or related field', 'Strong communication skills', 'Empathetic approach'],
+                        postedDate: job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : '2024-01-01',
+                        applyLink: "#",
+                        featured: Math.random() > 0.7 // Random featured status for demo
+                    }));
+                    
+                    setJobs(transformedJobs);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch jobs');
+                }
                 
             } catch (error) {
                 console.error('Error fetching jobs:', error);
+                setError(error.message);
+                // Fallback to mock data if API fails
+                setJobs(getMockJobsData());
+            } finally {
                 setLoading(false);
             }
         };
 
         fetchJobs();
     }, []);
+
+    // Fallback mock data
+    const getMockJobsData = () => [
+        {
+            id: 1,
+            title: "Clinical Psychologist",
+            department: "Clinical",
+            type: "Full-time",
+            experience: "3-5 years",
+            location: "Mumbai, India",
+            salary: "₹8-12 LPA",
+            description: "We are seeking a licensed Clinical Psychologist to join our team. The ideal candidate will have experience in therapeutic interventions and psychological assessments.",
+            requirements: [
+                "PhD or PsyD in Clinical Psychology",
+                "Valid license to practice",
+                "Experience with CBT, DBT, and other therapeutic modalities",
+                "Strong assessment and diagnostic skills"
+            ],
+            postedDate: "2024-01-15",
+            applyLink: "#",
+            featured: true
+        },
+        {
+            id: 2,
+            title: "Counseling Psychologist",
+            department: "Counseling",
+            type: "Full-time",
+            experience: "2-4 years",
+            location: "Delhi, India",
+            salary: "₹6-9 LPA",
+            description: "Join our counseling team to provide individual and group therapy sessions. Help clients navigate life challenges and mental health concerns.",
+            requirements: [
+                "Master's in Counseling Psychology",
+                "2+ years of counseling experience",
+                "Empathic and compassionate approach",
+                "Excellent communication skills"
+            ],
+            postedDate: "2024-01-12",
+            applyLink: "#",
+            featured: false
+        },
+        {
+            id: 3,
+            title: "Intern - Psychology",
+            department: "Training",
+            type: "Internship",
+            experience: "0-1 years",
+            location: "Bangalore, India",
+            salary: "Stipend Provided",
+            description: "Perfect opportunity for psychology students to gain hands-on experience in a clinical setting under expert supervision.",
+            requirements: [
+                "Currently pursuing Psychology degree",
+                "Strong interest in clinical work",
+                "Willingness to learn and grow",
+                "Good observational skills"
+            ],
+            postedDate: "2024-01-10",
+            applyLink: "#",
+            featured: true
+        },
+        {
+            id: 4,
+            title: "Mental Health Counselor",
+            department: "Counseling",
+            type: "Part-time",
+            experience: "1-3 years",
+            location: "Hyderabad, India",
+            salary: "₹4-6 LPA",
+            description: "Provide mental health counseling services to individuals and groups. Flexible part-time position with remote options.",
+            requirements: [
+                "Master's in Psychology or related field",
+                "Counseling certification preferred",
+                "Experience with teletherapy",
+                "Flexible schedule availability"
+            ],
+            postedDate: "2024-01-08",
+            applyLink: "#",
+            featured: false
+        }
+    ];
 
     const departments = [...new Set(jobs.map(job => job.department))];
     const jobTypes = [...new Set(jobs.map(job => job.type))];
@@ -195,6 +203,30 @@ const Job = () => {
                                     <div className="pulse-dot dot-3"></div>
                                 </div>
                                 <p>Loading career opportunities...</p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="job-opportunities-page">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="error-state">
+                                <div className="error-icon">⚠️</div>
+                                <h3>Error Loading Jobs</h3>
+                                <p>{error}</p>
+                                <button 
+                                    className="retry-btn"
+                                    onClick={() => window.location.reload()}
+                                >
+                                    Try Again
+                                </button>
                             </div>
                         </Col>
                     </Row>
@@ -300,11 +332,11 @@ const Job = () => {
                                 >
                                     <Card className="h-100">
                                         <Card.Body className="p-4">
-                                            {/* {job.featured && (
+                                            {job.featured && (
                                                 <div className="featured-badge">
                                                     <span>⭐ Featured</span>
                                                 </div>
-                                            )} */}
+                                            )}
                                             <div className="job-header">
                                                 <h3 className="job-title">{job.title}</h3>
                                                 <div className="salary-badge">{job.salary}</div>
@@ -329,9 +361,9 @@ const Job = () => {
                                                 </div>
                                             </div>
 
-                                            {/* <p className="job-description">
+                                            <p className="job-description">
                                                 {job.description}
-                                            </p> */}
+                                            </p>
 
                                             <div className="job-requirements">
                                                 <strong>Key Requirements:</strong>
@@ -383,7 +415,7 @@ const Job = () => {
             </section>
 
             {/* CTA Section */}
-            {/* <section className="jobs-cta py-5">
+            <section className="jobs-cta py-5">
                 <Container>
                     <Row className="justify-content-center text-center">
                         <Col lg={8}>
@@ -397,7 +429,7 @@ const Job = () => {
                         </Col>
                     </Row>
                 </Container>
-            </section> */}
+            </section>
 
             {/* Job Detail Modal */}
             <Modal 
@@ -410,14 +442,14 @@ const Job = () => {
                 {selectedJob && (
                     <>
                         <Modal.Header closeButton>
-                            {/* <div className="modal-header-content">
+                            <div className="modal-header-content">
                                 <Modal.Title>{selectedJob.title}</Modal.Title>
                                 {selectedJob.featured && (
                                     <Badge bg="warning" className="featured-badge-modal">
                                         Featured
                                     </Badge>
                                 )}
-                            </div> */}
+                            </div>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="modal-content">
@@ -695,20 +727,22 @@ const Job = () => {
                     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
                 }
 
-                @keyframes pulse {
-                    0%, 100% {
-                        transform: scale(1);
-                        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
-                    }
-                    50% {
-                        transform: scale(1.05);
-                        box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
-                    }
+                .featured-badge {
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    background: linear-gradient(45deg, #ff6b35, #ff8e53);
+                    color: white;
+                    padding: 5px 10px;
+                    border-radius: 12px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    z-index: 2;
                 }
 
                 .job-header {
                     display: flex;
-                    justify-content: between;
+                    justify-content: space-between;
                     align-items: flex-start;
                     margin-bottom: 1rem;
                 }
@@ -860,6 +894,43 @@ const Job = () => {
                         transform: scale(1.5);
                         opacity: 0.7;
                     }
+                }
+
+                /* Error State */
+                .error-state {
+                    text-align: center;
+                    padding: 100px 20px;
+                    animation: fadeIn 0.6s ease-out;
+                }
+
+                .error-icon {
+                    font-size: 4rem;
+                    margin-bottom: 20px;
+                }
+
+                .error-state h3 {
+                    color: #dc3545;
+                    margin-bottom: 1rem;
+                }
+
+                .error-state p {
+                    color: #666;
+                    margin-bottom: 2rem;
+                }
+
+                .retry-btn {
+                    background: linear-gradient(45deg, #dc3545, #e35d6a);
+                    border: none;
+                    padding: 12px 30px;
+                    font-weight: 600;
+                    border-radius: 25px;
+                    color: white;
+                    transition: all 0.3s ease;
+                }
+
+                .retry-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
                 }
 
                 /* Empty State */

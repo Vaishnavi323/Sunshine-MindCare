@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -7,64 +7,89 @@ const ReviewFeedback = () => {
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
     const [formData, setFormData] = useState({
-        name: '',
+        full_name: '',
         email: '',
-        review: '',
-        experience: '',
-        recommend: ''
+        message: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState('');
+    const [reviews, setReviews] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    // Mock reviews data - Replace with API data
-    const reviews = [
-        {
-            id: 1,
-            name: 'Priya Sharma',
-            rating: 5,
-            date: '2024-01-15',
-            review: 'Sunshine Counseling transformed my life. The therapists are incredibly compassionate and professional. Highly recommended!',
-            experience: 'Individual Therapy',
-            verified: true
-        },
-        {
-            id: 2,
-            name: 'Rahul Verma',
-            rating: 4,
-            date: '2024-01-12',
-            review: 'Great experience with the counseling sessions. The environment is very welcoming and the staff is supportive.',
-            experience: 'Couples Counseling',
-            verified: true
-        },
-        {
-            id: 3,
-            name: 'Anita Patel',
-            rating: 5,
-            date: '2024-01-10',
-            review: 'My child has shown remarkable improvement after sessions with the child psychologist. Thank you for your dedication!',
-            experience: 'Child Psychology',
-            verified: true
-        },
-        {
-            id: 4,
-            name: 'Michael Thomas',
-            rating: 5,
-            date: '2024-01-08',
-            review: 'Professional, empathetic, and effective. The therapy sessions have helped me manage my anxiety significantly.',
-            experience: 'Anxiety Treatment',
-            verified: false
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+    // Fetch approved feedbacks from API
+    const fetchApprovedFeedbacks = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            const response = await fetch(`${backendUrl}/feedback/getapproved`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.status && result.data) {
+                // Transform API data to match our component structure
+                const transformedReviews = result.data.map(feedback => ({
+                    id: feedback.id,
+                    name: feedback.full_name || 'Anonymous',
+                    rating: parseInt(feedback.rating) || 0,
+                    date: feedback.created_at ? feedback.created_at.split(' ')[0] : new Date().toISOString().split('T')[0],
+                    review: feedback.message || 'No message provided',
+                    experience: 'Mental Health Services',
+                    verified: feedback.status === "1"
+                }));
+                setReviews(transformedReviews);
+            } else {
+                throw new Error(result.message || 'Failed to fetch reviews');
+            }
+        } catch (error) {
+            console.error('Error fetching reviews:', error);
+            setError(error.message || 'Failed to load reviews. Please try again later.');
+            // Fallback to empty array
+            setReviews([]);
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
 
-    const experienceOptions = [
-        'Individual Therapy',
-        'Couples Counseling',
-        'Family Therapy',
-        'Child Psychology',
-        'Anxiety Treatment',
-        'Depression Counseling',
-        'Other'
-    ];
+    // Calculate reviews statistics
+    const calculateStats = () => {
+        if (reviews.length === 0) {
+            return {
+                averageRating: 0,
+                totalReviews: 0,
+                ratingDistribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+            };
+        }
+
+        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = totalRating / reviews.length;
+        
+        const ratingDistribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+        reviews.forEach(review => {
+            ratingDistribution[review.rating]++;
+        });
+
+        return {
+            averageRating: Math.round(averageRating * 10) / 10,
+            totalReviews: reviews.length,
+            ratingDistribution
+        };
+    };
+
+    const stats = calculateStats();
+
+    useEffect(() => {
+        if (activeTab === 'reviews') {
+            fetchApprovedFeedbacks();
+        }
+    }, [activeTab]);
 
     const handleRatingClick = (value) => {
         setRating(value);
@@ -88,31 +113,66 @@ const ReviewFeedback = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validation
         if (rating === 0) {
-            alert('Please select a rating');
+            setSubmitError('Please select a rating');
+            return;
+        }
+
+        if (!formData.message.trim()) {
+            setSubmitError('Please share your feedback message');
             return;
         }
 
         setIsSubmitting(true);
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        setIsSubmitting(false);
-        setIsSubmitted(true);
-        
-        // Reset form after success
-        setTimeout(() => {
-            setRating(0);
-            setFormData({
-                name: '',
-                email: '',
-                review: '',
-                experience: '',
-                recommend: ''
+        setSubmitError('');
+
+        try {
+            const payload = {
+                rating: rating.toString(),
+                full_name: formData.full_name || null,
+                email: formData.email || null,
+                message: formData.message
+            };
+
+            const response = await fetch(`${backendUrl}/feedback/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
             });
-            setIsSubmitted(false);
-        }, 3000);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.status) {
+                setIsSubmitted(true);
+                
+                // Reset form after success
+                setTimeout(() => {
+                    setRating(0);
+                    setFormData({
+                        full_name: '',
+                        email: '',
+                        message: ''
+                    });
+                    setIsSubmitted(false);
+                }, 3000);
+            } else {
+                throw new Error(data.message || 'Failed to submit feedback');
+            }
+            
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+            setSubmitError(error.message || 'Failed to submit feedback. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const renderStars = (ratingValue, forDisplay = false) => {
@@ -155,6 +215,11 @@ const ReviewFeedback = () => {
         return texts[ratingValue] || '';
     };
 
+    const getPercentage = (count) => {
+        if (stats.totalReviews === 0) return 0;
+        return Math.round((count / stats.totalReviews) * 100);
+    };
+
     return (
         <div className="review-feedback-page">
             {/* Animated Background */}
@@ -192,6 +257,11 @@ const ReviewFeedback = () => {
                             >
                                 <span className="tab-icon">📖</span>
                                 Read Reviews
+                                {stats.totalReviews > 0 && (
+                                    <span className="review-count-badge">
+                                        {stats.totalReviews}
+                                    </span>
+                                )}
                             </button>
                         </div>
 
@@ -231,121 +301,67 @@ const ReviewFeedback = () => {
 
                                                 {/* Personal Information */}
                                                 <div className="form-section">
-                                                    <h4 className="section-title">Your Information</h4>
+                                                    <h4 className="section-title">Your Information (Optional)</h4>
                                                     <div className="form-row">
                                                         <div className="form-group">
-                                                            <label>Full Name *</label>
+                                                            <label>Full Name</label>
                                                             <input
                                                                 type="text"
-                                                                name="name"
-                                                                value={formData.name}
+                                                                name="full_name"
+                                                                value={formData.full_name}
                                                                 onChange={handleInputChange}
-                                                                required
                                                                 className="form-input"
-                                                                placeholder="Enter your full name"
+                                                                placeholder="Enter your full name (optional)"
                                                             />
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>Email Address *</label>
+                                                            <label>Email Address</label>
                                                             <input
                                                                 type="email"
                                                                 name="email"
                                                                 value={formData.email}
                                                                 onChange={handleInputChange}
-                                                                required
                                                                 className="form-input"
-                                                                placeholder="Enter your email"
+                                                                placeholder="Enter your email (optional)"
                                                             />
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                {/* Experience Details */}
-                                                {/* <div className="form-section">
-                                                    <h4 className="section-title">Experience Details</h4>
-                                                    <div className="form-group">
-                                                        <label>Type of Service *</label>
-                                                        <select
-                                                            name="experience"
-                                                            value={formData.experience}
-                                                            onChange={handleInputChange}
-                                                            required
-                                                            className="form-select"
-                                                        >
-                                                            <option value="">Select service type</option>
-                                                            {experienceOptions.map(option => (
-                                                                <option key={option} value={option}>
-                                                                    {option}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                    <div className="form-group">
-                                                        <label>Would you recommend us to others? *</label>
-                                                        <div className="radio-group">
-                                                            <label className="radio-option">
-                                                                <input
-                                                                    type="radio"
-                                                                    name="recommend"
-                                                                    value="yes"
-                                                                    checked={formData.recommend === 'yes'}
-                                                                    onChange={handleInputChange}
-                                                                    required
-                                                                />
-                                                                <span className="radio-custom"></span>
-                                                                <span className="radio-label">Yes, definitely</span>
-                                                            </label>
-                                                            <label className="radio-option">
-                                                                <input
-                                                                    type="radio"
-                                                                    name="recommend"
-                                                                    value="maybe"
-                                                                    checked={formData.recommend === 'maybe'}
-                                                                    onChange={handleInputChange}
-                                                                />
-                                                                <span className="radio-custom"></span>
-                                                                <span className="radio-label">Maybe</span>
-                                                            </label>
-                                                            <label className="radio-option">
-                                                                <input
-                                                                    type="radio"
-                                                                    name="recommend"
-                                                                    value="no"
-                                                                    checked={formData.recommend === 'no'}
-                                                                    onChange={handleInputChange}
-                                                                />
-                                                                <span className="radio-custom"></span>
-                                                                <span className="radio-label">Probably not</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div> */}
-
-                                                {/* Review Text */}
+                                                {/* Feedback Message */}
                                                 <div className="form-section">
-                                                    <h4 className="section-title">Your Review</h4>
+                                                    <h4 className="section-title">Your Feedback *</h4>
                                                     <div className="form-group">
                                                         <label>Share your experience *</label>
                                                         <textarea
-                                                            name="review"
-                                                            value={formData.review}
+                                                            name="message"
+                                                            value={formData.message}
                                                             onChange={handleInputChange}
                                                             required
                                                             className="form-textarea"
                                                             placeholder="Tell us about your experience with our services..."
                                                             rows="5"
+                                                            maxLength="500"
                                                         ></textarea>
                                                         <div className="char-count">
-                                                            {formData.review.length}/500 characters
+                                                            {formData.message.length}/500 characters
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                {/* Error Message */}
+                                                {submitError && (
+                                                    <div className="error-message">
+                                                        <i className="fas fa-exclamation-circle"></i>
+                                                        {submitError}
+                                                    </div>
+                                                )}
 
                                                 {/* Submit Button */}
                                                 <button
                                                     type="submit"
                                                     className={`submit-feedback-btn ${isSubmitting ? 'submitting' : ''}`}
-                                                    disabled={isSubmitting || rating === 0}
+                                                    disabled={isSubmitting || rating === 0 || !formData.message.trim()}
                                                 >
                                                     {isSubmitting ? (
                                                         <>
@@ -366,84 +382,103 @@ const ReviewFeedback = () => {
                         {/* Read Reviews Tab */}
                         {activeTab === 'reviews' && (
                             <div className="tab-content animate-slide-in">
-                                <div className="reviews-stats">
-                                    <div className="overall-rating">
-                                        <div className="rating-number">4.8</div>
-                                        <div className="rating-stars">
-                                            {renderStars(5, true)}
-                                        </div>
-                                        <div className="rating-count">Based on 127 reviews</div>
+                                {loading ? (
+                                    <div className="loading-reviews">
+                                        <div className="loading-spinner-large"></div>
+                                        <p>Loading reviews...</p>
                                     </div>
-                                    <div className="rating-bars">
-                                        {[5, 4, 3, 2, 1].map(stars => (
-                                            <div key={stars} className="rating-bar">
-                                                <span className="stars">{stars} ★</span>
-                                                <div className="bar-container">
-                                                    <div 
-                                                        className="bar-fill"
-                                                        style={{ width: `${(stars/5) * 100}%` }}
-                                                    ></div>
-                                                </div>
-                                                <span className="count">64%</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="reviews-grid">
-                                    {reviews.map((review, index) => (
-                                        <div 
-                                            key={review.id}
-                                            className="review-card animate-card"
-                                            style={{ animationDelay: `${index * 0.1}s` }}
+                                ) : error ? (
+                                    <div className="error-state">
+                                        <div className="error-icon">⚠️</div>
+                                        <h4>Unable to Load Reviews</h4>
+                                        <p>{error}</p>
+                                        <button 
+                                            className="retry-btn"
+                                            onClick={fetchApprovedFeedbacks}
                                         >
-                                            <Card className="h-100">
-                                                <Card.Body className="p-4">
-                                                    {/* Review Header */}
-                                                    <div className="review-header">
-                                                        {/* <div className="reviewer-info">
-                                                            <div className="reviewer-avatar">
-                                                                {review.name.split(' ').map(n => n[0]).join('')}
-                                                            </div>
-                                                            <div className="reviewer-details">
-                                                                <h5 className="reviewer-name">{review.name}</h5>
-                                                                <div className="review-meta">
-                                                                    <span className="review-date">
-                                                                        {new Date(review.date).toLocaleDateString()}
-                                                                    </span>
-                                                                    {review.verified && (
-                                                                        <span className="verified-badge">✓ Verified</span>
-                                                                    )}
+                                            Try Again
+                                        </button>
+                                    </div>
+                                ) : reviews.length === 0 ? (
+                                    <div className="no-reviews">
+                                        <div className="no-reviews-icon">💬</div>
+                                        <h4>No Reviews Yet</h4>
+                                        <p>Be the first to share your experience!</p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="reviews-stats">
+                                            <div className="overall-rating">
+                                                <div className="rating-number">{stats.averageRating}</div>
+                                                <div className="rating-stars">
+                                                    {renderStars(Math.round(stats.averageRating), true)}
+                                                </div>
+                                                <div className="rating-count">Based on {stats.totalReviews} reviews</div>
+                                            </div>
+                                            <div className="rating-bars">
+                                                {[5, 4, 3, 2, 1].map(stars => (
+                                                    <div key={stars} className="rating-bar">
+                                                        <span className="stars">{stars} ★</span>
+                                                        <div className="bar-container">
+                                                            <div 
+                                                                className="bar-fill"
+                                                                style={{ width: `${getPercentage(stats.ratingDistribution[stars])}%` }}
+                                                            ></div>
+                                                        </div>
+                                                        <span className="count">{getPercentage(stats.ratingDistribution[stars])}%</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="reviews-grid">
+                                            {reviews.map((review, index) => (
+                                                <div 
+                                                    key={review.id}
+                                                    className="review-card animate-card"
+                                                    style={{ animationDelay: `${index * 0.1}s` }}
+                                                >
+                                                    <Card className="h-100">
+                                                        <Card.Body className="p-4">
+                                                            {/* Review Header */}
+                                                            <div className="review-header">
+                                                                <div className="reviewer-info">
+                                                                    <div className="reviewer-avatar">
+                                                                        {review.name.split(' ').map(n => n[0]).join('')}
+                                                                    </div>
+                                                                    <div className="reviewer-details">
+                                                                        <h5 className="reviewer-name">{review.name}</h5>
+                                                                        <div className="review-meta">
+                                                                            <span className="review-date">
+                                                                                {new Date(review.date).toLocaleDateString()}
+                                                                            </span>
+                                                                            {review.verified && (
+                                                                                <span className="verified-badge">✓ Verified</span>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="review-rating">
+                                                                    {renderStars(review.rating, true)}
                                                                 </div>
                                                             </div>
-                                                        </div> */}
-                                                        <div className="review-rating">
-                                                            {renderStars(review.rating, true)}
-                                                        </div>
-                                                    </div>
 
-                                                    {/* Review Content */}
-                                                    <div className="review-content">
-                                                        <p className="review-text">{review.review}</p>
-                                                        <div className="review-experience">
-                                                            {/* <span className="experience-tag">
-                                                                {review.experience}
-                                                            </span> */}
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Review Reactions */}
-                                                    {/* <div className="review-actions">
-                                                        <button className="helpful-btn">
-                                                            <span className="reaction-icon">👍</span>
-                                                            Helpful (24)
-                                                        </button>
-                                                    </div> */}
-                                                </Card.Body>
-                                            </Card>
+                                                            {/* Review Content */}
+                                                            <div className="review-content">
+                                                                <p className="review-text">{review.review}</p>
+                                                                <div className="review-experience">
+                                                                    <span className="experience-tag">
+                                                                        {review.experience}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </Card.Body>
+                                                    </Card>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
+                                    </>
+                                )}
                             </div>
                         )}
                     </Col>
@@ -459,7 +494,98 @@ const ReviewFeedback = () => {
                     overflow: hidden;
                 }
 
-                /* Animated Background */
+                /* Review count badge */
+                .review-count-badge {
+                    background: #ff6b35;
+                    color: white;
+                    border-radius: 12px;
+                    padding: 2px 8px;
+                    font-size: 0.8rem;
+                    margin-left: 8px;
+                }
+
+                /* Loading state */
+                .loading-reviews {
+                    text-align: center;
+                    padding: 4rem 2rem;
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                }
+
+                .loading-spinner-large {
+                    width: 50px;
+                    height: 50px;
+                    border: 4px solid #e9ecef;
+                    border-top: 4px solid #2a5298;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 1rem;
+                }
+
+                /* Error state */
+                .error-state {
+                    text-align: center;
+                    padding: 4rem 2rem;
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                }
+
+                .error-icon {
+                    font-size: 4rem;
+                    margin-bottom: 1rem;
+                }
+
+                .error-state h4 {
+                    color: #dc3545;
+                    margin-bottom: 1rem;
+                }
+
+                .error-state p {
+                    color: #6c757d;
+                    margin-bottom: 2rem;
+                }
+
+                .retry-btn {
+                    background: #2a5298;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .retry-btn:hover {
+                    background: #1e3c72;
+                    transform: translateY(-2px);
+                }
+
+                /* No reviews state */
+                .no-reviews {
+                    text-align: center;
+                    padding: 4rem 2rem;
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                }
+
+                .no-reviews-icon {
+                    font-size: 4rem;
+                    margin-bottom: 1rem;
+                }
+
+                .no-reviews h4 {
+                    color: #2a5298;
+                    margin-bottom: 1rem;
+                }
+
+                .no-reviews p {
+                    color: #6c757d;
+                }
+
+                /* Rest of the existing styles remain the same */
                 .feedback-background {
                     position: absolute;
                     top: 0;
@@ -570,6 +696,7 @@ const ReviewFeedback = () => {
                     color: #6c757d;
                     transition: all 1s ease;
                     cursor: pointer;
+                    position: relative;
                 }
 
                 .tab-button.active {
@@ -726,60 +853,17 @@ const ReviewFeedback = () => {
                     margin-top: 0.5rem;
                 }
 
-                /* Radio Buttons */
-                .radio-group {
-                    display: flex;
-                    gap: 1.5rem;
-                    flex-wrap: wrap;
-                }
-
-                .radio-option {
+                /* Error Message */
+                .error-message {
+                    background: #f8d7da;
+                    color: #721c24;
+                    padding: 12px 15px;
+                    border-radius: 8px;
+                    border: 1px solid #f5c6cb;
                     display: flex;
                     align-items: center;
-                    gap: 0.5rem;
-                    cursor: pointer;
-                    padding: 10px 15px;
-                    border-radius: 8px;
-                    transition: all 0.3s ease;
-                }
-
-                .radio-option:hover {
-                    background: #f8f9fa;
-                }
-
-                .radio-option input {
-                    display: none;
-                }
-
-                .radio-custom {
-                    width: 18px;
-                    height: 18px;
-                    border: 2px solid #e9ecef;
-                    border-radius: 50%;
-                    position: relative;
-                    transition: all 0.3s ease;
-                }
-
-                .radio-option input:checked + .radio-custom {
-                    border-color: #2a5298;
-                    background: #2a5298;
-                }
-
-                .radio-option input:checked + .radio-custom::after {
-                    content: '';
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 8px;
-                    height: 8px;
-                    background: white;
-                    border-radius: 50%;
-                }
-
-                .radio-label {
+                    gap: 8px;
                     font-weight: 500;
-                    color: #495057;
                 }
 
                 /* Submit Button */
@@ -1050,32 +1134,6 @@ const ReviewFeedback = () => {
                     font-weight: 500;
                 }
 
-                .review-actions {
-                    border-top: 1px solid #e9ecef;
-                    padding-top: 1rem;
-                }
-
-                .helpful-btn {
-                    background: transparent;
-                    border: 1px solid #e9ecef;
-                    padding: 6px 12px;
-                    border-radius: 15px;
-                    color: #6c757d;
-                    font-size: 0.9rem;
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                }
-
-                .helpful-btn:hover {
-                    background: #f8f9fa;
-                    border-color: #2a5298;
-                    color: #2a5298;
-                }
-
-                .reaction-icon {
-                    margin-right: 5px;
-                }
-
                 /* Animations */
                 @keyframes expandWidth {
                     from { width: 0; }
@@ -1154,7 +1212,7 @@ const ReviewFeedback = () => {
 
                     .form-row {
                         grid-template-columns: 1fr;
-                    }
+                        }
 
                     .reviews-stats {
                         grid-template-columns: 1fr;

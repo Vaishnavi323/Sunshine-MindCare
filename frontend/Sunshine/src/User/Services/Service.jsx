@@ -14,10 +14,158 @@ const ServicesPage = () => {
     const [selectedService, setSelectedService] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [visibleServices, setVisibleServices] = useState({});
+    const [servicesData, setServicesData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const servicesRef = useRef([]);
 
-    // Services data with images
-    const servicesData = [
+    // Fetch services from API
+    useEffect(() => {
+        const fetchServices = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                
+                // Fetch all services by calling the API multiple times (since it requires ID)
+                const serviceIds = [1, 2, 3, 4, 5, 6]; // Adjust based on your service IDs
+                const servicePromises = serviceIds.map(id => 
+                    fetch(`${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                );
+
+                const serviceResults = await Promise.all(servicePromises);
+                
+                // Transform API data to match your component structure
+                const transformedServices = serviceResults.map((result, index) => {
+                    if (result.status && result.error) {
+                        const service = result.error;
+                        return {
+                            id: service.id,
+                            title: service.title || `Service ${service.id}`,
+                            image: getServiceImage(service.id),
+                            description: service.description || 'No description available',
+                            color: getServiceColor(service.id),
+                            subservices: service.sub_services && service.sub_services.length > 0 
+                                ? service.sub_services.map(sub => ({
+                                    title: sub.title || 'Sub Service',
+                                    description: sub.description || 'No description available',
+                                    duration: '50 mins',
+                                    price: 'Contact for pricing'
+                                }))
+                                : getDefaultSubservices(service.id)
+                        };
+                    }
+                    return null;
+                }).filter(service => service !== null);
+
+                setServicesData(transformedServices);
+                
+            } catch (error) {
+                console.error('Error fetching services:', error);
+                setError(error.message);
+                // Fallback to mock data if API fails
+                setServicesData(getMockServicesData());
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchServices();
+    }, []);
+
+    // Helper function to get service image based on ID
+    const getServiceImage = (id) => {
+        const imageMap = {
+            1: individualTherapyImg,
+            2: couplesCounselingImg,
+            3: familyTherapyImg,
+            4: childTherapyImg,
+            5: anxietyTreatmentImg,
+            6: traumaTherapyImg
+        };
+        return imageMap[id] || individualTherapyImg;
+    };
+
+    // Helper function to get service color based on ID
+    const getServiceColor = (id) => {
+        const colorMap = {
+            1: "#2a5298",
+            2: "#ff9800",
+            3: "#4caf50",
+            4: "#9c27b0",
+            5: "#2196f3",
+            6: "#ff5722"
+        };
+        return colorMap[id] || "#2a5298";
+    };
+
+    // Helper function to get default subservices if API returns empty
+    const getDefaultSubservices = (id) => {
+        const defaultSubservices = {
+            1: [
+                {
+                    title: "Individual Counseling",
+                    description: "Personalized one-on-one therapy sessions tailored to your specific needs and goals.",
+                    duration: "50 mins",
+                    price: "Contact for pricing"
+                }
+            ],
+            2: [
+                {
+                    title: "Couples Therapy",
+                    description: "Professional guidance to strengthen relationships and improve communication.",
+                    duration: "60 mins",
+                    price: "Contact for pricing"
+                }
+            ],
+            3: [
+                {
+                    title: "Family Counseling",
+                    description: "Therapy sessions focused on improving family dynamics and relationships.",
+                    duration: "60 mins",
+                    price: "Contact for pricing"
+                }
+            ],
+            4: [
+                {
+                    title: "Child & Adolescent Therapy",
+                    description: "Specialized therapy for young individuals facing emotional challenges.",
+                    duration: "45 mins",
+                    price: "Contact for pricing"
+                }
+            ],
+            5: [
+                {
+                    title: "Anxiety & Depression Treatment",
+                    description: "Evidence-based approaches for managing anxiety and depressive symptoms.",
+                    duration: "50 mins",
+                    price: "Contact for pricing"
+                }
+            ],
+            6: [
+                {
+                    title: "Trauma Therapy",
+                    description: "Specialized treatment for trauma recovery and PTSD management.",
+                    duration: "50 mins",
+                    price: "Contact for pricing"
+                }
+            ]
+        };
+        return defaultSubservices[id] || [{
+            title: "Professional Counseling",
+            description: "Expert mental health support and guidance.",
+            duration: "50 mins",
+            price: "Contact for pricing"
+        }];
+    };
+
+    // Fallback mock data
+    const getMockServicesData = () => [
         {
             id: 1,
             title: "Individual Therapy",
@@ -26,32 +174,10 @@ const ServicesPage = () => {
             color: "#2a5298",
             subservices: [
                 {
-                    title: "Cognitive Behavioral Therapy (CBT)",
-                    description: "Identify and change negative thought patterns and behaviors that affect your mental health and daily functioning.",
+                    title: "Individual Counseling",
+                    description: "Personalized one-on-one therapy sessions tailored to your specific needs and goals.",
                     duration: "50 mins",
-                    price: "₹1,500",
-                    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Psychodynamic Therapy",
-                    description: "Explore unconscious patterns and childhood experiences to understand current behaviors and relationships.",
-                    duration: "50 mins",
-                    price: "₹1,600",
-                    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Humanistic Therapy",
-                    description: "Focus on self-development and personal growth through self-exploration and positive regard.",
-                    duration: "50 mins",
-                    price: "₹1,400",
-                    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Solution-Focused Therapy",
-                    description: "Concentrate on solutions rather than problems, building on your existing strengths and resources.",
-                    duration: "45 mins",
-                    price: "₹1,300",
-                    image: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=400&h=300&fit=crop"
+                    price: "Contact for pricing"
                 }
             ]
         },
@@ -63,25 +189,10 @@ const ServicesPage = () => {
             color: "#ff9800",
             subservices: [
                 {
-                    title: "Relationship Counseling",
-                    description: "Improve communication, resolve conflicts, and rebuild trust in your relationship.",
+                    title: "Couples Therapy",
+                    description: "Professional guidance to strengthen relationships and improve communication.",
                     duration: "60 mins",
-                    price: "₹2,000",
-                    image: "https://images.unsplash.com/photo-1519669556878-63bdad8a1a49?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Pre-Marital Counseling",
-                    description: "Prepare for marriage by discussing expectations, goals, and building a strong foundation.",
-                    duration: "60 mins",
-                    price: "₹2,200",
-                    image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Marital Therapy",
-                    description: "Address specific marital issues, enhance intimacy, and navigate life transitions together.",
-                    duration: "60 mins",
-                    price: "₹2,500",
-                    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop"
+                    price: "Contact for pricing"
                 }
             ]
         },
@@ -93,25 +204,10 @@ const ServicesPage = () => {
             color: "#4caf50",
             subservices: [
                 {
-                    title: "Family Systems Therapy",
-                    description: "Understand family dynamics, roles, and patterns that affect individual and family well-being.",
+                    title: "Family Counseling",
+                    description: "Therapy sessions focused on improving family dynamics and relationships.",
                     duration: "60 mins",
-                    price: "₹2,500",
-                    image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Parent-Child Therapy",
-                    description: "Improve parent-child relationships, communication, and attachment bonds.",
-                    duration: "50 mins",
-                    price: "₹2,000",
-                    image: "https://images.unsplash.com/photo-1541559475991-5d8ad1e1e8b3?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Blended Family Counseling",
-                    description: "Support for step-families navigating new relationships and family structures.",
-                    duration: "60 mins",
-                    price: "₹2,800",
-                    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop"
+                    price: "Contact for pricing"
                 }
             ]
         },
@@ -123,25 +219,10 @@ const ServicesPage = () => {
             color: "#9c27b0",
             subservices: [
                 {
-                    title: "Play Therapy",
-                    description: "Therapeutic approach using play to help young children express emotions and resolve problems.",
+                    title: "Child & Adolescent Therapy",
+                    description: "Specialized therapy for young individuals facing emotional challenges.",
                     duration: "45 mins",
-                    price: "₹1,800",
-                    image: "https://images.unsplash.com/photo-1549056572-75914d6d7e1a?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Teen Counseling",
-                    description: "Address adolescent issues including identity, peer pressure, academic stress, and emotional regulation.",
-                    duration: "50 mins",
-                    price: "₹1,700",
-                    image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Parent Coaching",
-                    description: "Guidance for parents of children with emotional, behavioral, or developmental needs.",
-                    duration: "50 mins",
-                    price: "₹1,600",
-                    image: "https://images.unsplash.com/photo-1512486130939-2c4f79935e4f?w=400&h=300&fit=crop"
+                    price: "Contact for pricing"
                 }
             ]
         },
@@ -153,25 +234,10 @@ const ServicesPage = () => {
             color: "#2196f3",
             subservices: [
                 {
-                    title: "Anxiety Management",
-                    description: "Coping strategies, relaxation techniques, and cognitive restructuring for anxiety disorders.",
+                    title: "Anxiety & Depression Treatment",
+                    description: "Evidence-based approaches for managing anxiety and depressive symptoms.",
                     duration: "50 mins",
-                    price: "₹1,600",
-                    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Depression Therapy",
-                    description: "Comprehensive treatment for major depressive disorder using evidence-based approaches.",
-                    duration: "50 mins",
-                    price: "₹1,600",
-                    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Stress Management",
-                    description: "Techniques to manage and reduce stress, improve coping skills, and enhance resilience.",
-                    duration: "45 mins",
-                    price: "₹1,400",
-                    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop"
+                    price: "Contact for pricing"
                 }
             ]
         },
@@ -183,25 +249,10 @@ const ServicesPage = () => {
             color: "#ff5722",
             subservices: [
                 {
-                    title: "EMDR Therapy",
-                    description: "Eye Movement Desensitization and Reprocessing for trauma processing and healing.",
-                    duration: "60 mins",
-                    price: "₹2,200",
-                    image: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "Trauma-Focused CBT",
-                    description: "Cognitive Behavioral Therapy specifically adapted for trauma recovery.",
+                    title: "Trauma Therapy",
+                    description: "Specialized treatment for trauma recovery and PTSD management.",
                     duration: "50 mins",
-                    price: "₹1,800",
-                    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=300&fit=crop"
-                },
-                {
-                    title: "PTSD Treatment",
-                    description: "Comprehensive PTSD management including symptom reduction and quality of life improvement.",
-                    duration: "50 mins",
-                    price: "₹1,900",
-                    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=300&fit=crop"
+                    price: "Contact for pricing"
                 }
             ]
         }
@@ -233,7 +284,7 @@ const ServicesPage = () => {
         });
 
         return () => observer.disconnect();
-    }, []);
+    }, [servicesData]);
 
     const setServiceRef = (index) => (el) => {
         servicesRef.current[index] = el;
@@ -254,6 +305,47 @@ const ServicesPage = () => {
         console.log('Booking:', subservice);
         alert(`Booking appointment for: ${subservice.title}`);
     };
+
+    if (loading) {
+        return (
+            <div className="service-page">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="loading-state">
+                                <div className="loading-spinner"></div>
+                                <p>Loading services...</p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="service-page">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="error-state">
+                                <div className="error-icon">⚠️</div>
+                                <h3>Error Loading Services</h3>
+                                <p>{error}</p>
+                                <button 
+                                    className="retry-btn"
+                                    onClick={() => window.location.reload()}
+                                >
+                                    Try Again
+                                </button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
 
     return (
         <div className="service-page">
@@ -286,7 +378,7 @@ const ServicesPage = () => {
                         <Col key={service.id} lg={4} md={6} className="mb-4">
                             <div
                                 ref={setServiceRef(index)}
-                                className={`service-card ${visibleServices[index] ? 'visible' : ''}`}
+                                className={`service-cards ${visibleServices[index] ? 'visible' : ''}`}
                                 style={{ animationDelay: `${index * 0.1}s` }}
                                 onClick={() => handleServiceClick(service)}
                             >
@@ -304,7 +396,7 @@ const ServicesPage = () => {
                                         <p className="service-description">{service.description}</p>
                                         <div className="service-footer">
                                             <span className="subservices-count">
-                                                {service.subservices.length} Specialized Treatments
+                                                {service.subservices.length} Specialized {service.subservices.length === 1 ? 'Treatment' : 'Treatments'}
                                             </span>
                                             <div className="click-indicator">
                                                 <span>View Details →</span>
@@ -353,19 +445,11 @@ const ServicesPage = () => {
                                             className="subservice-card"
                                             style={{ animationDelay: `${index * 0.1}s` }}
                                         >
-                                            {/* <div className="subservice-image-container">
-                                                <img 
-                                                    src={subservice.image} 
-                                                    alt={subservice.title}
-                                                    className="subservice-image"
-                                                />
-                                            </div> */}
                                             <div className="subservice-content">
                                                 <div className="subservice-header">
                                                     <h5 className="subservice-title">{subservice.title}</h5>
                                                     <div className="subservice-meta">
                                                         <span className="duration">{subservice.duration}</span>
-                                                        {/* <span className="price">{subservice.price}</span> */}
                                                     </div>
                                                 </div>
                                                 <p className="subservice-description">{subservice.description}</p>
@@ -485,7 +569,7 @@ const ServicesPage = () => {
                 }
 
                 /* Service Cards */
-                .service-card {
+                .service-cards {
                     opacity: 0;
                     transform: translateY(50px);
                     transition: all 0.6s ease-out;
@@ -493,7 +577,7 @@ const ServicesPage = () => {
                     height: 100%;
                 }
 
-                .service-card.visible {
+                .service-cards.visible {
                     opacity: 1;
                     transform: translateY(0);
                 }
@@ -510,7 +594,7 @@ const ServicesPage = () => {
                     flex-direction: column;
                 }
 
-                .service-card:hover .card-inner {
+                .service-cards:hover .card-inner {
                     transform: translateY(-15px) scale(1.02);
                     box-shadow: 
                         0 20px 40px rgba(30, 136, 229, 0.15),
@@ -530,7 +614,7 @@ const ServicesPage = () => {
                     transition: transform 0.6s ease;
                 }
 
-                .service-card:hover .service-image {
+                .service-cards:hover .service-image {
                     transform: scale(1.1);
                 }
 
@@ -545,7 +629,7 @@ const ServicesPage = () => {
                     transition: opacity 0.3s ease;
                 }
 
-                .service-card:hover .image-overlay {
+                .service-cards:hover .image-overlay {
                     opacity: 1;
                 }
 
@@ -593,7 +677,7 @@ const ServicesPage = () => {
                     transition: transform 0.3s ease;
                 }
 
-                .service-card:hover .click-indicator {
+                .service-cards:hover .click-indicator {
                     transform: translateX(5px);
                 }
 
@@ -663,17 +747,6 @@ const ServicesPage = () => {
                     border: 1px solid rgba(100, 181, 246, 0.2);
                 }
 
-                .subservice-image-container {
-                    width: 120px;
-                    flex-shrink: 0;
-                }
-
-                .subservice-image {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
-
                 .subservice-content {
                     padding: 1.5rem;
                     flex: 1;
@@ -712,12 +785,6 @@ const ServicesPage = () => {
                     font-weight: 600;
                 }
 
-                .price {
-                    color: #4caf50;
-                    font-weight: 700;
-                    font-size: 1.1rem;
-                }
-
                 .subservice-description {
                     color: #546e7a;
                     line-height: 1.5;
@@ -739,6 +806,65 @@ const ServicesPage = () => {
                 .book-subservice-btn:hover {
                     transform: translateY(-2px);
                     box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+                }
+
+                /* Loading State */
+                .loading-state {
+                    text-align: center;
+                    padding: 100px 20px;
+                    animation: fadeIn 0.6s ease-out;
+                }
+
+                .loading-spinner {
+                    width: 50px;
+                    height: 50px;
+                    border: 4px solid #f3f3f3;
+                    border-top: 4px solid #2a5298;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 1rem;
+                }
+
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+
+                /* Error State */
+                .error-state {
+                    text-align: center;
+                    padding: 100px 20px;
+                    animation: fadeIn 0.6s ease-out;
+                }
+
+                .error-icon {
+                    font-size: 4rem;
+                    margin-bottom: 20px;
+                }
+
+                .error-state h3 {
+                    color: #dc3545;
+                    margin-bottom: 1rem;
+                }
+
+                .error-state p {
+                    color: #666;
+                    margin-bottom: 2rem;
+                }
+
+                .retry-btn {
+                    background: linear-gradient(45deg, #dc3545, #e35d6a);
+                    border: none;
+                    padding: 12px 30px;
+                    font-weight: 600;
+                    border-radius: 25px;
+                    color: white;
+                    transition: all 0.3s ease;
+                }
+
+                .retry-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
                 }
 
                 /* Animations */
@@ -807,11 +933,6 @@ const ServicesPage = () => {
                         flex-direction: column;
                     }
 
-                    .subservice-image-container {
-                        width: 100%;
-                        height: 150px;
-                    }
-
                     .subservice-header {
                         flex-direction: column;
                         gap: 1rem;
@@ -840,7 +961,7 @@ const ServicesPage = () => {
 
                 /* Reduced motion for accessibility */
                 @media (prefers-reduced-motion: reduce) {
-                    .service-card,
+                    .service-cards,
                     .floating-therapy,
                     .services-title,
                     .services-subtitle,
@@ -850,7 +971,7 @@ const ServicesPage = () => {
                         transition: none !important;
                     }
                     
-                    .service-card {
+                    .service-cards {
                         opacity: 1;
                         transform: none;
                     }
