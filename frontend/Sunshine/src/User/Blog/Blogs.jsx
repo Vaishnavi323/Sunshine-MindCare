@@ -1,86 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const BlogPage = () => {
-  // Dynamic blog data - easily add more blogs
-  const [blogs] = useState([
-    {
-      id: 1,
-      title: 'Understanding Anxiety: A Comprehensive Guide',
-      excerpt: 'Anxiety is a natural response to stress, but when it becomes overwhelming, it can impact your daily life. Learn about the signs, symptoms, and effective coping strategies.',
-      author: 'Dr. Hemant Sonanis',
-      authorRole: 'Psychiatrist',
-      date: 'Nov 10, 2024',
-      readTime: '8 min read',
-      category: 'Mental Health',
-      image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&h=600&fit=crop',
-      tags: ['Anxiety', 'Mental Health', 'Coping Strategies']
-    },
-    {
-      id: 2,
-      title: 'The Power of Mindfulness in Daily Life',
-      excerpt: 'Discover how mindfulness practices can transform your mental well-being and help you live more fully in the present moment.',
-      author: 'Ms. Anjali Deshmukh',
-      authorRole: 'Counseling Psychologist',
-      date: 'Nov 8, 2024',
-      readTime: '6 min read',
-      category: 'Wellness',
-      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=600&fit=crop',
-      tags: ['Mindfulness', 'Wellness', 'Meditation']
-    },
-    {
-      id: 3,
-      title: 'Supporting Children Through Emotional Challenges',
-      excerpt: 'As parents and caregivers, understanding how to support children through emotional difficulties is crucial for their development and well-being.',
-      author: 'Mr. Rahul Patil',
-      authorRole: 'Clinical Psychologist',
-      date: 'Nov 5, 2024',
-      readTime: '10 min read',
-      category: 'Child Psychology',
-      image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&h=600&fit=crop',
-      tags: ['Child Psychology', 'Parenting', 'Emotional Health']
-    },
-    {
-      id: 4,
-      title: 'Breaking the Stigma: Mental Health Awareness',
-      excerpt: 'Mental health is just as important as physical health. Let\'s break the stigma and create a supportive environment for those seeking help.',
-      author: 'Dr. Priya Sharma',
-      authorRole: 'Clinical Psychologist',
-      date: 'Nov 3, 2024',
-      readTime: '7 min read',
-      category: 'Awareness',
-      image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&h=600&fit=crop',
-      tags: ['Mental Health', 'Awareness', 'Stigma']
-    },
-    {
-      id: 5,
-      title: 'Cognitive Behavioral Therapy: What to Expect',
-      excerpt: 'CBT is one of the most effective forms of therapy. Learn what happens in a typical session and how it can help you overcome challenges.',
-      author: 'Ms. Neha Kulkarni',
-      authorRole: 'Psychologist',
-      date: 'Nov 1, 2024',
-      readTime: '9 min read',
-      category: 'Therapy',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop',
-      tags: ['CBT', 'Therapy', 'Treatment']
-    },
-    {
-      id: 6,
-      title: 'Building Resilience in Difficult Times',
-      excerpt: 'Resilience is the ability to bounce back from adversity. Discover practical strategies to build your mental and emotional resilience.',
-      author: 'Mr. Vikram Joshi',
-      authorRole: 'Counselor',
-      date: 'Oct 28, 2024',
-      readTime: '7 min read',
-      category: 'Self-Help',
-      image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&h=600&fit=crop',
-      tags: ['Resilience', 'Self-Help', 'Coping']
-    }
-  ]);
-
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedBlog, setSelectedBlog] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  // Get unique categories
+  // Real API call
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/blog/list`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.status) {
+          // Transform API data to match your component structure
+          const transformedBlogs = data.error.map(blog => ({
+            id: blog.id,
+            title: blog.heading,
+            excerpt: blog.description || 'No description available',
+            author: 'Sunshine MindCare Team',
+            authorRole: 'Mental Health Professionals',
+            date: blog.created_at ? new Date(blog.created_at).toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            }) : 'Recent',
+            readTime: '5 min read',
+            category: blog.category || 'Mental Health',
+            image: `${import.meta.env.VITE_BACKEND_URL}/${blog.image}`,
+            tags: [blog.category || 'Mental Health', 'Wellness'],
+            created_at: blog.created_at,
+            description: blog.description,
+            fullContent: blog.description || 'No content available for this blog post.'
+          }));
+          
+          setBlogs(transformedBlogs);
+        } else {
+          throw new Error(data.message || 'Failed to fetch blogs');
+        }
+        
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+        setError(error.message);
+        // Fallback to empty array if API fails
+        setBlogs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // Get unique categories from API data
   const categories = ['All', ...new Set(blogs.map(blog => blog.category))];
 
   // Filter blogs
@@ -88,19 +77,86 @@ const BlogPage = () => {
     const matchesCategory = selectedCategory === 'All' || blog.category === selectedCategory;
     const matchesSearch = blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         blog.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+                         (blog.tags && blog.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
     return matchesCategory && matchesSearch;
   });
 
   const handleBlogClick = (blog) => {
-    console.log('Blog clicked:', blog.title);
-    alert(`Opening: ${blog.title}`);
+    setSelectedBlog(blog);
+    setShowModal(true);
   };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedBlog(null);
+  };
+
+  const handleShareBlog = (blog) => {
+    if (navigator.share) {
+      navigator.share({
+        title: blog.title,
+        text: blog.excerpt,
+        url: window.location.href,
+      });
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(`${blog.title} - ${window.location.href}`);
+      alert('Blog link copied to clipboard!');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="blog-page">
+        <div className="blog-container">
+          <div className="blog-hero">
+            <h1 className="blog-hero-title">Our Blog</h1>
+            <p className="blog-hero-subtitle">
+              Expert insights, mental health tips, and inspiring stories to support 
+              your journey towards wellness and personal growth
+            </p>
+          </div>
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p>Loading blogs...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="blog-page">
+        <div className="blog-container">
+          <div className="blog-hero">
+            <h1 className="blog-hero-title">Our Blog</h1>
+            <p className="blog-hero-subtitle">
+              Expert insights, mental health tips, and inspiring stories to support 
+              your journey towards wellness and personal growth
+            </p>
+          </div>
+          <div className="error-state">
+            <div className="error-icon">⚠️</div>
+            <h3>Error Loading Blogs</h3>
+            <p>{error}</p>
+            <button 
+              className="retry-btn"
+              onClick={() => window.location.reload()}
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
         
         * {
           margin: 0;
@@ -139,6 +195,17 @@ const BlogPage = () => {
           to {
             opacity: 1;
             transform: scale(1);
+          }
+        }
+
+        @keyframes modalFadeIn {
+          from {
+            opacity: 0;
+            transform: scale(0.8) translateY(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
           }
         }
 
@@ -194,9 +261,23 @@ const BlogPage = () => {
           margin-bottom: 25px;
         }
 
-        
+        .search-input {
+          width: 100%;
+          max-width: 500px;
+          padding: 15px 25px;
+          border: 2px solid #e0e0e0;
+          border-radius: 25px;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+          margin: 0 auto;
+          display: block;
+        }
 
-        
+        .search-input:focus {
+          outline: none;
+          border-color: #3567c3;
+          box-shadow: 0 0 0 3px rgba(53, 103, 195, 0.1);
+        }
 
         .category-filters {
           display: flex;
@@ -389,6 +470,221 @@ const BlogPage = () => {
           box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
+        /* Blog Detail Modal */
+        .blog-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          padding: 20px;
+          animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .blog-modal {
+          background: white;
+          border-radius: 20px;
+          max-width: 900px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          position: relative;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-close-btn {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: rgba(0, 0, 0, 0.7);
+          color: white;
+          border: none;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 10;
+          transition: all 0.3s ease;
+          font-size: 1.2rem;
+        }
+
+        .modal-close-btn:hover {
+          background: rgba(0, 0, 0, 0.9);
+          transform: scale(1.1);
+        }
+
+        .modal-image-container {
+          position: relative;
+          height: 400px;
+          overflow: hidden;
+        }
+
+        .modal-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .modal-content {
+          padding: 40px;
+        }
+
+        .modal-header {
+          margin-bottom: 30px;
+        }
+
+        .modal-category {
+          background: linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%);
+          color: white;
+          padding: 8px 20px;
+          border-radius: 20px;
+          font-size: 0.9rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          display: inline-block;
+          margin-bottom: 20px;
+        }
+
+        .modal-title {
+          font-size: 2.5rem;
+          font-weight: 800;
+          color: #2c3e50;
+          margin-bottom: 20px;
+          line-height: 1.3;
+        }
+
+        .modal-meta {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          margin-bottom: 30px;
+          color: #666;
+          font-size: 0.95rem;
+        }
+
+        .modal-meta-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .modal-description {
+          font-size: 1.1rem;
+          line-height: 1.8;
+          color: #444;
+          margin-bottom: 30px;
+          white-space: pre-line;
+        }
+
+        .modal-tags {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-bottom: 30px;
+        }
+
+        .modal-tag {
+          background: #f0f0f0;
+          color: #667eea;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          font-weight: 600;
+        }
+
+        .modal-actions {
+          display: flex;
+          gap: 15px;
+          align-items: center;
+        }
+
+        .share-btn {
+          background: #f8f9fa;
+          border: 2px solid #e0e0e0;
+          color: #666;
+          padding: 10px 20px;
+          border-radius: 20px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .share-btn:hover {
+          background: #3567c3;
+          color: white;
+          border-color: #3567c3;
+        }
+
+        /* Loading State */
+        .loading-state {
+          text-align: center;
+          padding: 60px 20px;
+          animation: fadeInUp 0.6s ease-out;
+        }
+
+        .loading-spinner {
+          width: 50px;
+          height: 50px;
+          border: 4px solid #f3f3f3;
+          border-top: 4px solid #2a5298;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* Error State */
+        .error-state {
+          text-align: center;
+          padding: 60px 20px;
+          animation: fadeInUp 0.6s ease-out;
+        }
+
+        .error-icon {
+          font-size: 4rem;
+          margin-bottom: 20px;
+        }
+
+        .error-state h3 {
+          color: #dc3545;
+          margin-bottom: 1rem;
+        }
+
+        .error-state p {
+          color: #666;
+          margin-bottom: 2rem;
+        }
+
+        .retry-btn {
+          background: linear-gradient(45deg, #dc3545, #e35d6a);
+          border: none;
+          padding: 12px 30px;
+          font-weight: 600;
+          border-radius: 25px;
+          color: white;
+          transition: all 0.3s ease;
+        }
+
+        .retry-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+        }
+
         /* No Results */
         .no-results {
           text-align: center;
@@ -408,20 +704,6 @@ const BlogPage = () => {
           font-weight: 600;
         }
 
-        /* Featured Post */
-        .featured-section {
-          margin-bottom: 50px;
-          animation: fadeInUp 0.8s ease-out 0.4s backwards;
-        }
-
-        .featured-title {
-          font-size: 2rem;
-          font-weight: 700;
-          color: #2c3e50;
-          margin-bottom: 30px;
-          text-align: center;
-        }
-
         /* Responsive */
         @media (max-width: 1024px) {
           .blog-grid {
@@ -431,6 +713,10 @@ const BlogPage = () => {
 
           .blog-hero-title {
             font-size: 3rem;
+          }
+
+          .modal-title {
+            font-size: 2rem;
           }
         }
 
@@ -463,6 +749,24 @@ const BlogPage = () => {
             padding: 8px 18px;
             font-size: 0.85rem;
           }
+
+          .modal-content {
+            padding: 30px 20px;
+          }
+
+          .modal-image-container {
+            height: 300px;
+          }
+
+          .modal-title {
+            font-size: 1.8rem;
+          }
+
+          .modal-meta {
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+          }
         }
 
         @media (max-width: 480px) {
@@ -482,6 +786,19 @@ const BlogPage = () => {
             flex-direction: column;
             gap: 15px;
             align-items: flex-start;
+          }
+
+          .modal-title {
+            font-size: 1.5rem;
+          }
+
+          .modal-image-container {
+            height: 200px;
+          }
+
+          .modal-actions {
+            flex-direction: column;
+            align-items: stretch;
           }
         }
       `}</style>
@@ -525,18 +842,26 @@ const BlogPage = () => {
           {/* Blog Grid */}
           {filteredBlogs.length > 0 ? (
             <div className="blog-grid">
-              {filteredBlogs.map((blog) => (
+              {filteredBlogs.map((blog, index) => (
                 <div
                   key={blog.id}
                   className="blog-card"
                   onClick={() => handleBlogClick(blog)}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="blog-image-container">
                     <img
                       src={blog.image}
                       alt={blog.title}
                       className="blog-image"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
                     />
+                    <div className="image-fallback" style={{ display: 'none', background: 'linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%)', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '3rem' }}>
+                      <i className="fas fa-image"></i>
+                    </div>
                     <div className="blog-category-badge">{blog.category}</div>
                   </div>
 
@@ -544,15 +869,27 @@ const BlogPage = () => {
                     <div className="blog-meta">
                       <span className="blog-date">📅 {blog.date}</span>
                       <span>•</span>
-                      
+                      {/* <span className="blog-read-time">⏱️ {blog.readTime}</span> */}
                     </div>
 
                     <h3 className="blog-title">{blog.title}</h3>
                     <p className="blog-excerpt">{blog.excerpt}</p>
 
-                
+                    <div className="blog-tags mb-2">
+                      {blog.tags && blog.tags.map((tag, tagIndex) => (
+                        <span key={tagIndex} className="tag">{tag}</span>
+                      ))}
+                    </div>
 
-                    
+                    <div className="blog-footer">
+                      <div className="blog-author">
+                        <span className="author-name">{blog.author}</span>
+                        <span className="author-role">{blog.authorRole}</span>
+                      </div>
+                      <button className="read-more-btn">
+                        Read More →
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -564,6 +901,73 @@ const BlogPage = () => {
             </div>
           )}
         </div>
+
+        {/* Blog Detail Modal */}
+        {/* {showModal && selectedBlog && (
+          <div className="blog-modal-overlay" onClick={handleCloseModal}>
+            <div className="blog-modal" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close-btn" onClick={handleCloseModal}>
+                <i className="fas fa-times"></i>
+              </button>
+              
+              <div className="modal-image-container">
+                <img
+                  src={selectedBlog.image}
+                  alt={selectedBlog.title}
+                  className="modal-image"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+                <div className="image-fallback" style={{ display: 'none', background: 'linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%)', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '4rem' }}>
+                  <i className="fas fa-image"></i>
+                </div>
+              </div>
+
+              <div className="modal-content">
+                <div className="modal-header">
+                  <div className="modal-category">{selectedBlog.category}</div>
+                  <h1 className="modal-title">{selectedBlog.title}</h1>
+                  <div className="modal-meta">
+                    <div className="modal-meta-item">
+                      <i className="fas fa-user"></i>
+                      <span>{selectedBlog.author}</span>
+                    </div>
+                    <div className="modal-meta-item">
+                      <i className="fas fa-calendar"></i>
+                      <span>{selectedBlog.date}</span>
+                    </div>
+                    <div className="modal-meta-item">
+                      <i className="fas fa-clock"></i>
+                      <span>{selectedBlog.readTime}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="modal-description">
+                  {selectedBlog.fullContent}
+                </div>
+
+                <div className="modal-tags">
+                  {selectedBlog.tags && selectedBlog.tags.map((tag, tagIndex) => (
+                    <span key={tagIndex} className="modal-tag">#{tag}</span>
+                  ))}
+                </div>
+
+                <div className="modal-actions">
+                  <button 
+                    className="share-btn"
+                    onClick={() => handleShareBlog(selectedBlog)}
+                  >
+                    <i className="fas fa-share-alt"></i>
+                    Share This Blog
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )} */}
       </div>
     </>
   );

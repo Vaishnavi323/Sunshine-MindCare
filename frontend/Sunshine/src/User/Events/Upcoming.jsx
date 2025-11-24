@@ -5,79 +5,53 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const UpcomingEvents = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Mock data - Replace this with your API call
+    // Real API call
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 setLoading(true);
+                setError(null);
                 
-                // Mock data structure for upcoming events
-                const mockEvents = [
-                    {
-                        id: 1,
-                        title: "MENTAL HEALTH AWARENESS WORKSHOP 2024",
-                        date: "2024-03-15",
-                        image: "/api/placeholder/400/250",
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/event/upcoming`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
                     },
-                    {
-                        id: 2,
-                        title: "SPRING WELLNESS RETREAT",
-                        date: "2024-04-20",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 3,
-                        title: "MINDFULNESS & MEDITATION MASTERCLASS",
-                        date: "2024-05-10",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 4,
-                        title: "ANXIETY MANAGEMENT SUPPORT GROUP",
-                        date: "2024-06-05",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 5,
-                        title: "STRESS REDUCTION TECHNIQUES SEMINAR",
-                        date: "2024-07-18",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 6,
-                        title: "YOUTH MENTAL HEALTH CONFERENCE 2024",
-                        date: "2024-08-25",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 7,
-                        title: "COPING WITH DEPRESSION WORKSHOP",
-                        date: "2024-09-12",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 8,
-                        title: "FAMILY THERAPY AND SUPPORT SESSION",
-                        date: "2024-10-08",
-                        image: "/api/placeholder/400/250",
-                    },
-                    {
-                        id: 9,
-                        title: "ANNUAL MENTAL HEALTH GALA",
-                        date: "2024-11-20",
-                        image: "/api/placeholder/400/250",
-                    }
-                ];
+                });
 
-                // Simulate API delay
-                setTimeout(() => {
-                    setEvents(mockEvents);
-                    setLoading(false);
-                }, 1000);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.status) {
+                    // Transform API data to match your component structure
+                    const transformedEvents = data.data.map(event => ({
+                        id: event.id,
+                        title: event.heading,
+                        venue: event.venue,
+                        date: event.date,
+                        time: event.time,
+                        description: event.description,
+                        image: event.image_url || `${import.meta.env.VITE_BACKEND_URL}/${event.image}`,
+                        created_at: event.created_at
+                    }));
+                    
+                    setEvents(transformedEvents);
+                } else {
+                    // No upcoming events - this is not an error, just empty data
+                    setEvents([]);
+                }
                 
             } catch (error) {
-                console.error('Error fetching events:', error);
+                console.error('Error fetching upcoming events:', error);
+                setError(error.message);
+                // Fallback to empty array if API fails
+                setEvents([]);
+            } finally {
                 setLoading(false);
             }
         };
@@ -89,6 +63,13 @@ const UpcomingEvents = () => {
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    // Format time
+    const formatTime = (timeString) => {
+        if (!timeString || timeString === '00:00:00') return '';
+        const time = new Date(`2000-01-01T${timeString}`);
+        return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
     // Check if event is happening soon (within next 30 days)
@@ -107,6 +88,31 @@ const UpcomingEvents = () => {
                         <Col lg={8} className="text-center">
                             <div className="loading-spinner"></div>
                             <p>Loading upcoming events...</p>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="events-error">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="error-icon">
+                                <i className="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h3>Error Loading Events</h3>
+                            <p>{error}</p>
+                            <button 
+                                className="retry-btn"
+                                onClick={() => window.location.reload()}
+                            >
+                                <i className="fas fa-redo"></i>
+                                Try Again
+                            </button>
                         </Col>
                     </Row>
                 </Container>
@@ -144,14 +150,27 @@ const UpcomingEvents = () => {
                                     style={{ animationDelay: `${index * 0.1}s` }}
                                 >
                                     <div className="card-image-container">
-                                        <div className="event-image">
-                                            {/* Image placeholder - replace with actual image */}
-                                            <div className="image-placeholder">
+                                        <div 
+                                            className="event-image"
+                                            style={{
+                                                backgroundImage: `url(${event.image})`,
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center',
+                                                backgroundRepeat: 'no-repeat'
+                                            }}
+                                        >
+                                            {/* Fallback icon if image fails to load */}
+                                            <div className="image-fallback">
                                                 <i className="fas fa-calendar-plus"></i>
                                             </div>
                                         </div>
                                         <div className="event-date-overlay">
                                             {formatDate(event.date)}
+                                            {event.time && event.time !== '00:00:00' && (
+                                                <div className="event-time">
+                                                    {formatTime(event.time)}
+                                                </div>
+                                            )}
                                             {isEventSoon(event.date) && (
                                                 <span className="soon-badge">Coming Soon</span>
                                             )}
@@ -160,6 +179,17 @@ const UpcomingEvents = () => {
                                     
                                     <Card.Body className="p-4">
                                         <h3 className="event-title">{event.title}</h3>
+                                        {event.venue && (
+                                            <div className="event-venue">
+                                                <i className="fas fa-map-marker-alt"></i>
+                                                {event.venue}
+                                            </div>
+                                        )}
+                                        {event.description && (
+                                            <p className="event-description">
+                                                {event.description}
+                                            </p>
+                                        )}
                                     </Card.Body>
                                 </Card>
                             </Col>
@@ -179,8 +209,8 @@ const UpcomingEvents = () => {
                 </Container>
             </section>
 
-            {/* Empty State */}
-            {events.length === 0 && !loading && (
+            {/* Empty State - This will show since API returns no events */}
+            {events.length === 0 && !loading && !error && (
                 <section className="empty-state py-5">
                     <Container>
                         <Row className="justify-content-center text-center">
@@ -201,8 +231,25 @@ const UpcomingEvents = () => {
                 </section>
             )}
 
-            
-            
+            {/* CTA Section */}
+            <section className="events-cta py-5">
+                <Container>
+                    <Row className="justify-content-center text-center">
+                        <Col lg={8}>
+                            <div className="cta-content">
+                                <h2>Stay Updated</h2>
+                                <p>
+                                    Be the first to know about our upcoming events, workshops, and mental health initiatives. 
+                                    Subscribe to our newsletter for regular updates.
+                                </p>
+                                <button className="cta-button">
+                                    Subscribe to Newsletter
+                                </button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
 
             <style jsx>{`
                 .upcoming-events-page {
@@ -303,21 +350,34 @@ const UpcomingEvents = () => {
                 .event-image {
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(135deg, #3567c3 0%, #2a5298 100%);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     color: white;
                     transition: transform 0.3s ease;
+                    position: relative;
                 }
 
                 .event-card:hover .event-image {
                     transform: scale(1.05);
                 }
 
-                .image-placeholder {
+                .image-fallback {
                     font-size: 3rem;
                     opacity: 0.8;
+                    display: none;
+                }
+
+                .event-image:not([style*="background-image"]),
+                .event-image[style*="background-image: url(null)"],
+                .event-image[style*="background-image: url(undefined)"] {
+                    background: linear-gradient(135deg, #3567c3 0%, #2a5298 100%) !important;
+                }
+
+                .event-image:not([style*="background-image"]) .image-fallback,
+                .event-image[style*="background-image: url(null)"] .image-fallback,
+                .event-image[style*="background-image: url(undefined)"] .image-fallback {
+                    display: flex;
                 }
 
                 .event-date-overlay {
@@ -334,6 +394,11 @@ const UpcomingEvents = () => {
                     display: flex;
                     flex-direction: column;
                     gap: 5px;
+                }
+
+                .event-time {
+                    font-size: 0.75rem;
+                    opacity: 0.9;
                 }
 
                 .soon-badge {
@@ -359,6 +424,30 @@ const UpcomingEvents = () => {
                     color: #2a5298;
                     font-size: 1.2rem;
                     font-weight: 600;
+                    line-height: 1.4;
+                    margin: 0 0 10px 0;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .event-venue {
+                    color: #666;
+                    font-size: 0.9rem;
+                    margin-bottom: 10px;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+
+                .event-venue i {
+                    color: #ff6b35;
+                }
+
+                .event-description {
+                    color: #666;
+                    font-size: 0.9rem;
                     line-height: 1.4;
                     margin: 0;
                     display: -webkit-box;
@@ -406,6 +495,50 @@ const UpcomingEvents = () => {
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
+                }
+
+                /* Error State */
+                .events-error {
+                    min-height: 50vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                }
+
+                .error-icon {
+                    font-size: 4rem;
+                    color: #dc3545;
+                    margin-bottom: 1.5rem;
+                }
+
+                .events-error h3 {
+                    color: #dc3545;
+                    margin-bottom: 1rem;
+                }
+
+                .events-error p {
+                    color: #6c757d;
+                    margin-bottom: 2rem;
+                }
+
+                .retry-btn {
+                    background: linear-gradient(45deg, #dc3545, #e35d6a);
+                    border: none;
+                    padding: 10px 25px;
+                    font-weight: 600;
+                    border-radius: 25px;
+                    color: white;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin: 0 auto;
+                }
+
+                .retry-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
                 }
 
                 /* Empty State */

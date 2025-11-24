@@ -36,7 +36,7 @@ const PublishedArticles = () => {
                         title: `Article ${article.id}`,
                         newspaper: "Sunshine MindCare",
                         date: article.created_at,
-                        image: `${import.meta.env.VITE_BACKEND_URL}/uploads/articles/${article.image}`,
+                        image: `${import.meta.env.VITE_BACKEND_URL}/${article.image}`,
                         originalImage: article.image
                     }));
                     
@@ -156,6 +156,7 @@ const PublishedArticles = () => {
                                                     backgroundRepeat: 'no-repeat'
                                                 }}
                                             >
+                                            <img src={article.image}/>
                                                 <div className="image-overlay">
                                                     <div className="image-overlay-text">
                                                         <div className="newspaper-name">{article.newspaper}</div>
@@ -233,6 +234,7 @@ const PublishedArticles = () => {
                                             backgroundRepeat: 'no-repeat'
                                         }}
                                     >
+                                    <img src={selectedArticle.image}/>
                                         <div className="image-overlay-modal">
                                             <div className="image-overlay-text-modal">
                                                 <div className="newspaper-name">{selectedArticle.newspaper}</div>
