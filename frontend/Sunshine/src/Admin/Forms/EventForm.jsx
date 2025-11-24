@@ -8,22 +8,23 @@ import {
   faMapMarkerAlt,
   faUsers,
   faHospital,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
 const EventForm = ({ event, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
-    title: event?.title || "",
+    title: event?.heading || "",
     date: event?.date || "",
     time: event?.time || "",
     venue: event?.venue || "",
     hospital: event?.hospital || "Sunshine",
     participants: event?.participants || "",
     description: event?.description || "",
-    image: event?.image || "",
   });
 
-  const [imagePreview, setImagePreview] = useState(event?.image || "");
+  const [imagePreview, setImagePreview] = useState(event?.image_url || "");
   const [imageFile, setImageFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleInputChange = (e) => {
@@ -39,14 +40,10 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
     if (file) {
       setImageFile(file);
       
-      // Create preview URL
+      // Create preview URL only for display
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
-        setFormData((prev) => ({
-          ...prev,
-          image: reader.result, // Store base64 string for immediate preview
-        }));
       };
       reader.readAsDataURL(file);
     }
@@ -55,27 +52,34 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
   const handleRemoveImage = () => {
     setImagePreview("");
     setImageFile(null);
-    setFormData((prev) => ({
-      ...prev,
-      image: "",
-    }));
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setUploading(true);
     
-    // Prepare final form data
-    const submitData = {
-      ...formData,
-      // If we have a file, we might want to handle upload here
-      // For now, we'll use the base64 string or URL
-      image: imagePreview || formData.image,
-    };
-    
-    onSubmit(submitData);
+    try {
+      // Prepare form data for API
+      const submitData = {
+        heading: formData.title,
+        date: formData.date,
+        time: formData.time,
+        venue: formData.venue,
+        description: formData.description,
+        imageFile: imageFile, // Send the File object
+        // Include existing image URL if editing and no new file
+        existingImage: event?.image_url || ""
+      };
+      
+      await onSubmit(submitData);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -93,6 +97,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
             <button
               onClick={onCancel}
               className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-300"
+              disabled={uploading}
             >
               <FontAwesomeIcon icon={faXmark} />
             </button>
@@ -119,20 +124,27 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                     type="button"
                     onClick={handleRemoveImage}
                     className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-all duration-300"
+                    disabled={uploading}
                   >
                     <FontAwesomeIcon icon={faXmark} className="text-sm" />
                   </button>
                 </div>
               ) : (
                 <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-[#2a5298] transition-all duration-300 group"
+                  onClick={() => !uploading && fileInputRef.current?.click()}
+                  className={`border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 group ${
+                    uploading ? 'opacity-50 cursor-not-allowed' : 'hover:border-[#2a5298]'
+                  }`}
                 >
                   <FontAwesomeIcon
                     icon={faImage}
-                    className="text-4xl text-gray-400 mb-4 group-hover:text-[#2a5298]"
+                    className={`text-4xl mb-4 group-hover:text-[#2a5298] ${
+                      uploading ? 'text-gray-300' : 'text-gray-400'
+                    }`}
                   />
-                  <p className="text-gray-600 mb-2">
+                  <p className={`mb-2 ${
+                    uploading ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
                     Click to upload event image
                   </p>
                   <p className="text-sm text-gray-500">
@@ -147,13 +159,15 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                 onChange={handleImageChange}
                 accept="image/*"
                 className="hidden"
+                disabled={uploading}
               />
 
               {!imagePreview && (
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300 flex items-center justify-center space-x-2 border border-gray-300"
+                  className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300 flex items-center justify-center space-x-2 border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={uploading}
                 >
                   <FontAwesomeIcon icon={faUpload} />
                   <span>Choose Image</span>
@@ -172,7 +186,8 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                 value={formData.title}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
+                disabled={uploading}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 disabled:opacity-50"
                 placeholder="Enter event title"
               />
             </div>
@@ -190,7 +205,8 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                     value={formData.date}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12"
+                    disabled={uploading}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12 disabled:opacity-50"
                   />
                   <FontAwesomeIcon
                     icon={faCalendarAlt}
@@ -209,7 +225,8 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                   value={formData.time}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
+                  disabled={uploading}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 disabled:opacity-50"
                   placeholder="e.g., 10:00 AM - 2:00 PM"
                 />
               </div>
@@ -228,7 +245,8 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                     value={formData.venue}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12"
+                    disabled={uploading}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12 disabled:opacity-50"
                     placeholder="Enter venue"
                   />
                   <FontAwesomeIcon
@@ -238,17 +256,17 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                 </div>
               </div>
 
-              {/* <div>
+              <div>
                 <label className="block text-sm font-semibold text-[#2a5298] mb-2">
-                  Hospital *
+                  Hospital
                 </label>
                 <div className="relative">
                   <select
                     name="hospital"
                     value={formData.hospital}
                     onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12 appearance-none"
+                    disabled={uploading}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12 appearance-none disabled:opacity-50"
                   >
                     <option value="Sunshine">Sunshine</option>
                     <option value="Manoday">Manoday</option>
@@ -259,31 +277,30 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
                   />
                 </div>
-              </div> */}
+              </div>
             </div>
 
-            {/* Participants and Description */}
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-[#2a5298] mb-2">
-                  Expected Participants
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    name="participants"
-                    value={formData.participants}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12"
-                    placeholder="Enter number"
-                  />
-                  <FontAwesomeIcon
-                    icon={faUsers}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  />
-                </div>
+            {/* Participants */}
+            <div>
+              <label className="block text-sm font-semibold text-[#2a5298] mb-2">
+                Expected Participants
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  name="participants"
+                  value={formData.participants}
+                  onChange={handleInputChange}
+                  disabled={uploading}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 pl-12 disabled:opacity-50"
+                  placeholder="Enter number"
+                />
+                <FontAwesomeIcon
+                  icon={faUsers}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                />
               </div>
-            </div> */}
+            </div>
 
             {/* Description */}
             <div>
@@ -295,8 +312,9 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
                 value={formData.description}
                 onChange={handleInputChange}
                 required
+                disabled={uploading}
                 rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 disabled:opacity-50"
                 placeholder="Enter event description"
               />
             </div>
@@ -306,15 +324,24 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
               <button
                 type="button"
                 onClick={onCancel}
-                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300 border border-gray-300"
+                disabled={uploading}
+                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300 border border-gray-300 disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-[#2a5298] text-white py-3 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2a5298]"
+                disabled={uploading}
+                className="flex-1 bg-[#2a5298] text-white py-3 rounded-lg font-semibold hover:bg-[#1e2a4a] transition-all duration-300 border border-[#2a5298] disabled:opacity-50 flex items-center justify-center"
               >
-                {event ? "Update Event" : "Create Event"}
+                {uploading ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} className="animate-spin mr-2" />
+                    {event ? "Updating..." : "Creating..."}
+                  </>
+                ) : (
+                  event ? "Update Event" : "Create Event"
+                )}
               </button>
             </div>
           </form>

@@ -616,7 +616,7 @@
 
 // export default Events;
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -636,13 +636,14 @@ import {
 import CustomAlert from "../../CustomAlert/CustomAlert";
 import EventForm from "../Forms/EventForm";
 import { addEvent, getEvents, updateEvent, deleteEvent } from "../../utils/Admin/event";
+import { useAuth } from "../../Admin/Auth/AuthContext";
 
 const baseURL = import.meta.env.VITE_IMAGE_URL;
 
 
 const Events = () => {
 
-const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
 
   const [alert, setAlert] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -653,6 +654,8 @@ const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const eventsPerPage = 9;
+
+  const { token } = useAuth();
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -668,13 +671,13 @@ const [events, setEvents] = useState([]);
   //   setError("");
   //   try {
   //     const response = await fetch(`${backendUrl}/event/list`);
-      
+
   //     if (!response.ok) {
   //       throw new Error(`HTTP error! status: ${response.status}`);
   //     }
 
   //     const result = await response.json();
-      
+
   //     if (result.status && result.data) {
   //       // Transform API data to match our component structure
   //       const transformedEvents = result.data.map(event => ({
@@ -707,13 +710,13 @@ const [events, setEvents] = useState([]);
   // Format time for display
   const formatTimeForDisplay = (time) => {
     if (!time || time === "00:00:00") return "Time not specified";
-    
+
     try {
       const [hours, minutes] = time.split(':');
       const hour = parseInt(hours, 10);
       const ampm = hour >= 12 ? 'PM' : 'AM';
       const hour12 = hour % 12 || 12;
-      
+
       return `${hour12}:${minutes} ${ampm}`;
     } catch (error) {
       return "Time not specified";
@@ -724,7 +727,7 @@ const [events, setEvents] = useState([]);
   const getEventStatus = (eventDate) => {
     const today = new Date();
     const event = new Date(eventDate);
-    
+
     if (event < today) {
       return "completed";
     } else {
@@ -739,22 +742,22 @@ const [events, setEvents] = useState([]);
 
   // Ref for delete alert click-outside
   const deleteAlertRef = useRef(null);
-useEffect(() => {
-  fetchEvents();
-}, []);
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
-const fetchEvents = async () => {
-  try {
-    const response = await getEvents();
-    console.log(response);
-    setEvents(response?.data?.data || []); // adjust based on your backend response
-  } catch (error) {
-    console.error(error);
-    setAlert({ type: "error", message: "Failed to load events!" });
-  } finally {
-    setLoading(false);
-  }
-};
+  const fetchEvents = async () => {
+    try {
+      const response = await getEvents();
+      console.log(response);
+      setEvents(response?.data?.data || []); // adjust based on your backend response
+    } catch (error) {
+      console.error(error);
+      setAlert({ type: "error", message: "Failed to load events!" });
+    } finally {
+      setLoading(false);
+    }
+  };
   // Click outside to close delete alert
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -780,21 +783,21 @@ const fetchEvents = async () => {
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
-const handleDelete = async (id) => {
-  try {
-    const response = await deleteEvent(id);
+  const handleDelete = async (id) => {
+    try {
+      const response = await deleteEvent(id);
 
-    if (response?.data?.success) {
-      setAlert({ type: "success", message: "Event deleted successfully!" });
-      fetchEvents(); // Refresh list after delete
-    } else {
-      setAlert({ type: "error", message: response?.data?.message || "Failed to delete event" });
+      if (response?.data?.success) {
+        setAlert({ type: "success", message: "Event deleted successfully!" });
+        fetchEvents(); // Refresh list after delete
+      } else {
+        setAlert({ type: "error", message: response?.data?.message || "Failed to delete event" });
+      }
+    } catch (error) {
+      setAlert({ type: "error", message: "Delete failed!" });
     }
-  } catch (error) {
-    setAlert({ type: "error", message: "Delete failed!" });
-  }
-  setDeleteConfirm(null);
-};
+    setDeleteConfirm(null);
+  };
 
   const handleEdit = (event) => {
     setEditingEvent(event);
@@ -802,32 +805,51 @@ const handleDelete = async (id) => {
   };
 
   const handleFormSubmit = async (formData) => {
-  try {
-    let response;
+    try {
+      // Create FormData object for file upload
+      const submitFormData = new FormData();
 
-    if (editingEvent) {
-      // Update event
-      response = await updateEvent(editingEvent.id, formData);
-    } else {
-      // Add new event
-      response = await addEvent(formData);
-    }
+      // Append text fields
+      submitFormData.append('heading', formData.heading);
+      submitFormData.append('date', formData.date);
+      submitFormData.append('time', formData.time);
+      submitFormData.append('venue', formData.venue);
+      submitFormData.append('description', formData.description);
 
-    if (response?.data?.success) {
-      setAlert({
-        type: "success",
-        message: editingEvent ? "Event updated successfully!" : "Event created successfully!",
-      });
-      fetchEvents(); // Refresh list from backend
-      setShowForm(false);
-      setEditingEvent(null);
-    } else {
-      setAlert({ type: "error", message: response?.data?.message || "Something went wrong!" });
+      // Append image file if exists
+      if (formData.imageFile) {
+        submitFormData.append('image', formData.imageFile);
+      }
+
+      let response;
+
+      if (editingEvent) {
+        // Update event - include ID and existing image if no new file
+        if (!formData.imageFile && formData.existingImage) {
+          submitFormData.append('existingImage', formData.existingImage);
+        }
+        response = await updateEvent(editingEvent.id, submitFormData, token);
+      } else {
+        // Add new event
+        response = await addEvent(submitFormData, token);
+      }
+
+      if (response?.data?.success) {
+        setAlert({
+          type: "success",
+          message: editingEvent ? "Event updated successfully!" : "Event created successfully!",
+        });
+        fetchEvents(); // Refresh list from backend
+        setShowForm(false);
+        setEditingEvent(null);
+      } else {
+        setAlert({ type: "error", message: response?.data?.message || "Something went wrong!" });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setAlert({ type: "error", message: "Failed to save event!" });
     }
-  } catch (error) {
-    setAlert({ type: "error", message: "Failed to save event!" });
-  }
-};
+  };
 
 
   const handleFormCancel = () => {
@@ -1022,66 +1044,66 @@ const handleDelete = async (id) => {
               </div>
             </div>
 
-        {/* Events Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {currentEvents.map((event) => (
-            <div
-              key={event.id}
-              className="bg-white rounded-xl shadow-md border border-gray-300 overflow-hidden group hover:shadow-xl transform hover:-translate-y-1 transition-all duration-500 ease-in-out cursor-pointer"
-              onClick={() => setImageModal(event)}
-            >
-              {/* Event Image */}
-              <div className="h-56 overflow-hidden relative">
-                <img
-                  src={event.image_url}
-                  alt={event.title}
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                />
-                <div className="absolute top-3 right-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                      event.status
-                    )}`}
-                  >
-                    {event.status}
-                  </span>
-                </div>
-                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-              </div>
-
-              {/* Event Content */}
-              <div className="p-5">
-                {/* Event Title */}
-                <h3 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
-                  {event.heading}
-                </h3>
-
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center text-gray-700">
-                    <FontAwesomeIcon
-                      icon={faCalendarAlt}
-                      className="text-[#2a5298] mr-3 w-4"
+            {/* Events Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {currentEvents.map((event) => (
+                <div
+                  key={event.id}
+                  className="bg-white rounded-xl shadow-md border border-gray-300 overflow-hidden group hover:shadow-xl transform hover:-translate-y-1 transition-all duration-500 ease-in-out cursor-pointer"
+                  onClick={() => setImageModal(event)}
+                >
+                  {/* Event Image */}
+                  <div className="h-56 overflow-hidden relative">
+                    <img
+                      src={event.image_url}
+                      alt={event.title}
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
                     />
-                    <span className="font-medium">
-                      {new Date(event.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
+                    <div className="absolute top-3 right-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                          event.status
+                        )}`}
+                      >
+                        {event.status}
+                      </span>
+                    </div>
+                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                   </div>
 
-                  <div className="flex items-center text-gray-700">
-                    <FontAwesomeIcon
-                      icon={faMapMarkerAlt}
-                      className="text-[#2a5298] mr-3 w-4"
-                    />
-                    <span className="line-clamp-1">{event.venue}</span>
-                  </div>
-                    <h4 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
-                  {event.heading}
-                </h4>
-                </div>
+                  {/* Event Content */}
+                  <div className="p-5">
+                    {/* Event Title */}
+                    <h3 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
+                      {event.heading}
+                    </h3>
+
+                    <div className="space-y-3 mb-4">
+                      <div className="flex items-center text-gray-700">
+                        <FontAwesomeIcon
+                          icon={faCalendarAlt}
+                          className="text-[#2a5298] mr-3 w-4"
+                        />
+                        <span className="font-medium">
+                          {new Date(event.date).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center text-gray-700">
+                        <FontAwesomeIcon
+                          icon={faMapMarkerAlt}
+                          className="text-[#2a5298] mr-3 w-4"
+                        />
+                        <span className="line-clamp-1">{event.venue}</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
+                        {event.heading}
+                      </h4>
+                    </div>
 
                     {/* Action Buttons */}
                     <div className="flex space-x-3 pt-4 border-t border-gray-200">
@@ -1153,15 +1175,13 @@ const handleDelete = async (id) => {
                     onClick={() =>
                       typeof pageNum === "number" && setCurrentPage(pageNum)
                     }
-                    className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 ${
-                      pageNum === currentPage
+                    className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 ${pageNum === currentPage
                         ? "bg-[#2a5298] text-white shadow-md border border-[#2a5298]"
                         : "bg-white text-gray-700 shadow-md border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
-                    } ${
-                      pageNum === "..."
+                      } ${pageNum === "..."
                         ? "cursor-default hover:bg-white hover:border-gray-300"
                         : ""
-                    }`}
+                      }`}
                     disabled={pageNum === "..."}
                   >
                     {pageNum}
@@ -1238,7 +1258,7 @@ const handleDelete = async (id) => {
               <h3 className="text-2xl font-bold text-[#2a5298] mb-3">
                 {imageModal.title}
               </h3>
-              
+
               {/* Event Description */}
               {imageModal.description && imageModal.description !== "No description available" && (
                 <p className="text-gray-600 mb-4">
