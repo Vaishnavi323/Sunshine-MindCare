@@ -780,20 +780,21 @@ const fetchEvents = async () => {
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+const handleDelete = async (id) => {
+  try {
+    const response = await deleteEvent(id);
 
-  const handleDelete = (id) => {
-    setEvents(events.filter((event) => event.id !== id));
-    setAlert({
-      type: "success",
-      message: "Event deleted successfully!",
-    });
-    setDeleteConfirm(null);
-
-    // Adjust current page if needed after deletion
-    if (currentEvents.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+    if (response?.data?.success) {
+      setAlert({ type: "success", message: "Event deleted successfully!" });
+      fetchEvents(); // Refresh list after delete
+    } else {
+      setAlert({ type: "error", message: response?.data?.message || "Failed to delete event" });
     }
-  };
+  } catch (error) {
+    setAlert({ type: "error", message: "Delete failed!" });
+  }
+  setDeleteConfirm(null);
+};
 
   const handleEdit = (event) => {
     setEditingEvent(event);
@@ -805,32 +806,29 @@ const fetchEvents = async () => {
     let response;
 
     if (editingEvent) {
-      setEvents(
-        events.map((event) =>
-          event.id === editingEvent.id ? { ...event, ...formData } : event
-        )
-      );
-      setAlert({
-        type: "success",
-        message: "Event updated successfully!",
-      });
+      // Update event
+      response = await updateEvent(editingEvent.id, formData);
     } else {
-      const newEvent = {
-        id: Math.max(...events.map((e) => e.id)) + 1,
-        ...formData,
-        status: "upcoming",
-        // If no image is uploaded, use a default image
-        image: formData.image || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
-      };
-      setEvents([...events, newEvent]);
+      // Add new event
+      response = await addEvent(formData);
+    }
+
+    if (response?.data?.success) {
       setAlert({
         type: "success",
-        message: "Event created successfully!",
+        message: editingEvent ? "Event updated successfully!" : "Event created successfully!",
       });
+      fetchEvents(); // Refresh list from backend
+      setShowForm(false);
+      setEditingEvent(null);
+    } else {
+      setAlert({ type: "error", message: response?.data?.message || "Something went wrong!" });
     }
-    setShowForm(false);
-    setEditingEvent(null);
-  };
+  } catch (error) {
+    setAlert({ type: "error", message: "Failed to save event!" });
+  }
+};
+
 
   const handleFormCancel = () => {
     setShowForm(false);
@@ -1035,7 +1033,7 @@ const fetchEvents = async () => {
               {/* Event Image */}
               <div className="h-56 overflow-hidden relative">
                 <img
-                  src={event.image}
+                  src={event.image_url}
                   alt={event.title}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
                 />
@@ -1055,31 +1053,23 @@ const fetchEvents = async () => {
               <div className="p-5">
                 {/* Event Title */}
                 <h3 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
-                  {event.title}
+                  {event.heading}
                 </h3>
 
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center text-gray-700">
-                        <FontAwesomeIcon
-                          icon={faCalendarAlt}
-                          className="text-[#2a5298] mr-3 w-4"
-                        />
-                        <span className="font-medium">
-                          {new Date(event.date).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center text-gray-700">
-                        <FontAwesomeIcon
-                          icon={faCalendarAlt}
-                          className="text-[#2a5298] mr-3 w-4"
-                        />
-                        <span className="text-sm">{event.time}</span>
-                      </div>
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center text-gray-700">
+                    <FontAwesomeIcon
+                      icon={faCalendarAlt}
+                      className="text-[#2a5298] mr-3 w-4"
+                    />
+                    <span className="font-medium">
+                      {new Date(event.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </div>
 
                   <div className="flex items-center text-gray-700">
                     <FontAwesomeIcon
@@ -1088,6 +1078,9 @@ const fetchEvents = async () => {
                     />
                     <span className="line-clamp-1">{event.venue}</span>
                   </div>
+                    <h4 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
+                  {event.heading}
+                </h4>
                 </div>
 
                     {/* Action Buttons */}
