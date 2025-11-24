@@ -209,7 +209,7 @@
 //         transform: translateY(0);
 //       }
 //     }
-    
+
 //     @keyframes fadeIn {
 //       from {
 //         opacity: 0;
@@ -218,7 +218,7 @@
 //         opacity: 1;
 //       }
 //     }
-    
+
 //     @keyframes scaleIn {
 //       from {
 //         opacity: 0;
@@ -229,23 +229,23 @@
 //         transform: scale(1);
 //       }
 //     }
-    
+
 //     .animate-slide-in-up {
 //       animation: slideInUp 0.6s ease-out;
 //     }
-    
+
 //     .animate-fade-in {
 //       animation: fadeIn 0.8s ease-out;
 //     }
-    
+
 //     .animate-scale-in {
 //       animation: scaleIn 0.5s ease-out;
 //     }
-    
+
 //     .hover-lift {
 //       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 //     }
-    
+
 //     .hover-lift:hover {
 //       transform: translateY(-8px);
 //       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -634,6 +634,7 @@ import {
   faExclamationTriangle,
   faSync,
 } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -660,34 +661,39 @@ const Reviews = () => {
   const fetchReviews = async () => {
     setLoading(true);
     setError("");
-    try {
-      const response = await fetch(`${backendUrl}/feedback/getall`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
 
-      const result = await response.json();
-      
-      if (result.status && result.data) {
+    const token = sessionStorage.getItem("admin_token");
+    try {
+      const response = await axios.get(`${backendUrl}/feedback/getall`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // const result = await response.json();
+
+      console.log("Fetched Reviews:", response.data.data);
+
+      if (response.data.status) {
         // Transform API data to match our component structure
-        const transformedReviews = result.data.map(feedback => ({
-          id: feedback.id,
-          patientName: feedback.full_name || "Anonymous",
-          patientEmail: feedback.email || "No email provided",
-          rating: parseInt(feedback.rating) || 0,
-          comment: feedback.message || "No comment provided",
-          date: feedback.created_at ? feedback.created_at.split(' ')[0] : new Date().toISOString().split('T')[0],
-          status: feedback.status === "1" ? "approved" : "pending",
+        // console.log("API Response inner Data:", response.data.data);
+        const transformedReviews = response.data.data.map(feedback => ({
+          id: feedback?.id,
+          patientName: feedback?.full_name || "Anonymous",
+          patientEmail: feedback?.email || "No email provided",
+          rating: parseInt(feedback?.rating) || 0,
+          comment: feedback?.message || "No comment provided",
+          date: feedback?.created_at ? feedback?.created_at.split(' ')[0] : new Date().toISOString().split('T')[0],
+          status: feedback?.status === "1" ? "approved" : "pending",
           doctor: "General", // Default value since not in API
           service: "Mental Health Services", // Default value
           helpful: Math.floor(Math.random() * 50), // Random helpful count
-          verified: feedback.status === "1",
-          originalData: feedback // Keep original API data
+          verified: feedback?.status === "1",
+          // originalData: feedback // Keep original API data
         }));
         setReviews(transformedReviews);
       } else {
-        throw new Error(result.message || 'Failed to fetch reviews');
+        throw new Error(response.data.message || 'Failed to fetch reviews');
       }
     } catch (error) {
       console.error('Error fetching reviews:', error);
@@ -868,15 +874,14 @@ const Reviews = () => {
       {/* Alert */}
       {alert && (
         <div className="fixed top-4 right-4 z-50 animate-fade-in">
-          <div className={`px-6 py-4 rounded-xl shadow-lg border ${
-            alert.type === 'success' 
-              ? 'bg-green-100 text-green-800 border-green-300' 
+          <div className={`px-6 py-4 rounded-xl shadow-lg border ${alert.type === 'success'
+              ? 'bg-green-100 text-green-800 border-green-300'
               : 'bg-red-100 text-red-800 border-red-300'
-          }`}>
+            }`}>
             <div className="flex items-center space-x-3">
-              <FontAwesomeIcon 
-                icon={alert.type === 'success' ? faCheck : faExclamationTriangle} 
-                className="text-lg" 
+              <FontAwesomeIcon
+                icon={alert.type === 'success' ? faCheck : faExclamationTriangle}
+                className="text-lg"
               />
               <span className="font-semibold">{alert.message}</span>
             </div>
@@ -1229,8 +1234,8 @@ const Reviews = () => {
                       typeof pageNum === "number" && setCurrentPage(pageNum)
                     }
                     className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 hover-lift ${pageNum === currentPage
-                        ? "bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white shadow-lg border border-[#2a5298]"
-                        : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
+                      ? "bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white shadow-lg border border-[#2a5298]"
+                      : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
                       } ${pageNum === "..."
                         ? "cursor-default hover:bg-white hover:border-gray-300 hover-lift-none"
                         : ""

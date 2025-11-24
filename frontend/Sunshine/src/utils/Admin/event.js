@@ -1,8 +1,12 @@
 
 import axiosInstance from "./axiosinstance";
 
-export const addEvent = async (formData) => {
-  return await axiosInstance.post("/event/add", formData);
+export const addEvent = async (formData , token) => {
+  return await axiosInstance.post("/event/add", formData , {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export const getEvents =async() =>{
