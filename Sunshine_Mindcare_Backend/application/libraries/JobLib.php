@@ -10,11 +10,25 @@ class Joblib {
         $this->CI->load->model('Jobmodel');
     }
 
-    public function addJob($data) {
-        $insert_id = $this->CI->Jobmodel->insertJob($data);
-        return $insert_id ? ['status' => true, 'message' => 'Job added', 'id' => $insert_id]
-                          : ['status' => false, 'message' => 'Failed'];
+
+public function addJob($data) {
+    $insert_id = $this->CI->Jobmodel->insertJob($data);
+
+    if ($insert_id) {
+        
+        $data['id'] = $insert_id;
+
+        return [
+            'status'  => true,
+            'message' => 'Job added',
+            'data'    => $data
+        ];
+    } else {
+        return ['status' => false, 'message' => 'Failed'];
     }
+}
+
+
 
     public function updateJob($data) {
         return $this->CI->Jobmodel->updateJob($data) ? ['status' => true, 'message' => 'Updated']

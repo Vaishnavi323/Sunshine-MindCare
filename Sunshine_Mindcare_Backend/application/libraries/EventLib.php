@@ -227,4 +227,27 @@ class EventLib {
 	}
 
 
+	public function listUpcomingEvents() {
+    $events = $this->CI->EventModel->getUpcomingEvents();
+    if (!$events) return ["success" => false, "message" => "No upcoming events"];
+
+    foreach ($events as &$row) {
+        $row['image_url'] = base_url($row['image']);
+    }
+
+    return ["success" => true, "data" => $events];
+}
+
+public function listPastEvents() {
+    $events = $this->CI->EventModel->getPastEvents();
+    if (!$events) return ["success" => false, "message" => "No past events"];
+
+    foreach ($events as &$row) {
+        $row['image_url'] = base_url($row['image']);
+    }
+
+    return ["success" => true, "data" => $events];
+}
+
+
 }

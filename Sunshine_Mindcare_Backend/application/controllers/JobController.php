@@ -16,7 +16,7 @@ class JobController extends CI_Controller {
 		$response = $this->joblib->addJob($input);
 
 		if ($response['status']) {
-			$this->api->send_response(200, $response['message'], null, null, ['id' => $response['id']]);
+			$this->api->send_response(200, $response['message'], null, null, ['id' => $response['data']['id']]);
 		} else {
 			$this->api->send_response(400, $response['message'], 'ERR_ADD_FAILED');
 		}

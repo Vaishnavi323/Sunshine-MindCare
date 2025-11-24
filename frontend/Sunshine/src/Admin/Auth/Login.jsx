@@ -12,7 +12,7 @@ import CustomAlert from "../../CustomAlert/CustomAlert";
 import { useNavigate } from "react-router-dom";
 import EMIImage from "../../assets/Sunshine_logo.png"
 import EMILogo from "../../assets/Sunshine_logo.jpg"
-//
+
 // Inline CSS for login page
 const loginStyles = {
   container: {
@@ -75,7 +75,7 @@ const loginStyles = {
   },
   rightCard: {
     flex: 1,
-    background: "linear-gradient(135deg, #3567c3 0%, #2a5298 100%)",
+    background: "linear-gradient(135deg, #2d365b 0%, #1e2a4b 100%)",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -92,7 +92,7 @@ const loginStyles = {
     height: "auto",
   },
   slogan: {
-    color: "#2a5298",
+    color: "#2d365b",
     fontSize: "18px",
     fontWeight: "500",
     textAlign: "center",
@@ -171,7 +171,7 @@ const loginStyles = {
   },
   loginButton: {
     background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-    color: "#2a5298",
+    color: "#2d365b",
     border: "none",
     borderRadius: "15px",
     padding: "16px 20px",
@@ -199,7 +199,7 @@ const loginStyles = {
   },
   loadingSpinner: {
     border: "2px solid transparent",
-    borderTop: "2px solid #2a5298",
+    borderTop: "2px solid #2d365b",
     borderRadius: "50%",
     width: "20px",
     height: "20px",
@@ -428,17 +428,11 @@ const Login = () => {
 
     try {
       const result = await login(credentials.username, credentials.password);
-      console.log(result);
-      if (!result.status) {
-        showCustomAlert(
-          "error",
-          result.error || "Login failed. Please check your credentials."
-        );
+      if (result.success) {
+        showCustomAlert("success", result.message || "Login successful! Redirecting...");
+        setTimeout(() => navigate("/admin"), 2000);
       } else {
-        showCustomAlert("success", "Login successful! Redirecting...");
-        setTimeout(() => {
-          navigate("/admin");
-        }, 3000);
+        showCustomAlert("error", result.message || "Login failed!");
       }
     } catch (error) {
       showCustomAlert(
@@ -467,9 +461,9 @@ const Login = () => {
           onClose={handleCloseAlert}
           duration={3000}
         />
-      )}
+      )} */}
 
-      <div style={loginStyles.container} className="border">
+      {/* <div style={loginStyles.container} className="border">
         
         <div
           style={{ ...loginStyles.floatingOrbs, ...loginStyles.floatingOrb1 }}
@@ -481,12 +475,12 @@ const Login = () => {
           style={{ ...loginStyles.floatingOrbs, ...loginStyles.floatingOrb3 }}
         ></div>
 
-        
+        {/* Two Card Container */}
         <div
           style={loginStyles.twoCardContainer}
           className="two-card-container  border border-black/80 rounded-2xl  shadow-xl"
         >
-          
+          {/* Left Card - Image and Slogan (Now White Background) */}
           <div style={loginStyles.leftCard} className="animate-slide-in-left">
             <div style={loginStyles.imageContainer}>
               <img
@@ -495,16 +489,20 @@ const Login = () => {
                 style={loginStyles.logoImage}
               />
 
-             
+
             </div>
 
             <div style={loginStyles.slogan}>
               Making a Difference in Our Community Through Compassion and Care
             </div>
           </div>
+
+          {/* Right Card - Login Form (Now Dark Blue Background) */}
           <div style={loginStyles.rightCard} className="animate-slide-in-right">
+            {/* Shimmer Effect */}
             <div style={loginStyles.shimmerEffect}></div>
 
+            {/* Header */}
             <div className="text-center mb-8 animate-slide-in-down">
               <div style={loginStyles.logoContainer}>
                 <img
@@ -519,7 +517,9 @@ const Login = () => {
               </p>
             </div>
 
+            {/* Login Form */}
             <form onSubmit={handleSubmit}>
+              {/* Username Field */}
               <div style={loginStyles.inputContainer}>
                 <div
                   style={{
@@ -549,6 +549,7 @@ const Login = () => {
                 />
               </div>
 
+              {/* Password Field */}
               <div style={loginStyles.inputContainer}>
                 <div
                   style={{
@@ -576,6 +577,7 @@ const Login = () => {
                   }}
                   disabled={isLoading}
                 />
+                {/* Password Toggle Button */}
                 <button
                   type="button"
                   style={{
@@ -596,6 +598,7 @@ const Login = () => {
                 </button>
               </div>
 
+              {/* Login Button */}
               <button
                 type="submit"
                 style={loginStyles.loginButton}
@@ -626,6 +629,7 @@ const Login = () => {
               </button>
             </form>
 
+            {/* Footer Note */}
             <div className="text-center mt-6">
               <p style={{ color: "rgba(255, 255, 255, 0.7)", fontSize: "14px" }}>
                 Secure access to Empathy Foundation admin panel

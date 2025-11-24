@@ -635,9 +635,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import CustomAlert from "../../CustomAlert/CustomAlert";
 import EventForm from "../Forms/EventForm";
+import { addEvent, getEvents, updateEvent, deleteEvent } from "../../utils/Admin/event";
+
+const baseURL = import.meta.env.VITE_IMAGE_URL;
+
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
+
+const [events, setEvents] = useState([]);
+const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -733,7 +739,22 @@ const Events = () => {
 
   // Ref for delete alert click-outside
   const deleteAlertRef = useRef(null);
+useEffect(() => {
+  fetchEvents();
+}, []);
 
+const fetchEvents = async () => {
+  try {
+    const response = await getEvents();
+    console.log(response);
+    setEvents(response?.data?.data || []); // adjust based on your backend response
+  } catch (error) {
+    console.error(error);
+    setAlert({ type: "error", message: "Failed to load events!" });
+  } finally {
+    setLoading(false);
+  }
+};
   // Click outside to close delete alert
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -762,7 +783,10 @@ const Events = () => {
 
   const handleDelete = (id) => {
     setEvents(events.filter((event) => event.id !== id));
-    showAlert("success", "Event deleted successfully!");
+    setAlert({
+      type: "success",
+      message: "Event deleted successfully!",
+    });
     setDeleteConfirm(null);
 
     // Adjust current page if needed after deletion
@@ -776,24 +800,33 @@ const Events = () => {
     setShowForm(true);
   };
 
-  const handleFormSubmit = (formData) => {
+  const handleFormSubmit = async (formData) => {
+  try {
+    let response;
+
     if (editingEvent) {
       setEvents(
         events.map((event) =>
           event.id === editingEvent.id ? { ...event, ...formData } : event
         )
       );
-      showAlert("success", "Event updated successfully!");
+      setAlert({
+        type: "success",
+        message: "Event updated successfully!",
+      });
     } else {
       const newEvent = {
-        id: events.length > 0 ? Math.max(...events.map((e) => e.id)) + 1 : 1,
+        id: Math.max(...events.map((e) => e.id)) + 1,
         ...formData,
         status: "upcoming",
         // If no image is uploaded, use a default image
         image: formData.image || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
       };
       setEvents([...events, newEvent]);
-      showAlert("success", "Event created successfully!");
+      setAlert({
+        type: "success",
+        message: "Event created successfully!",
+      });
     }
     setShowForm(false);
     setEditingEvent(null);
@@ -991,49 +1024,39 @@ const Events = () => {
               </div>
             </div>
 
-            {/* Events Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {currentEvents.map((event) => (
-                <div
-                  key={event.id}
-                  className="bg-white rounded-xl shadow-md border border-gray-300 overflow-hidden group hover:shadow-xl transform hover:-translate-y-1 transition-all duration-500 ease-in-out cursor-pointer"
-                  onClick={() => setImageModal(event)}
-                >
-                  {/* Event Image */}
-                  <div className="h-56 overflow-hidden relative">
-                    <img
-                      src={event.image}
-                      alt={event.title}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                      onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop";
-                      }}
-                    />
-                    <div className="absolute top-3 right-3">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                          event.status
-                        )}`}
-                      >
-                        {event.status}
-                      </span>
-                    </div>
-                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                  </div>
+        {/* Events Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {currentEvents.map((event) => (
+            <div
+              key={event.id}
+              className="bg-white rounded-xl shadow-md border border-gray-300 overflow-hidden group hover:shadow-xl transform hover:-translate-y-1 transition-all duration-500 ease-in-out cursor-pointer"
+              onClick={() => setImageModal(event)}
+            >
+              {/* Event Image */}
+              <div className="h-56 overflow-hidden relative">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                />
+                <div className="absolute top-3 right-3">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                      event.status
+                    )}`}
+                  >
+                    {event.status}
+                  </span>
+                </div>
+                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+              </div>
 
-                  {/* Event Content */}
-                  <div className="p-5">
-                    {/* Event Title */}
-                    <h3 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
-                      {event.title}
-                    </h3>
-
-                    {/* Event Description */}
-                    {event.description && event.description !== "No description available" && (
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                        {event.description}
-                      </p>
-                    )}
+              {/* Event Content */}
+              <div className="p-5">
+                {/* Event Title */}
+                <h3 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
+                  {event.title}
+                </h3>
 
                     <div className="space-y-3 mb-4">
                       <div className="flex items-center text-gray-700">
@@ -1058,14 +1081,14 @@ const Events = () => {
                         <span className="text-sm">{event.time}</span>
                       </div>
 
-                      <div className="flex items-center text-gray-700">
-                        <FontAwesomeIcon
-                          icon={faMapMarkerAlt}
-                          className="text-[#2a5298] mr-3 w-4"
-                        />
-                        <span className="line-clamp-1">{event.venue}</span>
-                      </div>
-                    </div>
+                  <div className="flex items-center text-gray-700">
+                    <FontAwesomeIcon
+                      icon={faMapMarkerAlt}
+                      className="text-[#2a5298] mr-3 w-4"
+                    />
+                    <span className="line-clamp-1">{event.venue}</span>
+                  </div>
+                </div>
 
                     {/* Action Buttons */}
                     <div className="flex space-x-3 pt-4 border-t border-gray-200">
