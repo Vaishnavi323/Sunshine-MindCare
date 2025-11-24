@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import {adminLogin} from "../../utils/Admin/login";
+import { adminLogin } from "../../utils/Admin/login";
 
 const AuthContext = createContext();
 
@@ -13,7 +13,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(()=> sessionStorage.getItem("admin_token"));
+  const [token, setToken] = useState(() => sessionStorage.getItem("admin_token"));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,15 +27,48 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
+    try {
       const response = await adminLogin(email, password);
-      sessionStorage.setItem("admin_token", response.data.token)
-      return response.data;
+      console.log("Login API Response:", response.data);
+
+      const data = response.data;
+
+      if (data.success === true) {
+        sessionStorage.setItem("admin_token", data.token);
+
+        if (data.user) {
+          sessionStorage.setItem("admin_user", JSON.stringify(data.user));
+          setUser(data.user);
+        }
+
+        return { success: true, message: data.message || "Login Successful" };
+      }
+
+      if (data.status === true) {
+        sessionStorage.setItem("admin_token", data.token);
+
+        if (data.user) {
+          sessionStorage.setItem("admin_user", JSON.stringify(data.user));
+          setUser(data.user);
+        }
+
+        return { success: true, message: data.message || "Login Successful" };
+      }
+
+      return { success: false, message: data.message || "Invalid credentials" };
+    } catch (error) {
+      return {
+        success: false,
+        message:
+          error.response?.data?.message || "An unexpected error occurred.",
+      };
+    }
   };
+
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("admin_token");
-    localStorage.removeItem("admin_user");
+    sessionStorage.removeItem("admin_token");
   };
 
   const value = {

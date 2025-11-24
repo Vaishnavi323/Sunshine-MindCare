@@ -83,3 +83,5 @@ $route['feedback/get'] = 'FeedbackController/get';
 $route['feedback/approve'] = 'FeedbackController/update';
 $route['feedback/getapproved'] = 'FeedbackController/getApproved';
 $route['feedback/getall'] = 'FeedbackController/getAll';
+$route['doctor/add'] = 'DoctorController/add';
+$route['doctor/list'] = 'DoctorController/list';

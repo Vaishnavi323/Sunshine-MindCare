@@ -14,147 +14,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import CustomAlert from "../../CustomAlert/CustomAlert";
 import EventForm from "../Forms/EventForm";
+import { addEvent, getEvents, updateEvent, deleteEvent } from "../../utils/Admin/event";
+
+const baseURL = import.meta.env.VITE_IMAGE_URL;
+
 
 const Events = () => {
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Mental Health Workshop",
-      date: "2024-01-15",
-      time: "10:00 AM - 2:00 PM",
-      venue: "Community Hall, Nashik",
-      hospital: "Sunshine",
-      participants: 120,
-      status: "completed",
-      description:
-        "Workshop focusing on mental health awareness and coping strategies for community members.",
-      image:
-        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=300&fit=crop",
-    },
-    {
-      id: 2,
-      title: "Community Counseling",
-      date: "2024-01-20",
-      time: "9:00 AM - 5:00 PM",
-      venue: "Local Park, Nashik",
-      hospital: "Manoday",
-      participants: 85,
-      status: "upcoming",
-      description:
-        "Free counseling sessions for community members with professional psychologists.",
-      image:
-        "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop",
-    },
-    {
-      id: 3,
-      title: "Youth Awareness Program",
-      date: "2024-02-01",
-      time: "11:00 AM - 4:00 PM",
-      venue: "City College, Nashik",
-      hospital: "Both",
-      participants: 200,
-      status: "upcoming",
-      description:
-        "Program targeting youth mental health awareness and stress management techniques.",
-      image:
-        "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=400&h=300&fit=crop",
-    },
-    {
-      id: 4,
-      title: "Senior Citizen Support",
-      date: "2024-02-10",
-      time: "1:00 PM - 3:00 PM",
-      venue: "Senior Center, Nashik",
-      hospital: "Sunshine",
-      participants: 60,
-      status: "upcoming",
-      description: "Mental health support and counseling for senior citizens.",
-      image:
-        "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop",
-    },
-    {
-      id: 5,
-      title: "Stress Management Workshop",
-      date: "2024-01-10",
-      time: "2:00 PM - 5:00 PM",
-      venue: "Corporate Office, Nashik",
-      hospital: "Manoday",
-      participants: 45,
-      status: "completed",
-      description:
-        "Workshop for corporate employees on stress management techniques.",
-      image:
-        "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=300&fit=crop",
-    },
-    {
-      id: 6,
-      title: "Children's Mental Health",
-      date: "2024-02-15",
-      time: "10:00 AM - 12:00 PM",
-      venue: "Public School, Nashik",
-      hospital: "Both",
-      participants: 150,
-      status: "upcoming",
-      description:
-        "Awareness program for children's mental health and emotional well-being.",
-      image:
-        "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=300&fit=crop",
-    },
-    {
-      id: 7,
-      title: "Family Counseling Day",
-      date: "2024-01-25",
-      time: "9:00 AM - 6:00 PM",
-      venue: "Community Center, Nashik",
-      hospital: "Sunshine",
-      participants: 90,
-      status: "completed",
-      description: "Full day counseling sessions for families and couples.",
-      image:
-        "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=400&h=300&fit=crop",
-    },
-    {
-      id: 8,
-      title: "Mental Health Marathon",
-      date: "2024-03-01",
-      time: "6:00 AM - 12:00 PM",
-      venue: "City Ground, Nashik",
-      hospital: "Both",
-      participants: 300,
-      status: "upcoming",
-      description: "Awareness marathon to promote mental health discussions.",
-      image:
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
-    },
-    {
-      id: 9,
-      title: "Professional Development",
-      date: "2024-01-30",
-      time: "3:00 PM - 6:00 PM",
-      venue: "Conference Hall, Nashik",
-      hospital: "Manoday",
-      participants: 75,
-      status: "completed",
-      description: "Training for mental health professionals and volunteers.",
-      image:
-        "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=300&fit=crop",
-    },
-    {
-      id: 10,
-      title: "Community Meditation",
-      date: "2024-02-20",
-      time: "6:00 AM - 7:00 AM",
-      venue: "Riverside Park, Nashik",
-      hospital: "Sunshine",
-      participants: 120,
-      status: "upcoming",
-      description:
-        "Guided meditation sessions for mental peace and relaxation.",
-      image:
-        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop",
-    },
-  ]);
 
+const [events, setEvents] = useState([]);
+const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -165,7 +33,22 @@ const Events = () => {
 
   // Ref for delete alert click-outside
   const deleteAlertRef = useRef(null);
+useEffect(() => {
+  fetchEvents();
+}, []);
 
+const fetchEvents = async () => {
+  try {
+    const response = await getEvents();
+    console.log(response);
+    setEvents(response?.data?.data || []); // adjust based on your backend response
+  } catch (error) {
+    console.error(error);
+    setAlert({ type: "error", message: "Failed to load events!" });
+  } finally {
+    setLoading(false);
+  }
+};
   // Click outside to close delete alert
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -191,54 +74,55 @@ const Events = () => {
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+const handleDelete = async (id) => {
+  try {
+    const response = await deleteEvent(id);
 
-  const handleDelete = (id) => {
-    setEvents(events.filter((event) => event.id !== id));
-    setAlert({
-      type: "success",
-      message: "Event deleted successfully!",
-    });
-    setDeleteConfirm(null);
-
-    // Adjust current page if needed after deletion
-    if (currentEvents.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+    if (response?.data?.success) {
+      setAlert({ type: "success", message: "Event deleted successfully!" });
+      fetchEvents(); // Refresh list after delete
+    } else {
+      setAlert({ type: "error", message: response?.data?.message || "Failed to delete event" });
     }
-  };
+  } catch (error) {
+    setAlert({ type: "error", message: "Delete failed!" });
+  }
+  setDeleteConfirm(null);
+};
 
   const handleEdit = (event) => {
     setEditingEvent(event);
     setShowForm(true);
   };
 
-  const handleFormSubmit = (formData) => {
+  const handleFormSubmit = async (formData) => {
+  try {
+    let response;
+
     if (editingEvent) {
-      setEvents(
-        events.map((event) =>
-          event.id === editingEvent.id ? { ...event, ...formData } : event
-        )
-      );
-      setAlert({
-        type: "success",
-        message: "Event updated successfully!",
-      });
+      // Update event
+      response = await updateEvent(editingEvent.id, formData);
     } else {
-      const newEvent = {
-        id: Math.max(...events.map((e) => e.id)) + 1,
-        ...formData,
-        status: "upcoming",
-        // If no image is uploaded, use a default image
-        image: formData.image || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
-      };
-      setEvents([...events, newEvent]);
+      // Add new event
+      response = await addEvent(formData);
+    }
+
+    if (response?.data?.success) {
       setAlert({
         type: "success",
-        message: "Event created successfully!",
+        message: editingEvent ? "Event updated successfully!" : "Event created successfully!",
       });
+      fetchEvents(); // Refresh list from backend
+      setShowForm(false);
+      setEditingEvent(null);
+    } else {
+      setAlert({ type: "error", message: response?.data?.message || "Something went wrong!" });
     }
-    setShowForm(false);
-    setEditingEvent(null);
-  };
+  } catch (error) {
+    setAlert({ type: "error", message: "Failed to save event!" });
+  }
+};
+
 
   const handleFormCancel = () => {
     setShowForm(false);
@@ -387,7 +271,7 @@ const Events = () => {
               {/* Event Image */}
               <div className="h-56 overflow-hidden relative">
                 <img
-                  src={event.image}
+                  src={event.image_url}
                   alt={event.title}
                   className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
                 />
@@ -407,7 +291,7 @@ const Events = () => {
               <div className="p-5">
                 {/* Event Title */}
                 <h3 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
-                  {event.title}
+                  {event.heading}
                 </h3>
 
                 <div className="space-y-3 mb-4">
@@ -432,6 +316,9 @@ const Events = () => {
                     />
                     <span className="line-clamp-1">{event.venue}</span>
                   </div>
+                    <h4 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
+                  {event.heading}
+                </h4>
                 </div>
 
                 {/* Action Buttons */}
