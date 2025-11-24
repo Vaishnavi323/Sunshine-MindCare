@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {useAuth} from "../Auth/AuthContext";
 import {
   faXmark,
   faUpload,
@@ -26,6 +27,7 @@ const EventForm = ({ event, onSubmit, onCancel }) => {
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
+  const {token} = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

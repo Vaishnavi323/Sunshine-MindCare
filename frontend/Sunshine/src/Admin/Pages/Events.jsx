@@ -616,7 +616,7 @@
 
 // export default Events;
 
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -627,24 +627,16 @@ import {
   faChevronLeft,
   faChevronRight,
   faXmark,
-  faUpload,
-  faImage,
   faSpinner,
   faExclamationTriangle,
   faSync,
 } from "@fortawesome/free-solid-svg-icons";
 import CustomAlert from "../../CustomAlert/CustomAlert";
 import EventForm from "../Forms/EventForm";
-import { addEvent, getEvents, updateEvent, deleteEvent } from "../../utils/Admin/event";
 import { useAuth } from "../../Admin/Auth/AuthContext";
 
-const baseURL = import.meta.env.VITE_IMAGE_URL;
-
-
 const Events = () => {
-
   const [events, setEvents] = useState([]);
-
   const [alert, setAlert] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -656,8 +648,7 @@ const Events = () => {
   const eventsPerPage = 9;
 
   const { token } = useAuth();
-
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
   // Show alert function
   const showAlert = (type, message) => {
@@ -665,47 +656,162 @@ const Events = () => {
     setTimeout(() => setAlert(null), 5000);
   };
 
-  // API call to fetch events
-  // const fetchEvents = async () => {
-  //   setLoading(true);
-  //   setError("");
-  //   try {
-  //     const response = await fetch(`${backendUrl}/event/list`);
+  // Fetch events on component mount
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
+  // API function to fetch events
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const response = await fetch(`${API_BASE_URL}/event/list`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-  //     const result = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-  //     if (result.status && result.data) {
-  //       // Transform API data to match our component structure
-  //       const transformedEvents = result.data.map(event => ({
-  //         id: event.id,
-  //         title: event.heading,
-  //         date: event.date,
-  //         time: formatTimeForDisplay(event.time),
-  //         venue: event.venue || "Venue not specified",
-  //         hospital: "Sunshine", // Default value
-  //         participants: 0, // Default value
-  //         status: getEventStatus(event.date),
-  //         description: event.description || "No description available",
-  //         image: event.image_url || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
-  //         created_at: event.created_at,
-  //         originalData: event // Keep original API data for reference
-  //       }));
-  //       setEvents(transformedEvents);
-  //     } else {
-  //       throw new Error(result.message || 'Failed to fetch events');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching events:', error);
-  //     setError(error.message || 'Failed to load events. Please try again later.');
-  //     showAlert("error", "Failed to load events");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      const result = await response.json();
+      
+      if (result.status) {
+        const eventsWithStatus = (result.data || []).map(event => ({
+          ...event,
+          status: getEventStatus(event.date)
+        }));
+        setEvents(eventsWithStatus);
+      } else {
+        throw new Error(result.message || 'Failed to fetch events');
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setError(error.message || "Failed to load events. Please try again.");
+      showAlert("error", error.message || "Failed to load events!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // API function to update event
+  const updateEventAPI = async (eventId, eventData) => {
+    try {
+      const formData = new FormData();
+      
+      // Append all fields
+      formData.append('id', eventId);
+      formData.append('heading', eventData.heading);
+      formData.append('date', eventData.date);
+      formData.append('venue', eventData.venue || '');
+      
+      if (eventData.description) {
+        formData.append('description', eventData.description);
+      }
+      
+      if (eventData.time && eventData.time !== "00:00:00") {
+        formData.append('time', eventData.time);
+      }
+      
+      // Append image file if exists
+      if (eventData.imageFile) {
+        formData.append('image', eventData.imageFile);
+      } else if (eventData.existingImage) {
+        formData.append('existingImage', eventData.existingImage);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/event/update`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error updating event:', error);
+      throw error;
+    }
+  };
+
+  // API function to delete event
+  const deleteEventAPI = async (eventId) => {
+    try {
+      const formData = new FormData();
+      formData.append('id', eventId);
+
+      const response = await fetch(`${API_BASE_URL}/event/delete`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      throw error;
+    }
+  };
+
+  // API function to add event
+  const addEventAPI = async (eventData) => {
+    try {
+      const formData = new FormData();
+      
+      // Append all fields
+      formData.append('heading', eventData.heading);
+      formData.append('date', eventData.date);
+      formData.append('venue', eventData.venue || '');
+      
+      if (eventData.description) {
+        formData.append('description', eventData.description);
+      }
+      
+      if (eventData.time && eventData.time !== "00:00:00") {
+        formData.append('time', eventData.time);
+      }
+      
+      // Append image file
+      if (eventData.imageFile) {
+        formData.append('image', eventData.imageFile);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/event/add`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error adding event:', error);
+      throw error;
+    }
+  };
 
   // Format time for display
   const formatTimeForDisplay = (time) => {
@@ -726,7 +832,10 @@ const Events = () => {
   // Determine event status based on date
   const getEventStatus = (eventDate) => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
     const event = new Date(eventDate);
+    event.setHours(0, 0, 0, 0);
 
     if (event < today) {
       return "completed";
@@ -735,122 +844,59 @@ const Events = () => {
     }
   };
 
-  // Fetch events on component mount
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  // Ref for delete alert click-outside
-  const deleteAlertRef = useRef(null);
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
-    try {
-      const response = await getEvents();
-      console.log(response);
-      setEvents(response?.data?.data || []); // adjust based on your backend response
-    } catch (error) {
-      console.error(error);
-      setAlert({ type: "error", message: "Failed to load events!" });
-    } finally {
-      setLoading(false);
-    }
-  };
-  // Click outside to close delete alert
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        deleteAlertRef.current &&
-        !deleteAlertRef.current.contains(event.target)
-      ) {
-        setDeleteConfirm(null);
-      }
-    };
-
-    if (deleteConfirm) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [deleteConfirm]);
-
-  // Pagination calculations
-  const totalPages = Math.ceil(events.length / eventsPerPage);
-  const indexOfLastEvent = currentPage * eventsPerPage;
-  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+  // Handle delete event
   const handleDelete = async (id) => {
     try {
-      const response = await deleteEvent(id);
+      const response = await deleteEventAPI(id);
 
-      if (response?.data?.success) {
-        setAlert({ type: "success", message: "Event deleted successfully!" });
+      if (response?.status) {
+        showAlert("success", "Event deleted successfully!");
         fetchEvents(); // Refresh list after delete
       } else {
-        setAlert({ type: "error", message: response?.data?.message || "Failed to delete event" });
+        showAlert("error", response?.message || "Failed to delete event");
       }
     } catch (error) {
-      setAlert({ type: "error", message: "Delete failed!" });
+      console.error('Delete error:', error);
+      showAlert("error", "Failed to delete event. Please try again.");
     }
     setDeleteConfirm(null);
   };
 
+  // Handle edit event
   const handleEdit = (event) => {
     setEditingEvent(event);
     setShowForm(true);
   };
 
+  // Handle form submission
   const handleFormSubmit = async (formData) => {
     try {
-      // Create FormData object for file upload
-      const submitFormData = new FormData();
-
-      // Append text fields
-      submitFormData.append('heading', formData.heading);
-      submitFormData.append('date', formData.date);
-      submitFormData.append('time', formData.time);
-      submitFormData.append('venue', formData.venue);
-      submitFormData.append('description', formData.description);
-
-      // Append image file if exists
-      if (formData.imageFile) {
-        submitFormData.append('image', formData.imageFile);
-      }
-
       let response;
 
       if (editingEvent) {
-        // Update event - include ID and existing image if no new file
-        if (!formData.imageFile && formData.existingImage) {
-          submitFormData.append('existingImage', formData.existingImage);
-        }
-        response = await updateEvent(editingEvent.id, submitFormData, token);
+        // Update event
+        response = await updateEventAPI(editingEvent.id, formData);
       } else {
         // Add new event
-        response = await addEvent(submitFormData, token);
+        response = await addEventAPI(formData);
       }
 
-      if (response?.data?.success) {
-        setAlert({
-          type: "success",
-          message: editingEvent ? "Event updated successfully!" : "Event created successfully!",
-        });
+      if (response?.status) {
+        showAlert(
+          "success", 
+          editingEvent ? "Event updated successfully!" : "Event created successfully!"
+        );
         fetchEvents(); // Refresh list from backend
         setShowForm(false);
         setEditingEvent(null);
       } else {
-        setAlert({ type: "error", message: response?.data?.message || "Something went wrong!" });
+        showAlert("error", response?.message || "Something went wrong!");
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      setAlert({ type: "error", message: "Failed to save event!" });
+      showAlert("error", "Failed to save event. Please try again.");
     }
   };
-
 
   const handleFormCancel = () => {
     setShowForm(false);
@@ -874,6 +920,12 @@ const Events = () => {
         return "bg-gray-100 text-gray-800 border border-gray-300";
     }
   };
+
+  // Pagination calculations
+  const totalPages = Math.ceil(events.length / eventsPerPage);
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
 
   // Dynamic pagination generation
   const getPaginationNumbers = () => {
@@ -1055,9 +1107,12 @@ const Events = () => {
                   {/* Event Image */}
                   <div className="h-56 overflow-hidden relative">
                     <img
-                      src={event.image_url}
-                      alt={event.title}
+                      src={event.image_url || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop"}
+                      alt={event.heading}
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                      onError={(e) => {
+                        e.target.src = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop";
+                      }}
                     />
                     <div className="absolute top-3 right-3">
                       <span
@@ -1093,16 +1148,25 @@ const Events = () => {
                         </span>
                       </div>
 
+                      {event.time && event.time !== "00:00:00" && (
+                        <div className="flex items-center text-gray-700">
+                          <FontAwesomeIcon
+                            icon={faCalendarAlt}
+                            className="text-[#2a5298] mr-3 w-4"
+                          />
+                          <span>{formatTimeForDisplay(event.time)}</span>
+                        </div>
+                      )}
+
                       <div className="flex items-center text-gray-700">
                         <FontAwesomeIcon
                           icon={faMapMarkerAlt}
                           className="text-[#2a5298] mr-3 w-4"
                         />
-                        <span className="line-clamp-1">{event.venue}</span>
+                        <span className="line-clamp-1">
+                          {event.venue || "Venue not specified"}
+                        </span>
                       </div>
-                      <h4 className="text-lg font-bold text-[#2a5298] mb-3 line-clamp-2 group-hover:text-[#3a4a7a] transition-colors duration-300">
-                        {event.heading}
-                      </h4>
                     </div>
 
                     {/* Action Buttons */}
@@ -1120,7 +1184,7 @@ const Events = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          setDeleteConfirm(event.id);
+                          setDeleteConfirm(event);
                         }}
                         className="flex-1 bg-white text-red-600 py-2 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 flex items-center justify-center space-x-2 border border-red-300"
                       >
@@ -1216,13 +1280,13 @@ const Events = () => {
         />
       )}
 
-      {/* Delete Confirmation using CustomAlert with Click Outside */}
+      {/* Delete Confirmation */}
       {deleteConfirm && (
         <CustomAlert
           type="delete"
-          message="Are you sure you want to delete this event? This action cannot be undone."
+          message={`Are you sure you want to delete the event "${deleteConfirm.heading}"? This action cannot be undone.`}
           onClose={() => setDeleteConfirm(null)}
-          onConfirm={() => handleDelete(deleteConfirm)}
+          onConfirm={() => handleDelete(deleteConfirm.id)}
         />
       )}
 
@@ -1245,8 +1309,8 @@ const Events = () => {
 
             <div className="w-full h-[70vh] overflow-hidden">
               <img
-                src={imageModal.image}
-                alt={imageModal.title}
+                src={imageModal.image_url || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop"}
+                alt={imageModal.heading}
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   e.target.src = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop";
@@ -1256,7 +1320,7 @@ const Events = () => {
 
             <div className="p-6 bg-white border-t border-gray-200">
               <h3 className="text-2xl font-bold text-[#2a5298] mb-3">
-                {imageModal.title}
+                {imageModal.heading}
               </h3>
 
               {/* Event Description */}
@@ -1281,20 +1345,22 @@ const Events = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center text-gray-600">
-                  <FontAwesomeIcon
-                    icon={faCalendarAlt}
-                    className="mr-3 w-4 text-[#2a5298]"
-                  />
-                  <span>{imageModal.time}</span>
-                </div>
+                {imageModal.time && imageModal.time !== "00:00:00" && (
+                  <div className="flex items-center text-gray-600">
+                    <FontAwesomeIcon
+                      icon={faCalendarAlt}
+                      className="mr-3 w-4 text-[#2a5298]"
+                    />
+                    <span>{formatTimeForDisplay(imageModal.time)}</span>
+                  </div>
+                )}
 
                 <div className="flex items-center text-gray-600">
                   <FontAwesomeIcon
                     icon={faMapMarkerAlt}
                     className="mr-3 w-4 text-[#2a5298]"
                   />
-                  <span>{imageModal.venue}</span>
+                  <span>{imageModal.venue || "Venue not specified"}</span>
                 </div>
 
                 <div className="flex items-center text-gray-600">
