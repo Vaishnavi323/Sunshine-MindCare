@@ -643,7 +643,7 @@ const baseURL = import.meta.env.VITE_IMAGE_URL;
 const Events = () => {
 
 const [events, setEvents] = useState([]);
-const [loading, setLoading] = useState(true);
+
   const [alert, setAlert] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -663,46 +663,46 @@ const [loading, setLoading] = useState(true);
   };
 
   // API call to fetch events
-  const fetchEvents = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const response = await fetch(`${backendUrl}/event/list`);
+  // const fetchEvents = async () => {
+  //   setLoading(true);
+  //   setError("");
+  //   try {
+  //     const response = await fetch(`${backendUrl}/event/list`);
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
 
-      const result = await response.json();
+  //     const result = await response.json();
       
-      if (result.status && result.data) {
-        // Transform API data to match our component structure
-        const transformedEvents = result.data.map(event => ({
-          id: event.id,
-          title: event.heading,
-          date: event.date,
-          time: formatTimeForDisplay(event.time),
-          venue: event.venue || "Venue not specified",
-          hospital: "Sunshine", // Default value
-          participants: 0, // Default value
-          status: getEventStatus(event.date),
-          description: event.description || "No description available",
-          image: event.image_url || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
-          created_at: event.created_at,
-          originalData: event // Keep original API data for reference
-        }));
-        setEvents(transformedEvents);
-      } else {
-        throw new Error(result.message || 'Failed to fetch events');
-      }
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      setError(error.message || 'Failed to load events. Please try again later.');
-      showAlert("error", "Failed to load events");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (result.status && result.data) {
+  //       // Transform API data to match our component structure
+  //       const transformedEvents = result.data.map(event => ({
+  //         id: event.id,
+  //         title: event.heading,
+  //         date: event.date,
+  //         time: formatTimeForDisplay(event.time),
+  //         venue: event.venue || "Venue not specified",
+  //         hospital: "Sunshine", // Default value
+  //         participants: 0, // Default value
+  //         status: getEventStatus(event.date),
+  //         description: event.description || "No description available",
+  //         image: event.image_url || "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
+  //         created_at: event.created_at,
+  //         originalData: event // Keep original API data for reference
+  //       }));
+  //       setEvents(transformedEvents);
+  //     } else {
+  //       throw new Error(result.message || 'Failed to fetch events');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching events:', error);
+  //     setError(error.message || 'Failed to load events. Please try again later.');
+  //     showAlert("error", "Failed to load events");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // Format time for display
   const formatTimeForDisplay = (time) => {
