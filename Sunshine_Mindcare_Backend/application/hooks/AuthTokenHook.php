@@ -17,7 +17,7 @@ class AuthTokenHook
 		'feedbackcontroller/add',
 		'feedbackcontroller/get',
 		'feedbackcontroller/update',
-		'feedbackcontroller/getApproved',
+		'feedbackcontroller/getapproved',
 		'jobcontroller/list',
 		'doctorcontroller/get',
 		'enquirecontroller/list',
