@@ -633,6 +633,7 @@ import {
   faSpinner,
   faExclamationTriangle,
   faSync,
+  faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useAuth } from "../Auth/AuthContext";
@@ -649,6 +650,7 @@ const Reviews = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(null);
   const reviewsPerPage = 6;
 
   const { token } = useAuth();
@@ -722,6 +724,60 @@ const Reviews = () => {
     } catch (error) {
       console.error('Error deleting feedback:', error);
       throw error;
+    }
+  };
+
+  // API function to approve feedback
+  const approveFeedbackAPI = async (feedbackId) => {
+    try {
+      setApproveLoading(feedbackId);
+      
+      const formData = new FormData();
+      formData.append('id', feedbackId);
+
+      const response = await fetch(`${API_BASE_URL}/feedback/approve`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error approving feedback:', error);
+      throw error;
+    } finally {
+      setApproveLoading(null);
+    }
+  };
+
+  // Handle approve review
+  const handleApprove = async (reviewId) => {
+    try {
+      const response = await approveFeedbackAPI(reviewId);
+
+      if (response?.status) {
+        // Update the review status locally
+        setReviews(prevReviews => 
+          prevReviews.map(review => 
+            review.id === reviewId 
+              ? { ...review, status: "approved", verified: true }
+              : review
+          )
+        );
+        showAlert("success", "Review approved successfully!");
+      } else {
+        throw new Error(response?.message || 'Failed to approve review');
+      }
+    } catch (error) {
+      console.error('Approve error:', error);
+      showAlert("error", error.message || "Failed to approve review. Please try again.");
     }
   };
 
@@ -1217,6 +1273,23 @@ const Reviews = () => {
                         <FontAwesomeIcon icon={faEye} />
                         <span>View</span>
                       </button>
+                      
+                      {/* Approve Button - Only show for pending reviews */}
+                      {review.status === "pending" && (
+                        <button
+                          onClick={() => handleApprove(review.id)}
+                          disabled={approveLoading === review.id}
+                          className="flex-1 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition-all duration-300 flex items-center justify-center space-x-2 border border-green-500 disabled:opacity-50"
+                        >
+                          {approveLoading === review.id ? (
+                            <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                          ) : (
+                            <FontAwesomeIcon icon={faCheckCircle} />
+                          )}
+                          <span>{approveLoading === review.id ? "Approving..." : "Approve"}</span>
+                        </button>
+                      )}
+                      
                       <button
                         onClick={() => setDeleteConfirm(review)}
                         className="flex-1 bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-red-600 transition-all duration-300 flex items-center justify-center space-x-2 border border-red-500"
@@ -1343,6 +1416,8 @@ const Reviews = () => {
           review={viewReview}
           onClose={() => setViewReview(null)}
           onDelete={setDeleteConfirm}
+          onApprove={handleApprove}
+          approveLoading={approveLoading}
         />
       )}
     </div>
@@ -1350,7 +1425,7 @@ const Reviews = () => {
 };
 
 // View Review Modal Component
-const ViewReviewModal = ({ review, onClose, onDelete }) => {
+const ViewReviewModal = ({ review, onClose, onDelete, onApprove, approveLoading }) => {
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <FontAwesomeIcon
@@ -1477,6 +1552,30 @@ const ViewReviewModal = ({ review, onClose, onDelete }) => {
 
           {/* Action Buttons */}
           <div className="flex space-x-4 pt-4 border-t border-gray-200">
+            {/* Approve Button - Only show for pending reviews */}
+            {review.status === "pending" && (
+              <button
+                onClick={() => {
+                  onApprove(review.id);
+                  onClose();
+                }}
+                disabled={approveLoading === review.id}
+                className="flex-1 bg-green-500 text-white py-3 rounded-xl font-semibold hover:bg-green-600 transition-all duration-300 border border-green-500 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {approveLoading === review.id ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                    Approving...
+                  </>
+                ) : (
+                  <>
+                    <FontAwesomeIcon icon={faCheckCircle} />
+                    Approve Review
+                  </>
+                )}
+              </button>
+            )}
+            
             <button
               onClick={() => {
                 onDelete(review);
