@@ -97,11 +97,11 @@ public function add()
 
 public function delete($id)
 {
-    $deleted = $this->ServiceModel->softDeleteService($id);
+    $deleted = $this->ServiceModel->softDeleteService($id); // name same hi rakha hai
 
     echo json_encode([
         'status' => $deleted,
-        'message' => $deleted ? 'Service soft deleted (inactive)' : 'Failed to delete service'
+        'message' => $deleted ? 'Service permanently deleted' : 'Failed to delete service'
     ]);
 }
 

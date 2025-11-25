@@ -80,11 +80,11 @@ public function add()
 
 public function delete($id)
 {
-    $deleted = $this->SubServiceModel->softDeleteSubService($id);
+    $deleted = $this->SubServiceModel->softDeleteSubService($id); // Name same rakha hai
 
     echo json_encode([
         'status' => $deleted,
-        'message' => $deleted ? 'SubService soft deleted (inactive)' : 'Failed to delete sub-service'
+        'message' => $deleted ? 'SubService permanently deleted' : 'Failed to delete sub-service'
     ]);
 }
 

@@ -39,7 +39,7 @@ public function updateService($id, $data)
 // Soft delete service (status = 0)
 public function softDeleteService($id)
 {
-    return $this->db->where('id', $id)->update('services', ['status' => 0]);
+    return $this->db->where('id', $id)->delete('services'); // update → delete
 }
 
 }

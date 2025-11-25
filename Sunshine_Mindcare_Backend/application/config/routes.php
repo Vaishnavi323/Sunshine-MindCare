@@ -98,4 +98,5 @@ $route['service/delete/(:num)'] = 'ServiceController/delete/$1';
 
 $route['subservice/update/(:num)'] = 'SubServiceController/update/$1';
 $route['subservice/delete/(:num)'] = 'SubServiceController/delete/$1';
+$route['appointment/delete/(:num)'] = 'AppointmentController/delete/$1';
 
