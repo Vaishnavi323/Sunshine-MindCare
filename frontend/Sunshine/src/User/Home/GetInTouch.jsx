@@ -2,30 +2,59 @@ import React, { useState } from 'react';
 
 const GetInTouchSection = () => {
   const [formData, setFormData] = useState({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    phone: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    if (submitStatus) setSubmitStatus(null);
   };
 
-  const handleSubmit = () => {
-    if (formData.fullName && formData.email && formData.message) {
-      alert('Thank you for reaching out! We will get back to you soon.');
-      setFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        message: ''
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost/Sunshine-MindCare/Sunshine_Mindcare_Backend';
+      
+      const response = await fetch(`${BACKEND_URL}/contact/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          message: formData.message
+        })
       });
-    } else {
-      alert('Please fill in all required fields.');
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          message: ''
+        });
+        setTimeout(() => setSubmitStatus(null), 5000);
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -109,43 +138,6 @@ const GetInTouchSection = () => {
           color: #666;
           line-height: 1.6;
           margin-bottom: 10px;
-        }
-
-        .rating-section {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin-bottom: 10px;
-        }
-
-        .rating-number {
-          font-weight: 700;
-          color: #2c3e50;
-        }
-
-        .stars {
-          color: #ffa726;
-        }
-
-        .reviews-link {
-          color: #1e88e5;
-          text-decoration: none;
-          font-size: 0.9rem;
-        }
-
-        .reviews-link:hover {
-          text-decoration: underline;
-        }
-
-        .map-link {
-          color: #1e88e5;
-          text-decoration: none;
-          font-size: 0.9rem;
-          font-weight: 600;
-        }
-
-        .map-link:hover {
-          text-decoration: underline;
         }
 
         .form-section {
@@ -234,6 +226,45 @@ const GetInTouchSection = () => {
           box-shadow: 0 6px 20px rgba(255, 167, 38, 0.4);
         }
 
+        .submit-button:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        .success-message {
+          background: #4caf50;
+          color: white;
+          padding: 15px 20px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          text-align: center;
+          font-weight: 600;
+          animation: slideDown 0.3s ease;
+        }
+
+        .error-message {
+          background: #f44336;
+          color: white;
+          padding: 15px 20px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          text-align: center;
+          font-weight: 600;
+          animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         @media (max-width: 968px) {
           .contact-wrapper {
             grid-template-columns: 1fr;
@@ -293,14 +324,6 @@ const GetInTouchSection = () => {
                   Directions
                 </a>
               </div>
-              
-              {/* <div className="rating-section">
-                <span className="rating-number">4.8</span>
-                <span className="stars">★★★★★</span>
-                <a href="#reviews" className="reviews-link">129 reviews</a>
-              </div>
-              
-              <a href="#map" className="map-link">View larger map</a> */}
             </div>
           </div>
 
@@ -312,18 +335,38 @@ const GetInTouchSection = () => {
               that a member of staff will work harder to receive such employee recognition
             </p>
 
-            <div className="form-group">
+            {submitStatus === 'success' && (
+              <div className="success-message">
+                ✓ Thank you for reaching out! Your form has been submitted successfully. We will get back to you soon.
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="error-message">
+                ✗ Something went wrong. Please try again later.
+              </div>
+            )}
+
+            <div className="form-row">
               <input
                 type="text"
-                name="fullName"
+                name="firstName"
                 className="form-input"
-                placeholder="Full Name"
-                value={formData.fullName}
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+              <input
+                type="text"
+                name="lastName"
+                className="form-input"
+                placeholder="Last Name"
+                value={formData.lastName}
                 onChange={handleChange}
               />
             </div>
 
-            <div className="form-row">
+            <div className="form-group">
               <input
                 type="email"
                 name="email"
@@ -332,28 +375,24 @@ const GetInTouchSection = () => {
                 value={formData.email}
                 onChange={handleChange}
               />
-              <input
-                type="tel"
-                name="phone"
-                className="form-input"
-                placeholder="Phone No."
-                value={formData.phone}
-                onChange={handleChange}
-              />
             </div>
 
             <div className="form-group">
               <textarea
                 name="message"
                 className="form-textarea"
-                placeholder="Message"
+                placeholder="Message (Optional)"
                 value={formData.message}
                 onChange={handleChange}
               ></textarea>
             </div>
 
-            <button className="submit-button" onClick={handleSubmit}>
-              Submit Now
+            <button 
+              className="submit-button" 
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Now'}
             </button>
           </div>
         </div>

@@ -111,69 +111,53 @@ const ReviewFeedback = () => {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        // Validation
-        if (rating === 0) {
-            setSubmitError('Please select a rating');
-            return;
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (rating === 0) {
+        setSubmitError('Please select a rating');
+        return;
+    }
+   
+
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+        // Convert to FormData
+        const formDataToSend = new FormData();
+        formDataToSend.append('rating', rating);
+
+        if (formData.message.trim()) formDataToSend.append('message', formData.message.trim());
+
+        // Optional fields
+        if (formData.full_name.trim()) formDataToSend.append('full_name', formData.full_name.trim());
+        if (formData.email.trim()) formDataToSend.append('email', formData.email.trim());
+
+        const response = await fetch(`${backendUrl}/feedback/add`, {
+            method: 'POST',
+            body: formDataToSend
+        });
+
+        const data = await response.json();
+
+        if (data.status) {
+            setIsSubmitted(true);
+            setTimeout(() => {
+                setRating(0);
+                setFormData({ full_name: '', email: '', message: '' });
+                setIsSubmitted(false);
+            }, 3000);
+        } else {
+            throw new Error(data.message || 'Failed to submit feedback');
         }
+    } catch (error) {
+        setSubmitError(error.message || 'Failed to submit feedback. Please try again.');
+    } finally {
+        setIsSubmitting(false);
+    }
+};
 
-        if (!formData.message.trim()) {
-            setSubmitError('Please share your feedback message');
-            return;
-        }
-
-        setIsSubmitting(true);
-        setSubmitError('');
-
-        try {
-            const payload = {
-                rating: rating.toString(),
-                full_name: formData.full_name || null,
-                email: formData.email || null,
-                message: formData.message
-            };
-
-            const response = await fetch(`${backendUrl}/feedback/add`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            
-            if (data.status) {
-                setIsSubmitted(true);
-                
-                // Reset form after success
-                setTimeout(() => {
-                    setRating(0);
-                    setFormData({
-                        full_name: '',
-                        email: '',
-                        message: ''
-                    });
-                    setIsSubmitted(false);
-                }, 3000);
-            } else {
-                throw new Error(data.message || 'Failed to submit feedback');
-            }
-            
-        } catch (error) {
-            console.error('Error submitting feedback:', error);
-            setSubmitError(error.message || 'Failed to submit feedback. Please try again.');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
 
     const renderStars = (ratingValue, forDisplay = false) => {
         return Array.from({ length: 5 }, (_, index) => {
@@ -333,16 +317,15 @@ const ReviewFeedback = () => {
                                                     <h4 className="section-title">Your Feedback *</h4>
                                                     <div className="form-group">
                                                         <label>Share your experience *</label>
-                                                        <textarea
-                                                            name="message"
-                                                            value={formData.message}
-                                                            onChange={handleInputChange}
-                                                            required
-                                                            className="form-textarea"
-                                                            placeholder="Tell us about your experience with our services..."
-                                                            rows="5"
-                                                            maxLength="500"
-                                                        ></textarea>
+                                                       <textarea
+    name="message"
+    value={formData.message}
+    onChange={handleInputChange}
+    className="form-textarea"
+    placeholder="Tell us about your experience with our services..."
+    rows="5"
+    maxLength="500"
+></textarea>
                                                         <div className="char-count">
                                                             {formData.message.length}/500 characters
                                                         </div>
@@ -361,7 +344,7 @@ const ReviewFeedback = () => {
                                                 <button
                                                     type="submit"
                                                     className={`submit-feedback-btn ${isSubmitting ? 'submitting' : ''}`}
-                                                    disabled={isSubmitting || rating === 0 || !formData.message.trim()}
+                                                    disabled={isSubmitting || rating === 0}
                                                 >
                                                     {isSubmitting ? (
                                                         <>

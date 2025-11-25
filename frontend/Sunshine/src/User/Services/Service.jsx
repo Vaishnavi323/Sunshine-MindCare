@@ -453,12 +453,12 @@ const ServicesPage = () => {
                                                     </div>
                                                 </div>
                                                 <p className="subservice-description">{subservice.description}</p>
-                                                <button 
+                                                {/* <button 
                                                     className="book-subservice-btn"
                                                     onClick={() => handleBookAppointment(subservice)}
                                                 >
                                                     Book Session
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </div>
                                     ))}

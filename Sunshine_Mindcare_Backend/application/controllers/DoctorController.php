@@ -68,12 +68,14 @@ $photo = $this->doctorlib->uploadImage('photo', $upload_path);
         echo json_encode([
             'status'  => true,
             'message' => 'Doctor list fetched successfully',
+			'total'   => count($doctors), 
             'data'    => $doctors
         ]);
     } else {
         echo json_encode([
             'status'  => false,
             'message' => 'No doctors found',
+			 'total'   => 0,
             'data'    => []
         ]);
     }
