@@ -635,6 +635,7 @@ import {
   faSync,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { useAuth } from "../Auth/AuthContext";
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -647,9 +648,11 @@ const Reviews = () => {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const reviewsPerPage = 6;
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const { token } = useAuth();
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
   // Show alert function
   const showAlert = (type, message) => {
@@ -662,21 +665,17 @@ const Reviews = () => {
     setLoading(true);
     setError("");
 
-    const token = sessionStorage.getItem("admin_token");
     try {
-      const response = await axios.get(`${backendUrl}/feedback/getall`, {
+      const response = await axios.get(`${API_BASE_URL}/feedback/getall`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // const result = await response.json();
-
       console.log("Fetched Reviews:", response.data.data);
 
       if (response.data.status) {
         // Transform API data to match our component structure
-        // console.log("API Response inner Data:", response.data.data);
         const transformedReviews = response.data.data.map(feedback => ({
           id: feedback?.id,
           patientName: feedback?.full_name || "Anonymous",
@@ -689,7 +688,6 @@ const Reviews = () => {
           service: "Mental Health Services", // Default value
           helpful: Math.floor(Math.random() * 50), // Random helpful count
           verified: feedback?.status === "1",
-          // originalData: feedback // Keep original API data
         }));
         setReviews(transformedReviews);
       } else {
@@ -701,6 +699,29 @@ const Reviews = () => {
       showAlert("error", "Failed to load reviews");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // API function to delete feedback
+  const deleteFeedbackAPI = async (feedbackId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/feedback/delete/${feedbackId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error deleting feedback:', error);
+      throw error;
     }
   };
 
@@ -730,15 +751,29 @@ const Reviews = () => {
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
   const currentReviews = filteredReviews.slice(indexOfFirstReview, indexOfLastReview);
 
-  const handleDelete = (id) => {
-    setReviews(reviews.filter((review) => review.id !== id));
-    showAlert("success", "Review deleted successfully!");
-    setDeleteConfirm(null);
+  const handleDelete = async (id) => {
+    try {
+      setDeleteLoading(true);
+      const response = await deleteFeedbackAPI(id);
 
-    // Adjust current page if needed after deletion
-    if (currentReviews.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      if (response?.status) {
+        setReviews(reviews.filter((review) => review.id !== id));
+        showAlert("success", "Review deleted successfully!");
+        
+        // Adjust current page if needed after deletion
+        if (currentReviews.length === 1 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+      } else {
+        throw new Error(response?.message || 'Failed to delete review');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      showAlert("error", error.message || "Failed to delete review. Please try again.");
+    } finally {
+      setDeleteLoading(false);
     }
+    setDeleteConfirm(null);
   };
 
   // Refresh reviews
@@ -1183,7 +1218,7 @@ const Reviews = () => {
                         <span>View</span>
                       </button>
                       <button
-                        onClick={() => setDeleteConfirm(review.id)}
+                        onClick={() => setDeleteConfirm(review)}
                         className="flex-1 bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-red-600 transition-all duration-300 flex items-center justify-center space-x-2 border border-red-500"
                       >
                         <FontAwesomeIcon icon={faTrash} />
@@ -1273,20 +1308,29 @@ const Reviews = () => {
               Confirm Deletion
             </h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this review? This action cannot be undone.
+              Are you sure you want to delete the review from {deleteConfirm.patientName}? This action cannot be undone.
             </p>
             <div className="flex space-x-4">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300 border border-gray-300"
+                disabled={deleteLoading}
+                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-300 border border-gray-300 disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
-                onClick={() => handleDelete(deleteConfirm)}
-                className="flex-1 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 border border-red-600"
+                onClick={() => handleDelete(deleteConfirm.id)}
+                disabled={deleteLoading}
+                className="flex-1 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 border border-red-600 disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                Delete
+                {deleteLoading ? (
+                  <>
+                    <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete'
+                )}
               </button>
             </div>
           </div>
@@ -1435,7 +1479,7 @@ const ViewReviewModal = ({ review, onClose, onDelete }) => {
           <div className="flex space-x-4 pt-4 border-t border-gray-200">
             <button
               onClick={() => {
-                onDelete(review.id);
+                onDelete(review);
                 onClose();
               }}
               className="flex-1 bg-red-500 text-white py-3 rounded-xl font-semibold hover:bg-red-600 transition-all duration-300 border border-red-500"

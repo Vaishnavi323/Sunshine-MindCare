@@ -170,7 +170,7 @@
 //                          job.department.toLowerCase().includes(searchTerm.toLowerCase());
 //     const matchesStatus = selectedStatus === "all" || job.status === selectedStatus;
 //     const matchesDepartment = selectedDepartment === "all" || job.department === selectedDepartment;
-    
+
 //     return matchesSearch && matchesStatus && matchesDepartment;
 //   });
 
@@ -179,7 +179,7 @@
 //     const matchesSearch = app.applicantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
 //                          app.applicantEmail.toLowerCase().includes(searchTerm.toLowerCase());
 //     const matchesStatus = selectedStatus === "all" || app.status === selectedStatus;
-    
+
 //     return matchesSearch && matchesStatus;
 //   });
 
@@ -336,7 +336,7 @@
 //         transform: translateY(0);
 //       }
 //     }
-    
+
 //     @keyframes fadeIn {
 //       from {
 //         opacity: 0;
@@ -345,7 +345,7 @@
 //         opacity: 1;
 //       }
 //     }
-    
+
 //     @keyframes scaleIn {
 //       from {
 //         opacity: 0;
@@ -356,23 +356,23 @@
 //         transform: scale(1);
 //       }
 //     }
-    
+
 //     .animate-slide-in-up {
 //       animation: slideInUp 0.6s ease-out;
 //     }
-    
+
 //     .animate-fade-in {
 //       animation: fadeIn 0.8s ease-out;
 //     }
-    
+
 //     .animate-scale-in {
 //       animation: scaleIn 0.5s ease-out;
 //     }
-    
+
 //     .hover-lift {
 //       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 //     }
-    
+
 //     .hover-lift:hover {
 //       transform: translateY(-8px);
 //       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -382,7 +382,7 @@
 //   return (
 //     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
 //       <style>{animationStyles}</style>
-      
+
 //       {/* Alert */}
 //       {alert && (
 //         <div className="fixed top-4 right-4 z-50 animate-fade-in">
@@ -565,7 +565,7 @@
 //                   }
 //                   className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
 //                 />
-                
+
 //               </div>
 //             </div>
 
@@ -790,7 +790,7 @@
 
 //                     {/* Action Buttons */}
 //                     <div className="flex space-x-2 pt-3 border-t border-gray-200">
-                      
+
 //                       <button
 //                         onClick={() => setDeleteConfirm({ type: 'application', id: application.id })}
 //                         className="flex-1 bg-white text-red-600 py-2 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 flex items-center justify-center space-x-2 border border-red-300"
@@ -1010,7 +1010,7 @@
 
 //   const handleSubmit = (e) => {
 //     e.preventDefault();
-    
+
 //     // Basic validation
 //     if (!formData.title.trim()) {
 //       alert('Please enter job title');
@@ -1491,57 +1491,12 @@ import {
   faPhone,
   faDownload,
   faSpinner,
+  faSync,
 } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../Auth/AuthContext";
 
 const Jobs = () => {
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      title: "Clinical Psychologist",
-      department: "Mental Health",
-      type: "Full-time",
-      location: "Nashik",
-      salary: "₹60,000 - ₹80,000/month",
-      experience: "3+ years",
-      description: "We are looking for a qualified Clinical Psychologist to join our mental health team. The ideal candidate will have experience in cognitive behavioral therapy and patient counseling.",
-      requirements: ["PhD in Clinical Psychology", "Valid license to practice", "Experience with CBT and DBT", "Excellent communication skills"],
-      status: "active",
-      postedDate: "2024-01-15",
-      applications: 12,
-      deadline: "2024-02-15"
-    },
-    {
-      id: 2,
-      title: "Mental Health Counselor",
-      department: "Counseling",
-      type: "Part-time",
-      location: "Pune",
-      salary: "₹35,000 - ₹45,000/month",
-      experience: "2+ years",
-      description: "Seeking a compassionate Mental Health Counselor to provide individual and group counseling sessions. Must be skilled in various therapeutic approaches.",
-      requirements: ["Master's in Psychology", "Counseling certification", "Experience in mental health settings", "Empathetic and patient"],
-      status: "active",
-      postedDate: "2024-01-12",
-      applications: 8,
-      deadline: "2024-02-10"
-    },
-    {
-      id: 3,
-      title: "Psychiatric Nurse",
-      department: "Medical",
-      type: "Full-time",
-      location: "Nashik",
-      salary: "₹45,000 - ₹60,000/month",
-      experience: "4+ years",
-      description: "We need a dedicated Psychiatric Nurse to work with our psychiatry team. Responsibilities include patient care, medication management, and support.",
-      requirements: ["BSc Nursing", "Psychiatric nursing certification", "4+ years experience", "Strong clinical skills"],
-      status: "closed",
-      postedDate: "2024-01-10",
-      applications: 15,
-      deadline: "2024-01-31"
-    }
-  ]);
-
+  const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([
     {
       id: 1,
@@ -1570,48 +1525,6 @@ const Jobs = () => {
       appliedDate: "2024-01-17",
       status: "reviewed",
       notes: "Good academic background"
-    },
-    {
-      id: 3,
-      jobId: 2,
-      applicantName: "Anjali Patel",
-      applicantEmail: "anjali.patel@email.com",
-      applicantPhone: "+91 9876543212",
-      experience: "2 years",
-      education: "MA in Counseling Psychology",
-      coverLetter: "As a dedicated mental health counselor, I have worked with diverse populations and have experience in both individual and group therapy settings.",
-      resume: "anjali_patel_resume.pdf",
-      appliedDate: "2024-01-14",
-      status: "accepted",
-      notes: "Excellent communication skills"
-    },
-    {
-      id: 4,
-      jobId: 2,
-      applicantName: "Suresh Kumar",
-      applicantEmail: "suresh.kumar@email.com",
-      applicantPhone: "+91 9876543213",
-      experience: "1 year",
-      education: "MA in Psychology",
-      coverLetter: "I am a recent graduate with one year of internship experience in mental health counseling. I am eager to start my professional career with your organization.",
-      resume: "suresh_kumar_resume.pdf",
-      appliedDate: "2024-01-13",
-      status: "rejected",
-      notes: "Limited experience"
-    },
-    {
-      id: 5,
-      jobId: 3,
-      applicantName: "Meena Reddy",
-      applicantEmail: "meena.reddy@email.com",
-      applicantPhone: "+91 9876543214",
-      experience: "5 years",
-      education: "BSc Nursing + Psychiatric Certification",
-      coverLetter: "With 5 years of experience in psychiatric nursing, I have developed strong skills in patient care, medication management, and crisis intervention.",
-      resume: "meena_reddy_resume.pdf",
-      appliedDate: "2024-01-11",
-      status: "accepted",
-      notes: "Highly experienced"
     }
   ]);
 
@@ -1621,15 +1534,272 @@ const Jobs = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [viewApplication, setViewApplication] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState("jobs"); // "jobs" or "applications"
+  const [activeTab, setActiveTab] = useState("jobs");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const itemsPerPage = 6;
 
-  // API Base URL from environment variable
+  const { token } = useAuth();
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
+  // Fetch jobs on component mount
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  // Auto-hide alert
+  useEffect(() => {
+    if (alert) {
+      const timer = setTimeout(() => {
+        setAlert(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
+
+  // API function to fetch jobs
+  const fetchJobs = async () => {
+    try {
+      setInitialLoading(true);
+      const response = await fetch(`${API_BASE_URL}/job/list`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.status && result.error) {
+        // Transform API response to match your component structure
+        const transformedJobs = transformJobsData(result.error);
+        setJobs(transformedJobs);
+      } else {
+        throw new Error(result.message || 'Failed to fetch jobs');
+      }
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+      setAlert({
+        type: "error",
+        message: error.message || "Failed to fetch jobs. Please try again.",
+      });
+    } finally {
+      setInitialLoading(false);
+    }
+  };
+
+  // Transform API response to match your component structure
+  const transformJobsData = (apiData) => {
+    return apiData
+      .filter(job => job.heading || job.department)
+      .map(job => ({
+        id: job.id,
+        title: job.heading || "Untitled Position",
+        department: job.department || "General",
+        type: job.type === "fulltime" ? "Full-time" : 
+              job.type === "parttime" ? "Part-time" : 
+              job.type === "contract" ? "Contract" : "Full-time",
+        location: job.location || "Location not specified",
+        salary: job.salary_lpa ? `₹${job.salary_lpa}` : "Salary not specified",
+        experience: job.experience || "Experience not specified",
+        description: job.description || "No description available",
+        requirements: job.requirements ? job.requirements.split(', ') : ["Requirements not specified"],
+        status: job.status === "1" ? "active" : "closed",
+        postedDate: job.post_date !== "0000-00-00" ? job.post_date : job.created_at.split(' ')[0],
+        applications: 0,
+        deadline: job.post_date !== "0000-00-00" ? job.post_date : "Not specified"
+      }));
+  };
+
+  // API function to add job
+  const addJobAPI = async (jobData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/job/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(jobData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error adding job:', error);
+      throw error;
+    }
+  };
+
+  // API function to update job
+  const updateJobAPI = async (jobId, jobData) => {
+    try {
+      const payload = {
+        id: jobId,
+        ...jobData
+      };
+
+      const response = await fetch(`${API_BASE_URL}/job/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error updating job:', error);
+      throw error;
+    }
+  };
+
+  // API function to delete job
+  const deleteJobAPI = async (jobId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/job/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id: jobId }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error deleting job:', error);
+      throw error;
+    }
+  };
+
+  const handleJobFormSubmit = async (formData) => {
+    setLoading(true);
+    
+    try {
+      // Transform form data to match exact API payload structure
+      const apiPayload = {
+        heading: formData.title,
+        department: formData.department,
+        salary_lpa: formData.salary.replace(/[^\d\s-LPA]/g, '').trim(),
+        type: formData.type.toLowerCase().replace('-', ''),
+        experience: formData.experience,
+        requirements: Array.isArray(formData.requirements) ? formData.requirements.join(', ') : formData.requirements,
+        description: formData.description,
+        post_date: formData.deadline,
+        location: formData.location
+      };
+
+      let response;
+
+      if (editingJob) {
+        // Update existing job
+        response = await updateJobAPI(editingJob.id, apiPayload);
+      } else {
+        // Add new job
+        response = await addJobAPI(apiPayload);
+      }
+
+      if (response?.status) {
+        // Refresh jobs list after successful operation
+        await fetchJobs();
+        setAlert({
+          type: "success",
+          message: editingJob ? "Job updated successfully!" : "Job posted successfully!",
+        });
+        setShowJobForm(false);
+        setEditingJob(null);
+      } else {
+        throw new Error(response?.message || `Failed to ${editingJob ? 'update' : 'add'} job`);
+      }
+    } catch (error) {
+      console.error('Error submitting job:', error);
+      setAlert({
+        type: "error",
+        message: error.message || `Failed to ${editingJob ? 'update' : 'post'} job. Please try again.`,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteJob = async (id) => {
+    try {
+      setLoading(true);
+      const response = await deleteJobAPI(id);
+
+      if (response?.status) {
+        setJobs(jobs.filter((job) => job.id !== id));
+        setAlert({
+          type: "success",
+          message: "Job deleted successfully!",
+        });
+      } else {
+        throw new Error(response?.message || 'Failed to delete job');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      setAlert({
+        type: "error",
+        message: error.message || "Failed to delete job. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+    setDeleteConfirm(null);
+
+    if (currentItemsSlice.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleDeleteApplication = (id) => {
+    setApplications(applications.filter((app) => app.id !== id));
+    setAlert({
+      type: "success",
+      message: "Application deleted successfully!",
+    });
+    setDeleteConfirm(null);
+
+    if (currentItemsSlice.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleApplicationStatusUpdate = (id, newStatus) => {
+    setApplications(
+      applications.map((app) =>
+        app.id === id ? { ...app, status: newStatus } : app
+      )
+    );
+    setAlert({
+      type: "success",
+      message: `Application ${newStatus} successfully!`,
+    });
+  };
 
   // Get unique departments and statuses
   const departments = ["all", ...new Set(jobs.map(job => job.department))];
@@ -1661,129 +1831,6 @@ const Jobs = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItemsSlice = currentItems.slice(indexOfFirstItem, indexOfLastItem);
-
-  // API function to add job
-  const addJobAPI = async (jobData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/job/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(jobData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error adding job:', error);
-      throw error;
-    }
-  };
-
-  const handleDeleteJob = (id) => {
-    setJobs(jobs.filter((job) => job.id !== id));
-    setAlert({
-      type: "success",
-      message: "Job deleted successfully!",
-    });
-    setDeleteConfirm(null);
-
-    if (currentItemsSlice.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleDeleteApplication = (id) => {
-    setApplications(applications.filter((app) => app.id !== id));
-    setAlert({
-      type: "success",
-      message: "Application deleted successfully!",
-    });
-    setDeleteConfirm(null);
-
-    if (currentItemsSlice.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleJobFormSubmit = async (formData) => {
-    setLoading(true);
-    
-    try {
-      // Transform form data to match API payload structure
-      const apiPayload = {
-        heading: formData.title,
-        department: formData.department,
-        salary_lpa: formData.salary,
-        type: formData.type.toLowerCase(),
-        experience: formData.experience,
-        requirements: Array.isArray(formData.requirements) ? formData.requirements.join(', ') : formData.requirements,
-        description: formData.description,
-        post_date: new Date().toISOString().split('T')[0],
-        location: formData.location
-      };
-
-      // Call the API
-      const response = await addJobAPI(apiPayload);
-
-      if (response.status) {
-        // API call successful - add job to local state with the ID from API
-        const newJob = {
-          id: response.data.id, // Use the ID returned from API
-          title: formData.title,
-          department: formData.department,
-          type: formData.type,
-          location: formData.location,
-          salary: formData.salary,
-          experience: formData.experience,
-          description: formData.description,
-          requirements: formData.requirements,
-          status: "active",
-          postedDate: new Date().toISOString().split('T')[0],
-          applications: 0,
-          deadline: formData.deadline
-        };
-        
-        setJobs([...jobs, newJob]);
-        setAlert({
-          type: "success",
-          message: "Job posted successfully!",
-        });
-      } else {
-        throw new Error(response.message || 'Failed to add job');
-      }
-    } catch (error) {
-      console.error('Error submitting job:', error);
-      setAlert({
-        type: "error",
-        message: error.message || "Failed to post job. Please try again.",
-      });
-      return; // Don't close the form if there's an error
-    } finally {
-      setLoading(false);
-    }
-
-    // Only close the form if API call was successful
-    setShowJobForm(false);
-    setEditingJob(null);
-  };
-
-  const handleApplicationStatusUpdate = (id, newStatus) => {
-    setApplications(
-      applications.map((app) =>
-        app.id === id ? { ...app, status: newStatus } : app
-      )
-    );
-    setAlert({
-      type: "success",
-      message: `Application ${newStatus} successfully!`,
-    });
-  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -1851,6 +1898,17 @@ const Jobs = () => {
     totalApplications: applications.length,
     pendingApplications: applications.filter(a => a.status === "pending").length,
   };
+
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2a5298] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading jobs...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Animation styles
   const animationStyles = `
@@ -1942,27 +2000,47 @@ const Jobs = () => {
             </p>
           </div>
 
-          {/* Add Job Button */}
-          <button
-            onClick={() => setShowJobForm(true)}
-            disabled={loading}
-            className="group relative bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-500 ease-out overflow-hidden hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <div className="flex items-center space-x-3 relative z-10">
-              {loading ? (
-                <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="transition-transform duration-500 group-hover:rotate-180"
-                />
-              )}
-              <span className="text-lg">
-                {loading ? "Processing..." : "Post New Job"}
-              </span>
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] to-[#2a5298] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          </button>
+          <div className="flex space-x-4">
+            {/* Refresh Button */}
+            <button
+              onClick={fetchJobs}
+              disabled={loading}
+              className="group relative bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md border border-gray-600 hover:bg-white hover:text-gray-600 transition-all duration-300 ease-in-out overflow-hidden disabled:opacity-50"
+            >
+              <div className="flex items-center space-x-3">
+                {loading ? (
+                  <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                ) : (
+                  <FontAwesomeIcon icon={faSync} />
+                )}
+                <span className="text-lg">
+                  {loading ? "Refreshing..." : "Refresh"}
+                </span>
+              </div>
+            </button>
+
+            {/* Add Job Button */}
+            <button
+              onClick={() => setShowJobForm(true)}
+              disabled={loading}
+              className="group relative bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-500 ease-out overflow-hidden hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <div className="flex items-center space-x-3 relative z-10">
+                {loading ? (
+                  <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    className="transition-transform duration-500 group-hover:rotate-180"
+                  />
+                )}
+                <span className="text-lg">
+                  {loading ? "Processing..." : "Post New Job"}
+                </span>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] to-[#2a5298] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </button>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -2573,7 +2651,7 @@ const JobForm = ({ job, onSubmit, onCancel, loading }) => {
     onSubmit(formData);
   };
 
-  const departments = ["Mental Health", "Counseling", "Medical", "Administration", "Support Staff"];
+  const departments = ["Mental Health", "Counseling", "Medical", "Administration", "Support Staff", "IT", "HR", "Finance"];
   const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"];
 
   return (
@@ -2699,7 +2777,7 @@ const JobForm = ({ job, onSubmit, onCancel, loading }) => {
                   required
                   disabled={loading}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 disabled:opacity-50"
-                  placeholder="e.g., ₹60,000 - ₹80,000/month"
+                  placeholder="e.g., 5-8 LPA"
                 />
               </div>
 
@@ -2715,7 +2793,7 @@ const JobForm = ({ job, onSubmit, onCancel, loading }) => {
                   required
                   disabled={loading}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300 disabled:opacity-50"
-                  placeholder="e.g., 3+ years"
+                  placeholder="e.g., 2-4 Years"
                 />
               </div>
             </div>
