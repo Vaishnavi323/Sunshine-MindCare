@@ -22,6 +22,9 @@ class AppointmentModel extends CI_Model {
 //     $this->db->where('id', $id);
 //     return $this->db->update('appointments', $data);
 // }
+    public function deleteAppointment($id) {
+        return $this->db->where('id', $id)->delete('appointments');
+    }
 
 
 

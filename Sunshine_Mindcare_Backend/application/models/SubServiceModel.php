@@ -27,7 +27,6 @@ public function updateSubService($id, $data)
 // Soft delete sub-service
 public function softDeleteSubService($id)
 {
-    return $this->db->where('id', $id)->update('sub_services', ['status' => 0]);
+    return $this->db->where('id', $id)->delete('sub_services'); // update → delete
 }
-
 }

@@ -81,6 +81,14 @@ class AppointmentController extends CI_Controller {
 	// 		$this->api->send_response(400, $response['message'], null);
 	// 	}
 	// }
+public function delete($id)
+{
+    $deleted = $this->AppointmentModel->deleteAppointment($id);
 
+    echo json_encode([
+        'status' => $deleted,
+        'message' => $deleted ? 'Appointment successfully deleted' : 'Failed to delete appointment'
+    ]);
+}
 }
 
