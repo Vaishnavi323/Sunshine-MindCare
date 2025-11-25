@@ -6,15 +6,15 @@ const TeamPage = () => {
   const [selectedMember, setSelectedMember] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
-  });
+
+  const baseURL = import.meta.env.VITE_BACKEND_URL;
 
   const defaultImage = "https://via.placeholder.com/600x600?text=No+Image";
 
   const fetchTeamMembers = async () => {
     try {
-      const response = await axiosInstance.get("/doctor/list");
+      const response = await axios.get(`${baseURL}/doctor/list`
+      );
       const members = response?.data?.data || [];
 
       const fetchedMembers = members.map((member) => {
@@ -42,7 +42,7 @@ const TeamPage = () => {
         return {
           id: member.id,
           name: member.full_name?.trim() || "Dr. Unknown",
-profession: member.qualification?.trim() || "Mental Health Specialist", // Fixed: removed wrong colon
+          profession: member.qualification?.trim() || "Mental Health Specialist", // Fixed: removed wrong colon
           specialization: member.description?.trim() || "General Psychology",
           image: cleanImage,
           bio: member.description?.trim() || "Dedicated to improving mental well-being.",

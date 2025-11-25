@@ -150,7 +150,7 @@
 
 //   const handleFormSubmit = async (formData) => {
 //     setLoading(true);
-    
+
 //     try {
 //       if (editingDoctor) {
 //         // Update existing doctor (local only for now)
@@ -163,7 +163,7 @@
 //       } else {
 //         // Add new doctor via API
 //         const apiResult = await addDoctorToAPI(formData);
-        
+
 //         if (apiResult.status) {
 //           // Add to local state with data from API response
 //           const newDoctor = {
@@ -300,7 +300,7 @@
 //         transform: translateY(0);
 //       }
 //     }
-    
+
 //     @keyframes fadeIn {
 //       from {
 //         opacity: 0;
@@ -309,7 +309,7 @@
 //         opacity: 1;
 //       }
 //     }
-    
+
 //     @keyframes scaleIn {
 //       from {
 //         opacity: 0;
@@ -320,23 +320,23 @@
 //         transform: scale(1);
 //       }
 //     }
-    
+
 //     .animate-slide-in-up {
 //       animation: slideInUp 0.6s ease-out;
 //     }
-    
+
 //     .animate-fade-in {
 //       animation: fadeIn 0.8s ease-out;
 //     }
-    
+
 //     .animate-scale-in {
 //       animation: scaleIn 0.5s ease-out;
 //     }
-    
+
 //     .hover-lift {
 //       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 //     }
-    
+
 //     .hover-lift:hover {
 //       transform: translateY(-8px);
 //       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -1134,7 +1134,8 @@ const Team = () => {
       }
 
       const result = await response.json();
-      
+      console.log('Fetched doctors:', result);
+
       if (result.status && result.data) {
         // Transform API data to match frontend structure
         const transformedDoctors = result.data.map(doctor => ({
@@ -1154,7 +1155,7 @@ const Team = () => {
           rating: 4.5,
           patients: Math.floor(Math.random() * 1000) + 100
         }));
-        
+
         setDoctors(transformedDoctors);
         showAlert("success", "Doctors loaded successfully!");
       } else {
@@ -1163,7 +1164,7 @@ const Team = () => {
     } catch (error) {
       console.error('Error fetching doctors:', error);
       showAlert("error", error.message || 'Failed to load doctors. Please try again.');
-      
+
       // Fallback to demo data if API fails
       setDoctors(getDemoDoctors());
     } finally {
@@ -1174,7 +1175,7 @@ const Team = () => {
   // Helper function to determine category from experience
   const getCategoryFromExperience = (experience) => {
     if (!experience) return "other";
-    
+
     const yearsMatch = experience.match(/(\d+)/);
     if (yearsMatch) {
       const years = parseInt(yearsMatch[1]);
@@ -1199,17 +1200,17 @@ const Team = () => {
     if (!photoUrl) {
       return "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop";
     }
-    
+
     // Filter out invalid URLs with local file paths
     if (photoUrl.includes('C:\\') || photoUrl.includes('htdocs\\')) {
       return "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop";
     }
-    
+
     // If URL is relative, make it absolute
     if (photoUrl.startsWith('uploads/')) {
       return `${backendUrl}/${photoUrl}`;
     }
-    
+
     return photoUrl;
   };
 
@@ -1257,10 +1258,26 @@ const Team = () => {
     setTimeout(() => setAlert(null), 5000);
   };
 
-  // API call to add doctor
+  // API call to add doctor with file upload
   const addDoctorToAPI = async (doctorData) => {
     try {
-      const payload = {
+      const formData = new FormData();
+
+      // Append text fields
+      formData.append('full_name', doctorData.name);
+      formData.append('email', doctorData.email);
+      formData.append('phone', doctorData.phone);
+      formData.append('specialization', doctorData.specialization);
+      formData.append('experience', doctorData.experience);
+      formData.append('qualification', doctorData.qualification);
+      formData.append('description', doctorData.description);
+
+      // Append image file if exists
+      if (doctorData.image && doctorData.image instanceof File) {
+        formData.append('photo', doctorData.image);
+      }
+
+      console.log('Submitting doctor with FormData:', {
         full_name: doctorData.name,
         email: doctorData.email,
         phone: doctorData.phone,
@@ -1268,18 +1285,21 @@ const Team = () => {
         experience: doctorData.experience,
         qualification: doctorData.qualification,
         description: doctorData.description,
-      };
+        hasImage: !!doctorData.image
+      });
 
       const response = await fetch(`${backendUrl}/doctor/add`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
+          // Don't set Content-Type - let browser set it with boundary for FormData
         },
-        body: JSON.stringify(payload)
+        body: formData
       });
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Server response:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
@@ -1333,7 +1353,7 @@ const Team = () => {
 
   const handleFormSubmit = async (formData) => {
     setLoading(true);
-    
+
     try {
       if (editingDoctor) {
         // Update existing doctor (local only for now)
@@ -1346,7 +1366,7 @@ const Team = () => {
       } else {
         // Add new doctor via API
         const apiResult = await addDoctorToAPI(formData);
-        
+
         if (apiResult.status) {
           // Add to local state with data from API response
           const newDoctor = {
@@ -1531,15 +1551,14 @@ const Team = () => {
 
       {/* Alert */}
       {alert && (
-        <div className={`fixed top-4 right-4 z-50 animate-fade-in px-6 py-4 rounded-xl shadow-lg border ${
-          alert.type === "success" 
-            ? "bg-green-100 text-green-800 border-green-300" 
+        <div className={`fixed top-4 right-4 z-50 animate-fade-in px-6 py-4 rounded-xl shadow-lg border ${alert.type === "success"
+            ? "bg-green-100 text-green-800 border-green-300"
             : "bg-red-100 text-red-800 border-red-300"
-        }`}>
+          }`}>
           <div className="flex items-center space-x-3">
-            <FontAwesomeIcon 
-              icon={alert.type === "success" ? faCheck : faExclamationTriangle} 
-              className="text-lg" 
+            <FontAwesomeIcon
+              icon={alert.type === "success" ? faCheck : faExclamationTriangle}
+              className="text-lg"
             />
             <span className="font-semibold">{alert.message}</span>
           </div>
@@ -1702,8 +1721,8 @@ const Team = () => {
                       placeholder="Search by name, email, or specialization..."
                       className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2a5298] focus:border-transparent transition-all duration-300"
                     />
-                    <FontAwesomeIcon 
-                      icon={faSearch} 
+                    <FontAwesomeIcon
+                      icon={faSearch}
                       className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
                     />
                   </div>
@@ -1899,8 +1918,8 @@ const Team = () => {
                       typeof pageNum === "number" && setCurrentPage(pageNum)
                     }
                     className={`w-12 h-12 flex items-center justify-center rounded-xl font-semibold transition-all duration-300 hover-lift ${pageNum === currentPage
-                        ? "bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white shadow-lg border border-[#2a5298]"
-                        : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
+                      ? "bg-gradient-to-r from-[#2a5298] to-[#4f46e5] text-white shadow-lg border border-[#2a5298]"
+                      : "bg-white text-gray-700 shadow-lg border border-gray-300 hover:border-[#2a5298] hover:bg-gray-50"
                       } ${pageNum === "..."
                         ? "cursor-default hover:bg-white hover:border-gray-300 hover-lift-none"
                         : ""
@@ -1991,9 +2010,9 @@ const DoctorForm = ({ doctor, onSubmit, onCancel, loading }) => {
     description: doctor?.description || "",
     address: doctor?.address || "",
     status: doctor?.status || "active",
-    image: doctor?.image || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop",
   });
 
+  const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(doctor?.image || "");
   const fileInputRef = useRef(null);
 
@@ -2018,30 +2037,20 @@ const DoctorForm = ({ doctor, onSubmit, onCancel, loading }) => {
         return;
       }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setFormData((prev) => ({
-          ...prev,
-          image: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
   const handleRemoveImage = () => {
+    setImageFile(null);
     setImagePreview("");
-    setFormData((prev) => ({
-      ...prev,
-      image: "",
-    }));
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
@@ -2070,7 +2079,13 @@ const DoctorForm = ({ doctor, onSubmit, onCancel, loading }) => {
       return;
     }
 
-    onSubmit(formData);
+    // Prepare form data for file upload
+    const submitData = {
+      ...formData,
+      image: imageFile // Pass the file object directly
+    };
+
+    onSubmit(submitData);
   };
 
   const triggerFileInput = () => {
