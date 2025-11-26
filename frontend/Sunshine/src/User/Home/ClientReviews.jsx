@@ -5,40 +5,112 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const ClientTestimonials = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+    const [testimonials, setTestimonials] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-    const testimonials = [
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+    // Fetch approved feedbacks from API
+    const fetchApprovedFeedbacks = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            const response = await fetch(`${backendUrl}/feedback/getapproved`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.status && result.data) {
+                // Transform API data to match our component structure
+                const transformedTestimonials = result.data.map(feedback => ({
+                    id: feedback.id,
+                    name: feedback.full_name || 'Anonymous',
+                    rating: parseInt(feedback.rating) || 0,
+                    date: feedback.created_at ? feedback.created_at.split(' ')[0] : new Date().toISOString().split('T')[0],
+                    text: feedback.message || 'No message provided',
+                    avatar: getInitials(feedback.full_name || 'Anonymous'),
+                    verified: feedback.status === "1",
+                    contributions: getRandomContributions()
+                }));
+                setTestimonials(transformedTestimonials);
+            } else {
+                throw new Error(result.message || 'Failed to fetch testimonials');
+            }
+        } catch (error) {
+            console.error('Error fetching testimonials:', error);
+            setError(error.message || 'Failed to load testimonials. Please try again later.');
+            // Fallback to mock data if API fails
+            setTestimonials(getMockTestimonials());
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Helper function to get initials for avatar
+    const getInitials = (name) => {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    };
+
+    // Helper function to generate random contributions
+    const getRandomContributions = () => {
+        const contributions = [1, 2, 3, 5, 8, 10, 12, 14];
+        return `${contributions[Math.floor(Math.random() * contributions.length)]} contributions`;
+    };
+
+    // Fallback mock data
+    const getMockTestimonials = () => [
         {
             id: 1,
             name: "Akanksha Damare",
             contributions: "14 contributions",
             text: "Initially I was hesitant about taking help from psychiatrist because of the stigma attached to the mental health issues. But with my parents guidance I decided to give it a chance. I had few very fruitful sessions with one of the counsellor... They understood my issues in detail and provided excellent support throughout my journey.",
-            avatar: "AD"
+            avatar: "AD",
+            rating: 5,
+            date: "2024-01-15",
+            verified: true
         },
         {
             id: 2,
             name: "Rahul Sharma",
             contributions: "8 contributions",
             text: "The team at Sunshine Counseling has been incredibly supportive. Their professional approach and compassionate care helped me overcome my anxiety and depression. I'm forever grateful for their guidance.",
-            avatar: "RS"
+            avatar: "RS",
+            rating: 4,
+            date: "2024-01-10",
+            verified: true
         },
         {
             id: 3,
             name: "Priya Patel",
             contributions: "12 contributions",
             text: "Outstanding service! The therapists are highly skilled and genuinely care about their clients. My mental health has improved significantly since I started sessions here.",
-            avatar: "PP"
+            avatar: "PP",
+            rating: 5,
+            date: "2024-01-08",
+            verified: true
         },
         {
             id: 4,
             name: "Michael Chen",
             contributions: "6 contributions",
             text: "A safe and welcoming environment where I felt comfortable sharing my thoughts. The personalized approach made all the difference in my recovery journey.",
-            avatar: "MC"
+            avatar: "MC",
+            rating: 4,
+            date: "2024-01-05",
+            verified: true
         }
     ];
 
     useEffect(() => {
-        if (isAutoPlaying) {
+        fetchApprovedFeedbacks();
+    }, []);
+
+    useEffect(() => {
+        if (isAutoPlaying && testimonials.length > 0) {
             const interval = setInterval(() => {
                 setCurrentSlide((prev) => (prev + 1) % testimonials.length);
             }, 5000);
@@ -58,16 +130,46 @@ const ClientTestimonials = () => {
         setCurrentSlide(index);
     };
 
+    const renderStars = (rating) => {
+        return Array.from({ length: 5 }, (_, index) => {
+            const starValue = index + 1;
+            return (
+                <span
+                    key={index}
+                    className={`star ${starValue <= rating ? 'filled' : ''}`}
+                >
+                    ★
+                </span>
+            );
+        });
+    };
+
+    if (loading) {
+        return (
+            <section className="testimonials-section py-5">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="loading-testimonials">
+                                <div className="loading-spinner-large"></div>
+                                <p>Loading testimonials...</p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
+        );
+    }
+
     return (
         <section className="testimonials-section py-5">
             <Container>
                 <Row className="justify-content-center">
                     <Col lg={8} className="text-center">
                         <div className="section-header animate-fade-in">
-                            <h2 className="section-titles">What Our Client Say</h2>
+                            <h2 className="section-title">What Our Clients Say</h2>
                             <p className="section-subtitle">
-                                A simple thank you goes a long way and will not only make your employees feel good,
-                                but will actually benefit your business in the process.
+                                Real experiences from our valued clients. Your feedback helps us grow and improve our services.
                             </p>
                             <div className="divider"></div>
                         </div>
@@ -76,366 +178,522 @@ const ClientTestimonials = () => {
 
                 <Row className="justify-content-center">
                     <Col lg={10}>
-                        <div
-                            className="testimonial-slider"
-                            onMouseEnter={() => setIsAutoPlaying(false)}
-                            onMouseLeave={() => setIsAutoPlaying(true)}
-                        >
-                            <div className="slider-container">
-                                {testimonials.map((testimonial, index) => (
-                                    <div
-                                        key={testimonial.id}
-                                        className={`testimonial-slide ${index === currentSlide ? 'active' :
-                                                index === (currentSlide - 1 + testimonials.length) % testimonials.length ? 'prev' :
-                                                    index === (currentSlide + 1) % testimonials.length ? 'next' : 'hidden'
-                                            }`}
-                                    >
-                                        <div className="testimonial-card">
-                                            <div className="quote-icon">"</div>
+                        {error ? (
+                            <div className="error-state text-center">
+                                <div className="error-icon">⚠️</div>
+                                <h4>Unable to Load Testimonials</h4>
+                                <p>{error}</p>
+                                <button 
+                                    className="retry-btn"
+                                    onClick={fetchApprovedFeedbacks}
+                                >
+                                    Try Again
+                                </button>
+                            </div>
+                        ) : testimonials.length === 0 ? (
+                            <div className="no-testimonials text-center">
+                                <div className="no-testimonials-icon">💬</div>
+                                <h4>No Testimonials Yet</h4>
+                                <p>Be the first to share your experience!</p>
+                            </div>
+                        ) : (
+                            <div
+                                className="testimonial-slider"
+                                onMouseEnter={() => setIsAutoPlaying(false)}
+                                onMouseLeave={() => setIsAutoPlaying(true)}
+                            >
+                                <div className="slider-container">
+                                    {testimonials.map((testimonial, index) => (
+                                        <div
+                                            key={testimonial.id}
+                                            className={`testimonial-slide ${index === currentSlide ? 'active' :
+                                                    index === (currentSlide - 1 + testimonials.length) % testimonials.length ? 'prev' :
+                                                        index === (currentSlide + 1) % testimonials.length ? 'next' : 'hidden'
+                                                }`}
+                                        >
+                                            <div className="testimonial-card">
+                                                <div className="quote-icon">"</div>
 
-                                            <div className="testimonial-content">
-                                                <p className="testimonial-text">{testimonial.text}</p>
-
-                                                {/* <div className="client-info">
-                                                    <div className="avatar">{testimonial.avatar}</div>
-                                                    <div className="client-details">
-                                                        <h4 className="client-name">{testimonial.name}</h4>
-                                                        <span className="client-contributions">{testimonial.contributions}</span>
+                                                <div className="testimonial-content">
+                                                    {/* Rating Stars */}
+                                                    <div className="testimonial-rating">
+                                                        {renderStars(testimonial.rating)}
                                                     </div>
-                                                </div> */}
+
+                                                    <p className="testimonial-text">{testimonial.text}</p>
+
+                                                    <div className="client-info">
+                                                        <div className="avatar">{testimonial.avatar}</div>
+                                                        <div className="client-details">
+                                                            <h4 className="client-name">{testimonial.name}</h4>
+                                                            <div className="client-meta">
+                                                                <span className="client-contributions">{testimonial.contributions}</span>
+                                                                {testimonial.verified && (
+                                                                    <span className="verified-badge">✓ Verified</span>
+                                                                )}
+                                                            </div>
+                                                            <span className="review-date">
+                                                                {new Date(testimonial.date).toLocaleDateString('en-US', {
+                                                                    year: 'numeric',
+                                                                    month: 'long',
+                                                                    day: 'numeric'
+                                                                })}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
 
-                            {/* Navigation Arrows */}
-                            <button className="slider-arrow prev-arrow" onClick={prevSlide}>
-                                <span>‹</span>
-                            </button>
-                            <button className="slider-arrow next-arrow" onClick={nextSlide}>
-                                <span>›</span>
-                            </button>
+                                {/* Navigation Arrows */}
+                                {testimonials.length > 1 && (
+                                    <>
+                                        <button className="slider-arrow prev-arrow" onClick={prevSlide}>
+                                            <span>‹</span>
+                                        </button>
+                                        <button className="slider-arrow next-arrow" onClick={nextSlide}>
+                                            <span>›</span>
+                                        </button>
 
-                            {/* Dots Indicator */}
-                            <div className="slider-dots">
-                                {testimonials.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        className={`dot ${index === currentSlide ? 'active' : ''}`}
-                                        onClick={() => goToSlide(index)}
-                                    />
-                                ))}
+                                        {/* Dots Indicator */}
+                                        <div className="slider-dots">
+                                            {testimonials.map((_, index) => (
+                                                <button
+                                                    key={index}
+                                                    className={`dot ${index === currentSlide ? 'active' : ''}`}
+                                                    onClick={() => goToSlide(index)}
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                        </div>
+                        )}
                     </Col>
                 </Row>
             </Container>
 
             <style jsx>{`
-        .testimonials-section {
-          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-          position: relative;
-          overflow: hidden;
-        }
+                .testimonials-section {
+                    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
 
-        /* Animations */
-        .animate-fade-in {
-          opacity: 0;
-          animation: fadeIn 1s ease-out 0.3s forwards;
-        }
+                /* Loading State */
+                .loading-testimonials {
+                    text-align: center;
+                    padding: 4rem 2rem;
+                }
 
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
+                .loading-spinner-large {
+                    width: 50px;
+                    height: 50px;
+                    border: 4px solid #e9ecef;
+                    border-top: 4px solid #2a5298;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 1rem;
+                }
 
-        @keyframes slideIn {
-          from { 
-            opacity: 0;
-            transform: translateX(100px) scale(0.9);
-          }
-          to { 
-            opacity: 1;
-            transform: translateX(0) scale(1);
-          }
-        }
+                /* Error State */
+                .error-state {
+                    padding: 4rem 2rem;
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                }
 
-        @keyframes slideOut {
-          from { 
-            opacity: 1;
-            transform: translateX(0) scale(1);
-          }
-          to { 
-            opacity: 0;
-            transform: translateX(-100px) scale(0.9);
-          }
-        }
+                .error-icon {
+                    font-size: 4rem;
+                    margin-bottom: 1rem;
+                }
 
-        /* Section Header */
-        .sections-title {
-          color: #2a5298;
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin-bottom: 20px;
-        }
+                .error-state h4 {
+                    color: #dc3545;
+                    margin-bottom: 1rem;
+                }
 
-        .section-subtitle {
-          color: #6c757d;
-          font-size: 1.1rem;
-          line-height: 1.6;
-          max-width: 600px;
-          margin: 0 auto 30px;
-        }
+                .error-state p {
+                    color: #6c757d;
+                    margin-bottom: 2rem;
+                }
 
-        .divider {
-          width: 80px;
-          height: 3px;
-          background: linear-gradient(45deg, #ff6b35, #ff8e53);
-          margin: 0 auto 40px;
-          border-radius: 2px;
-          animation: expandWidth 1s ease-out 0.8s forwards;
-          transform-origin: left;
-        }
+                .retry-btn {
+                    background: #2a5298;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
 
-        @keyframes expandWidth {
-          from { width: 0; }
-          to { width: 80px; }
-        }
+                .retry-btn:hover {
+                    background: #1e3c72;
+                    transform: translateY(-2px);
+                }
 
-        /* Slider Styles */
-        .testimonial-slider {
-          position: relative;
-          padding: 40px 0;
-        }
+                /* No Testimonials State */
+                .no-testimonials {
+                    padding: 4rem 2rem;
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                }
 
-        .slider-container {
-          position: relative;
-          height: 400px;
-          overflow: hidden;
-        }
+                .no-testimonials-icon {
+                    font-size: 4rem;
+                    margin-bottom: 1rem;
+                }
 
-        .testimonial-slide {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+                .no-testimonials h4 {
+                    color: #2a5298;
+                    margin-bottom: 1rem;
+                }
 
-        .testimonial-slide.active {
-          opacity: 1;
-          transform: translateX(0) scale(1);
-          z-index: 3;
-          animation: slideIn 0.6s ease-out;
-        }
+                .no-testimonials p {
+                    color: #6c757d;
+                }
 
-        .testimonial-slide.prev {
-          opacity: 0.3;
-          transform: translateX(-100%) scale(0.8);
-          z-index: 1;
-        }
+                /* Animations */
+                .animate-fade-in {
+                    opacity: 0;
+                    animation: fadeIn 1s ease-out 0.3s forwards;
+                }
 
-        .testimonial-slide.next {
-          opacity: 0.3;
-          transform: translateX(100%) scale(0.8);
-          z-index: 1;
-        }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
 
-        .testimonial-slide.hidden {
-          opacity: 0;
-          transform: translateX(100%) scale(0.8);
-          z-index: 0;
-        }
+                @keyframes slideIn {
+                    from { 
+                        opacity: 0;
+                        transform: translateX(100px) scale(0.9);
+                    }
+                    to { 
+                        opacity: 1;
+                        transform: translateX(0) scale(1);
+                    }
+                }
 
-        /* Testimonial Card */
-        .testimonial-card {
-          background: white;
-          padding: 50px 40px;
-          border-radius: 20px;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-          border-left: 5px solid #ff6b35;
-          position: relative;
-          height: 60%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
 
-        .quote-icon {
-          font-size: 4rem;
-          color: #ff6b35;
-          opacity: 0.2;
-          position: absolute;
-          top: 20px;
-          left: 30px;
-          font-family: serif;
-          line-height: 1;
-        }
+                /* Section Header */
+                .section-title {
+                    color: #2a5298;
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    margin-bottom: 20px;
+                }
 
-        .testimonial-content {
-          position: relative;
-          z-index: 2;
-        }
+                .section-subtitle {
+                    color: #6c757d;
+                    font-size: 1.1rem;
+                    line-height: 1.6;
+                    max-width: 600px;
+                    margin: 0 auto 30px;
+                }
 
-        .testimonial-text {
-          color: #495057;
-          font-size: 1.1rem;
-          line-height: 1.8;
-          margin-bottom: 30px;
-          font-style: italic;
-        }
+                .divider {
+                    width: 80px;
+                    height: 3px;
+                    background: linear-gradient(45deg, #ff6b35, #ff8e53);
+                    margin: 0 auto 40px;
+                    border-radius: 2px;
+                    animation: expandWidth 1s ease-out 0.8s forwards;
+                    transform-origin: left;
+                }
 
-        /* Client Info */
-        .client-info {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-        }
+                @keyframes expandWidth {
+                    from { width: 0; }
+                    to { width: 80px; }
+                }
 
-        .avatar {
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          background: linear-gradient(45deg, #2a5298, #1e3c72);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-weight: 700;
-          font-size: 1.2rem;
-          box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
-        }
+                /* Slider Styles */
+                .testimonial-slider {
+                    position: relative;
+                    padding: 40px 0;
+                }
 
-        .client-details h4 {
-          color: #2a5298;
-          font-weight: 700;
-          margin-bottom: 5px;
-        }
+                .slider-container {
+                    position: relative;
+                    height: 400px;
+                    overflow: hidden;
+                }
 
-        .client-contributions {
-          color: #ff6b35;
-          font-size: 0.9rem;
-          font-weight: 600;
-        }
+                .testimonial-slide {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+                }
 
-        /* Navigation Arrows */
-        .slider-arrow {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 50px;
-          height: 50px;
-          border: none;
-          border-radius: 50%;
-          background: white;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-          color: #2a5298;
-          font-size: 1.5rem;
-          font-weight: bold;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          z-index: 4;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
+                .testimonial-slide.active {
+                    opacity: 1;
+                    transform: translateX(0) scale(1);
+                    z-index: 3;
+                    animation: slideIn 0.6s ease-out;
+                }
 
-        .slider-arrow:hover {
-          background: #2a5298;
-          color: white;
-          transform: translateY(-50%) scale(1.1);
-        }
+                .testimonial-slide.prev {
+                    opacity: 0.3;
+                    transform: translateX(-100%) scale(0.8);
+                    z-index: 1;
+                }
 
-        .prev-arrow {
-          left: -25px;
-        }
+                .testimonial-slide.next {
+                    opacity: 0.3;
+                    transform: translateX(100%) scale(0.8);
+                    z-index: 1;
+                }
 
-        .next-arrow {
-          right: -25px;
-        }
+                .testimonial-slide.hidden {
+                    opacity: 0;
+                    transform: translateX(100%) scale(0.8);
+                    z-index: 0;
+                }
 
-        /* Dots Indicator */
-        .slider-dots {
-          display: flex;
-          justify-content: center;
-          gap: 10px;
-          margin-top: 40px;
-        }
+                /* Testimonial Card */
+                .testimonial-card {
+                    background: white;
+                    padding: 50px 40px;
+                    border-radius: 20px;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                    border-left: 5px solid #ff6b35;
+                    position: relative;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
 
-        .dot {
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          border: none;
-          background: #dee2e6;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
+                .quote-icon {
+                    font-size: 4rem;
+                    color: #ff6b35;
+                    opacity: 0.2;
+                    position: absolute;
+                    top: 20px;
+                    left: 30px;
+                    font-family: serif;
+                    line-height: 1;
+                }
 
-        .dot.active {
-          background: #ff6b35;
-          transform: scale(1.3);
-        }
+                .testimonial-content {
+                    position: relative;
+                    z-index: 2;
+                }
 
-        .dot:hover {
-          background: #2a5298;
-        }
+                /* Rating Stars */
+                .testimonial-rating {
+                    margin-bottom: 20px;
+                }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-          .sections-title {
-            font-size: 2rem;
-          }
+                .testimonial-rating .star {
+                    font-size: 1.3rem;
+                    color: #e9ecef;
+                    margin-right: 2px;
+                }
 
-          .testimonial-card {
-            padding: 30px 25px;
-          }
+                .testimonial-rating .star.filled {
+                    color: #ffc107;
+                }
 
-          .testimonial-text {
-            font-size: 1rem;
-          }
+                .testimonial-text {
+                    color: #495057;
+                    font-size: 1.1rem;
+                    line-height: 1.8;
+                    margin-bottom: 30px;
+                    font-style: italic;
+                }
 
-          .slider-arrow {
-            width: 40px;
-            height: 40px;
-            font-size: 1.2rem;
-          }
+                /* Client Info */
+                .client-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                }
 
-          .prev-arrow {
-            left: -10px;
-          }
+                .avatar {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    background: linear-gradient(45deg, #2a5298, #1e3c72);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-weight: 700;
+                    font-size: 1.2rem;
+                    box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
+                    flex-shrink: 0;
+                }
 
-          .next-arrow {
-            right: -10px;
-          }
+                .client-details {
+                    flex: 1;
+                }
 
-          .slider-container {
-            height: 450px;
-          }
-        }
+                .client-details h4 {
+                    color: #2a5298;
+                    font-weight: 700;
+                    margin-bottom: 5px;
+                }
 
-        @media (max-width: 576px) {
-          .section-titles {
-            font-size: 1.8rem;
-          }
+                .client-meta {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 5px;
+                }
 
-          .testimonial-card {
-            padding: 25px 20px;
-          }
+                .client-contributions {
+                    color: #ff6b35;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                }
 
-          .client-info {
-            flex-direction: column;
-            text-align: center;
-            gap: 10px;
-          }
+                .verified-badge {
+                    background: #28a745;
+                    color: white;
+                    padding: 2px 8px;
+                    border-radius: 10px;
+                    font-size: 0.7rem;
+                    font-weight: 600;
+                }
 
-          .slider-container {
-            height: 500px;
-          }
-        }
-      `}</style>
+                .review-date {
+                    color: #6c757d;
+                    font-size: 0.8rem;
+                }
+
+                /* Navigation Arrows */
+                .slider-arrow {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 50px;
+                    height: 50px;
+                    border: none;
+                    border-radius: 50%;
+                    background: white;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                    color: #2a5298;
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    z-index: 4;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .slider-arrow:hover {
+                    background: #2a5298;
+                    color: white;
+                    transform: translateY(-50%) scale(1.1);
+                }
+
+                .prev-arrow {
+                    left: -25px;
+                }
+
+                .next-arrow {
+                    right: -25px;
+                }
+
+                /* Dots Indicator */
+                .slider-dots {
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-top: 40px;
+                }
+
+                .dot {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    border: none;
+                    background: #dee2e6;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .dot.active {
+                    background: #ff6b35;
+                    transform: scale(1.3);
+                }
+
+                .dot:hover {
+                    background: #2a5298;
+                }
+
+                /* Responsive Design */
+                @media (max-width: 768px) {
+                    .section-title {
+                        font-size: 2rem;
+                    }
+
+                    .testimonial-card {
+                        padding: 30px 25px;
+                    }
+
+                    .testimonial-text {
+                        font-size: 1rem;
+                    }
+
+                    .slider-arrow {
+                        width: 40px;
+                        height: 40px;
+                        font-size: 1.2rem;
+                    }
+
+                    .prev-arrow {
+                        left: -10px;
+                    }
+
+                    .next-arrow {
+                        right: -10px;
+                    }
+
+                    .slider-container {
+                        height: 450px;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .section-title {
+                        font-size: 1.8rem;
+                    }
+
+                    .testimonial-card {
+                        padding: 25px 20px;
+                    }
+
+                    .client-info {
+                        flex-direction: column;
+                        text-align: center;
+                        gap: 10px;
+                    }
+
+                    .client-meta {
+                        justify-content: center;
+                    }
+
+                    .slider-container {
+                        height: 500px;
+                    }
+                }
+            `}</style>
         </section>
     );
 };
