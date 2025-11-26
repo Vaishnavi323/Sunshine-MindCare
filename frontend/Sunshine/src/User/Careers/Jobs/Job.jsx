@@ -21,7 +21,7 @@ const Job = () => {
                 setLoading(true);
                 setError(null);
                 
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}job/list`, {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/list`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
