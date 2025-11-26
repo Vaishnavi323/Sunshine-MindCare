@@ -336,11 +336,7 @@ const Job = () => {
                                 >
                                     <Card className="h-100">
                                         <Card.Body className="p-4">
-                                            {job.featured && (
-                                                <div className="featured-badge">
-                                                    <span>⭐ Featured</span>
-                                                </div>
-                                            )}
+                                            
                                             <div className="job-header">
                                                 <h3 className="job-title">{job.title}</h3>
                                                 <div className="salary-badge">{job.salary}</div>
@@ -419,22 +415,7 @@ const Job = () => {
             </section>
 
             {/* CTA Section */}
-            <section className="jobs-cta py-5">
-                <Container>
-                    <Row className="justify-content-center text-center">
-                        <Col lg={8}>
-                            <div className="cta-content">
-                                <h2>Can't Find Your Perfect Role?</h2>
-                                <p>We're always looking for talented mental health professionals. Send us your resume and we'll contact you when matching positions open.</p>
-                                <button className="cta-button">
-                                    Submit Your Resume
-                                </button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
-
+           
             {/* Job Detail Modal */}
             <Modal 
                 show={showModal} 

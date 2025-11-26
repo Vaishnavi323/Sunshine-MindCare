@@ -221,9 +221,7 @@ const UpcomingEvents = () => {
                                     </div>
                                     <h3>No Upcoming Events</h3>
                                     <p>There are no upcoming events scheduled at the moment. Check back later for new events!</p>
-                                    <button className="subscribe-btn">
-                                        Notify Me About Future Events
-                                    </button>
+                                    
                                 </div>
                             </Col>
                         </Row>
@@ -232,24 +230,7 @@ const UpcomingEvents = () => {
             )}
 
             {/* CTA Section */}
-            <section className="events-cta py-5">
-                <Container>
-                    <Row className="justify-content-center text-center">
-                        <Col lg={8}>
-                            <div className="cta-content">
-                                <h2>Stay Updated</h2>
-                                <p>
-                                    Be the first to know about our upcoming events, workshops, and mental health initiatives. 
-                                    Subscribe to our newsletter for regular updates.
-                                </p>
-                                <button className="cta-button">
-                                    Subscribe to Newsletter
-                                </button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
+            
 
             <style jsx>{`
                 .upcoming-events-page {

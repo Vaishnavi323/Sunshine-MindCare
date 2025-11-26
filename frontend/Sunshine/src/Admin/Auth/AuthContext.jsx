@@ -74,12 +74,7 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem("admin_token");
     sessionStorage.removeItem("admin_user");
     navigate('/login');
-    // Navigate to login page after logout
-    // try {
-    //   navigate('/login', { replace: true });
-    // } catch (err) {
-    //   console.warn('Navigation to /login failed', err);
-    // }
+    
   };
 
   const value = {
