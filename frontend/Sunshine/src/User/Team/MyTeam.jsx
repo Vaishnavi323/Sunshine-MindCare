@@ -248,7 +248,7 @@ const TeamPage = () => {
   const [loading, setLoading] = useState(true);
 
   const baseURL = import.meta.env.VITE_BACKEND_URL;
-  const defaultImage = "https://via.placeholder.com/600x600?text=No+Image";
+  // const defaultImage = "";
 
   const fetchTeamMembers = async () => {
     try {
