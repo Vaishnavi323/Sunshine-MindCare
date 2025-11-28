@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Blogmodel extends CI_Model {
+class BlogModel extends CI_Model {
 
     public function insertBlog($data) {
         $this->db->insert('blogs', $data);
