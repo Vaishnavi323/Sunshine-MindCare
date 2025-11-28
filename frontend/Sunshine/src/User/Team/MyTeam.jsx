@@ -265,17 +265,21 @@ const TeamPage = () => {
             : `${import.meta.env.VITE_BACKEND_URL}/${photo}`;
         }
 
-        // Category mapping
+        // Category mapping - simplified for founder, senior, junior
         const categoryMap = {
           Founder: "founder",
+          founder: "founder",
           senior: "senior",
-          psychologist: "psychologist",
-          counselor: "counselor",
-          educator: "educator",
+          Senior: "senior",
+          junior: "junior",
+          Junior: "junior",
+          psychologist: "junior",
+          counselor: "junior",
+          educator: "junior",
         };
 
         const rawCategory = (member.category || "").toString().trim().toLowerCase();
-        const category = categoryMap[rawCategory] || "psychologist";
+        const category = categoryMap[rawCategory] || "junior";
 
         return {
           id: member.id,
@@ -290,8 +294,8 @@ const TeamPage = () => {
         };
       });
 
-      // Sort by hierarchy: founder → senior → psychologist → counselor → educator
-      const categoryOrder = { founder: 1, senior: 2, psychologist: 3, counselor: 4, educator: 5 };
+      // Sort by hierarchy: founder → senior → junior
+      const categoryOrder = { founder: 1, senior: 2, junior: 3 };
       fetchedMembers.sort((a, b) => {
         return categoryOrder[a.category] - categoryOrder[b.category];
       });
@@ -314,9 +318,7 @@ const TeamPage = () => {
   // Filter members by category in hierarchical order
   const founder = teamMembers.find((m) => m.category === "founder");
   const seniorDoctors = teamMembers.filter((m) => m.category === "senior");
-  const psychologists = teamMembers.filter((m) => m.category === "psychologist");
-  const counselors = teamMembers.filter((m) => m.category === "counselor");
-  const educators = teamMembers.filter((m) => m.category === "educator");
+  const juniorDoctors = teamMembers.filter((m) => m.category === "junior");
 
   return (
     <>
@@ -359,6 +361,8 @@ const TeamPage = () => {
               color: #666;
               opacity: 0.9; 
             }
+
+            /* Founder Section - Big Horizontal Card */
             .founder-section { 
               margin-bottom: 80px; 
             }
@@ -369,11 +373,11 @@ const TeamPage = () => {
               overflow: hidden; 
               box-shadow: 0 10px 30px rgba(30, 60, 114, 0.1); 
               display: flex; 
-              flex-direction: column; 
-              max-width: 800px; 
+              max-width: 100%; 
               margin: 0 auto;
               transition: all 0.3s ease;
               cursor: pointer;
+              min-height: 400px;
             }
             .founder-card:hover {
               transform: translateY(-5px);
@@ -381,10 +385,11 @@ const TeamPage = () => {
             }
             .founder-image-container { 
               position: relative; 
+              flex: 0 0 400px;
             }
             .founder-image { 
               width: 100%; 
-              height: 400px; 
+              height: 100%; 
               object-fit: cover; 
             }
             .founder-badge { 
@@ -393,38 +398,59 @@ const TeamPage = () => {
               right: 20px; 
               background: #1e3c72; 
               color: white; 
-              padding: 10px 20px; 
+              padding: 12px 24px; 
               border-radius: 50px; 
               font-weight: bold; 
-              font-size: 16px;
+              font-size: 18px;
             }
             .founder-info { 
-              padding: 40px; 
-              text-align: center; 
+              padding: 50px; 
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
             }
             .founder-name { 
-              font-size: 36px; 
-              margin-bottom: 10px; 
+              font-size: 42px; 
+              margin-bottom: 15px; 
               color: #1e3c72; 
+              font-weight: 700;
             }
             .founder-profession { 
-              font-size: 22px; 
+              font-size: 24px; 
               color: #2a5298; 
-              margin-bottom: 10px; 
+              margin-bottom: 15px; 
               font-weight: 600;
             }
             .founder-specialization { 
-              font-size: 18px; 
+              font-size: 20px; 
               color: #666; 
-              margin-bottom: 20px; 
+              margin-bottom: 25px; 
               font-style: italic;
             }
             .founder-bio { 
-              font-size: 16px; 
+              font-size: 18px; 
               line-height: 1.8; 
               color: #555; 
               margin-bottom: 30px; 
             }
+            .founder-contact {
+              display: flex;
+              gap: 30px;
+              flex-wrap: wrap;
+            }
+            .contact-item {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              font-size: 16px;
+              color: #1e3c72;
+            }
+            .contact-icon {
+              font-size: 20px;
+            }
+
+            /* Team Sections */
             .team-section { 
               margin-bottom: 80px; 
             }
@@ -449,7 +475,7 @@ const TeamPage = () => {
             }
             .team-grids { 
               display: grid; 
-              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+              grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
               gap: 30px; 
             }
             .team-card { 
@@ -518,6 +544,8 @@ const TeamPage = () => {
               color: #666; 
               line-height: 1.5;
             }
+
+            /* Modal */
             .modal-overlay { 
               position: fixed; 
               inset: 0; 
@@ -609,6 +637,26 @@ const TeamPage = () => {
               color: #1e3c72; 
               font-weight: 500; 
             }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+              .founder-card {
+                flex-direction: column;
+                min-height: auto;
+              }
+              .founder-image-container {
+                flex: 0 0 300px;
+              }
+              .founder-info {
+                padding: 30px;
+              }
+              .founder-name {
+                font-size: 32px;
+              }
+              .team-grids {
+                grid-template-columns: 1fr;
+              }
+            }
           `}</style>
 
           <div className={`team-page ${selectedMember ? "modal-open" : ""}`}>
@@ -620,9 +668,10 @@ const TeamPage = () => {
                 </p>
               </div>
 
-              {/* Founder Section */}
+              {/* Founder Section - Big Horizontal Card */}
               {founder && (
                 <div className="founder-section">
+                  <h2 className="section-title">Founder</h2>
                   <div className="founder-card" onClick={() => handleMemberClick(founder)}>
                     <div className="founder-image-container">
                       <img src={founder.image} alt={founder.name} className="founder-image" onError={(e) => (e.target.src = defaultImage)} />
@@ -633,41 +682,72 @@ const TeamPage = () => {
                       <p className="founder-profession">{founder.profession}</p>
                       <p className="founder-specialization">{founder.specialization}</p>
                       <p className="founder-bio">{founder.bio}</p>
+                      <div className="founder-contact">
+                        {founder.email && (
+                          <div className="contact-item">
+                            <span className="contact-icon">📧</span>
+                            <span>{founder.email}</span>
+                          </div>
+                        )}
+                        {founder.phone && (
+                          <div className="contact-item">
+                            <span className="contact-icon">📞</span>
+                            <span>{founder.phone}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Other Sections in Hierarchy Order */}
-              {[
-                { title: "Senior Doctors", list: seniorDoctors, category: "senior" },
-                { title: "Clinical Psychologists", list: psychologists, category: "psychologist" },
-                { title: "Counselors & Therapists", list: counselors, category: "counselor" },
-                { title: "Special Educators", list: educators, category: "educator" },
-              ].map((section) => (
-                section.list.length > 0 && (
-                  <div className="team-section" key={section.category}>
-                    <h2 className="section-title">{section.title}</h2>
-                    <div className="team-grids">
-                      {section.list.map((member) => (
-                        <div key={member.id} className="team-card" onClick={() => handleMemberClick(member)}>
-                          <div className="image-container">
-                            <img src={member.image} alt={member.name} className="member-image" onError={(e) => (e.target.src = defaultImage)} />
-                            <div className="image-overlay">
-                              <div className="view-profile">View Profile</div>
-                            </div>
-                          </div>
-                          <div className="member-info">
-                            <h3 className="member-name">{member.name}</h3>
-                            <p className="member-profession">{member.profession}</p>
-                            <p className="member-specialization">{member.specialization}</p>
+              {/* Senior Doctors Section */}
+              {seniorDoctors.length > 0 && (
+                <div className="team-section">
+                  <h2 className="section-title">Senior Doctors</h2>
+                  <div className="team-grids">
+                    {seniorDoctors.map((member) => (
+                      <div key={member.id} className="team-card" onClick={() => handleMemberClick(member)}>
+                        <div className="image-container">
+                          <img src={member.image} alt={member.name} className="member-image" onError={(e) => (e.target.src = defaultImage)} />
+                          <div className="image-overlay">
+                            <div className="view-profile">View Profile</div>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                        <div className="member-info">
+                          <h3 className="member-name">{member.name}</h3>
+                          <p className="member-profession">{member.profession}</p>
+                          <p className="member-specialization">{member.specialization}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )
-              ))}
+                </div>
+              )}
+
+              {/* Junior Doctors Section */}
+              {juniorDoctors.length > 0 && (
+                <div className="team-section">
+                  <h2 className="section-title">Our Team</h2>
+                  <div className="team-grids">
+                    {juniorDoctors.map((member) => (
+                      <div key={member.id} className="team-card" onClick={() => handleMemberClick(member)}>
+                        <div className="image-container">
+                          <img src={member.image} alt={member.name} className="member-image" onError={(e) => (e.target.src = defaultImage)} />
+                          <div className="image-overlay">
+                            <div className="view-profile">View Profile</div>
+                          </div>
+                        </div>
+                        <div className="member-info">
+                          <h3 className="member-name">{member.name}</h3>
+                          <p className="member-profession">{member.profession}</p>
+                          <p className="member-specialization">{member.specialization}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Modal */}
