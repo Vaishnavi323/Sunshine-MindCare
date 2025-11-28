@@ -314,30 +314,30 @@ const Jobs = () => {
   };
 
   // Application functions (static for demo)
-  const handleDeleteApplication = (id) => {
-    setApplications(applications.filter((app) => app.id !== id));
-    setAlert({
-      type: "success",
-      message: "Application deleted successfully!",
-    });
-    setDeleteConfirm(null);
+  // const handleDeleteApplication = (id) => {
+  //   setApplications(applications.filter((app) => app.id !== id));
+  //   setAlert({
+  //     type: "success",
+  //     message: "Application deleted successfully!",
+  //   });
+  //   setDeleteConfirm(null);
 
-    if (currentItemsSlice.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  //   if (currentItemsSlice.length === 1 && currentPage > 1) {
+  //     setCurrentPage(currentPage - 1);
+  //   }
+  // };
 
-  const handleApplicationStatusUpdate = (id, newStatus) => {
-    setApplications(
-      applications.map((app) =>
-        app.id === id ? { ...app, status: newStatus } : app
-      )
-    );
-    setAlert({
-      type: "success",
-      message: `Application ${newStatus} successfully!`,
-    });
-  };
+  // const handleApplicationStatusUpdate = (id, newStatus) => {
+  //   setApplications(
+  //     applications.map((app) =>
+  //       app.id === id ? { ...app, status: newStatus } : app
+  //     )
+  //   );
+  //   setAlert({
+  //     type: "success",
+  //     message: `Application ${newStatus} successfully!`,
+  //   });
+  // };
 
   // Get unique departments and statuses
   const departments = ["all", ...new Set(jobs.map(job => job.department))];

@@ -20,7 +20,7 @@ const Job = () => {
             try {
                 setLoading(true);
                 setError(null);
-                
+
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/list`, {
                     method: 'GET',
                     headers: {
@@ -33,37 +33,37 @@ const Job = () => {
                 }
 
                 const data = await response.json();
-                
+
                 if (data.status) {
                     // Transform API data to match your component structure
                     const transformedJobs = data.error.map(job => ({
                         id: job.id,
                         title: (job.heading && job.heading.trim() !== '') ? job.heading : `Job Position ${job.id}`,
                         department: (job.department && job.department.trim() !== '') ? job.department : 'General',
-                        type: job.type === 'fulltime' ? 'Full-time' : 
-                              job.type === 'parttime' ? 'Part-time' : 
-                              job.type === 'internship' ? 'Internship' : 
-                              job.type === 'contract' ? 'Contract' : 'Full-time',
+                        type: job.type === 'fulltime' ? 'Full-time' :
+                            job.type === 'parttime' ? 'Part-time' :
+                                job.type === 'internship' ? 'Internship' :
+                                    job.type === 'contract' ? 'Contract' : 'Full-time',
                         experience: (job.experience && job.experience.trim() !== '') ? job.experience : 'Not specified',
                         location: (job.location && job.location.trim() !== '') ? job.location : 'Multiple Locations',
                         salary: (job.salary_lpa && job.salary_lpa.trim() !== '') ? `₹${job.salary_lpa} LPA` : 'Competitive Salary',
                         description: (job.description && job.description.trim() !== '') ? job.description : 'Join our team and contribute to mental healthcare excellence. We are looking for passionate professionals who want to make a difference.',
-                        requirements: (job.requirements && job.requirements.trim() !== '') ? 
-                            job.requirements.split(',').map(req => req.trim()).filter(req => req) : 
+                        requirements: (job.requirements && job.requirements.trim() !== '') ?
+                            job.requirements.split(',').map(req => req.trim()).filter(req => req) :
                             ['Relevant degree or certification', 'Strong communication skills', 'Empathetic approach', 'Team player'],
                         postedDate: job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
                         applyLink: "#apply",
                         featured: job.id % 3 === 0 // Every 3rd job will be featured
                     }));
-                    
+
                     // Filter out invalid jobs (optional - uncomment if needed)
                     // const validJobs = transformedJobs.filter(job => job.title !== `Job Position ${job.id}`);
-                    
+
                     setJobs(transformedJobs);
                 } else {
                     throw new Error(data.message || 'Failed to fetch jobs');
                 }
-                
+
             } catch (error) {
                 console.error('Error fetching jobs:', error);
                 setError(error.message);
@@ -225,7 +225,7 @@ const Job = () => {
                                 <div className="error-icon">⚠️</div>
                                 <h3>Error Loading Jobs</h3>
                                 <p>{error}</p>
-                                <button 
+                                <button
                                     className="retry-btn"
                                     onClick={() => window.location.reload()}
                                 >
@@ -259,7 +259,7 @@ const Job = () => {
                                     Join Our Mission
                                 </h1>
                                 <p className="hero-subtitle animate-fade-in">
-                                    Build your career while making a difference in mental healthcare. 
+                                    Build your career while making a difference in mental healthcare.
                                     Explore opportunities to grow with Sunshine Counseling.
                                 </p>
                                 <div className="hero-divider"></div>
@@ -279,7 +279,7 @@ const Job = () => {
                         <Col lg={9}>
                             <div className="filters-container">
                                 <div className="filter-group">
-                                    <select 
+                                    <select
                                         value={filters.department}
                                         onChange={(e) => handleFilterChange('department', e.target.value)}
                                         className="filter-select"
@@ -291,7 +291,7 @@ const Job = () => {
                                     </select>
                                 </div>
                                 <div className="filter-group">
-                                    <select 
+                                    <select
                                         value={filters.type}
                                         onChange={(e) => handleFilterChange('type', e.target.value)}
                                         className="filter-select"
@@ -303,7 +303,7 @@ const Job = () => {
                                     </select>
                                 </div>
                                 <div className="filter-group">
-                                    <select 
+                                    <select
                                         value={filters.experience}
                                         onChange={(e) => handleFilterChange('experience', e.target.value)}
                                         className="filter-select"
@@ -329,19 +329,19 @@ const Job = () => {
                     <Row className="g-4">
                         {filteredJobs.map((job, index) => (
                             <Col key={job.id} lg={6} className="mb-4">
-                                <div 
+                                <div
                                     className="job-card animate-card"
                                     style={{ animationDelay: `${index * 0.1}s` }}
                                     onClick={() => handleJobClick(job)}
                                 >
                                     <Card className="h-100">
                                         <Card.Body className="p-4">
-                                            
+
                                             <div className="job-header">
                                                 <h3 className="job-title">{job.title}</h3>
                                                 <div className="salary-badge">{job.salary}</div>
                                             </div>
-                                            
+
                                             <div className="job-meta">
                                                 <div className="meta-item">
                                                     <span className="meta-icon">🏢</span>
@@ -415,12 +415,12 @@ const Job = () => {
             </section>
 
             {/* CTA Section */}
-           
+
             {/* Job Detail Modal */}
-            <Modal 
-                show={showModal} 
-                onHide={handleCloseModal} 
-                size="lg" 
+            <Modal
+                show={showModal}
+                onHide={handleCloseModal}
+                size="lg"
                 centered
                 className="job-modal"
             >

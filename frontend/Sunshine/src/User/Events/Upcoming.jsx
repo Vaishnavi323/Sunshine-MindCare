@@ -200,9 +200,9 @@ const UpcomingEvents = () => {
                     {events.length > 0 && (
                         <Row className="mt-5">
                             <Col className="text-center">
-                                <button className="load-more-btn">
+                                {/* <button className="load-more-btn">
                                     Load More Events
-                                </button>
+                                </button> */}
                             </Col>
                         </Row>
                     )}
