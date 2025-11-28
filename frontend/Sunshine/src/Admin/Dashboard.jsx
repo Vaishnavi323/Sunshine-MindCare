@@ -760,7 +760,7 @@ const Dashboard = () => {
           {/* Data and Information Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Recent Events */}
-            <div
+            {/* <div
               style={{
                 ...dashboardStyles.dataCard,
                 animation: "slideInFromLeft 0.8s ease-out 0.4s both",
@@ -778,10 +778,10 @@ const Dashboard = () => {
                   <DataItem key={index} {...event} delay={index * 100} />
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Senior Doctors */}
-            <div
+            {/* <div
               style={{
                 ...dashboardStyles.dataCard,
                 animation: "fadeInUp 0.8s ease-out 0.5s both",
@@ -799,10 +799,10 @@ const Dashboard = () => {
                   <DataItem key={index} {...doctor} delay={index * 100} />
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Pending Appointments */}
-            <div
+            {/* <div
               style={{
                 ...dashboardStyles.dataCard,
                 animation: "slideInFromRight 0.8s ease-out 0.6s both",
@@ -820,7 +820,7 @@ const Dashboard = () => {
                   <DataItem key={index} {...appointment} delay={index * 100} />
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

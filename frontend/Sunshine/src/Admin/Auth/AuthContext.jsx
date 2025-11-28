@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { adminLogin } from "../../utils/Admin/login";
 
 const AuthContext = createContext();
@@ -25,6 +26,8 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
+
+  const navigate = useNavigate();
 
   const login = async (email, password) => {
     try {
@@ -69,6 +72,9 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     sessionStorage.removeItem("admin_token");
+    sessionStorage.removeItem("admin_user");
+    navigate('/login');
+    
   };
 
   const value = {
