@@ -1,17 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Bloglib {
+class BlogLib {
 
     protected $CI;
 
     public function __construct() {
         $this->CI =& get_instance();
-        $this->CI->load->model('Blogmodel');
+        $this->CI->load->model('BlogModel');
     }
 
    public function addBlog($data) {
-    $insert_id = $this->CI->Blogmodel->insertBlog($data);
+    $insert_id = $this->CI->BlogModel->insertBlog($data);
     if ($insert_id) {
         return [
             'status' => true,
@@ -27,14 +27,14 @@ class Bloglib {
 }
 
     public function updateBlog($data) {
-        return $this->CI->Blogmodel->updateBlog($data);
+        return $this->CI->BlogModel->updateBlog($data);
     }
 
     public function deleteBlog($id) {
-        return $this->CI->Blogmodel->deleteBlog($id);
+        return $this->CI->BlogModel->deleteBlog($id);
     }
 
     public function getBlogList() {
-        return $this->CI->Blogmodel->getBlogs();
+        return $this->CI->BlogModel->getBlogs();
     }
 }

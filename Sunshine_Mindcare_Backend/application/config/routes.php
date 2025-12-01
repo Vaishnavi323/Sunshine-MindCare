@@ -54,7 +54,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 
-$route['admin/login'] = 'admincontroller/login';
+$route['admin/login'] = 'AdminController/login';
 $route['service/add']  = 'ServiceController/add';
 $route['service/list'] = 'ServiceController/list';
 $route['subservice/add'] = 'SubServiceController/add';

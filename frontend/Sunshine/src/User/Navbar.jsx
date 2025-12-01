@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import logoImage from '../assets/Sunshine_logo.png';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import TopBar from './TopBar';
+// import { FaRegHeart } from "react-icons/fa6";
+import { IoMdHeart } from "react-icons/io";
 
 const CustomNavbar = () => {
     const [showEventsDropdown, setShowEventsDropdown] = useState(false);
@@ -24,17 +26,17 @@ const CustomNavbar = () => {
         <>
             <TopBar />
             <Navbar expand="xl" className="custom-navbar" sticky="top">
-            <Container fluid className="px-4">
-                {/* Left side - Logo and email */}
-                <div className="d-flex align-items gap-3">
-                    <Link to="/" className="d-flex align-items" style={{ textDecoration: 'none' }}>
-                        <Navbar.Brand href="#" className="d-flex align-items" onClick={(e) => e.preventDefault()}style={{ backgroundColor: "transparent" }}     >
-                            <img src={logoImage} alt="Sunshine Logo" className="navbar-logo"
-                            style={{  height:"70px",width: "140px", objectFit: "fill", display: "block" }}
-                            />
-                        </Navbar.Brand>
-                    </Link>
-                </div>
+                <Container fluid className="px-4">
+                    {/* Left side - Logo and email */}
+                    <div className="d-flex align-items gap-3">
+                        <Link to="/" className="d-flex align-items" style={{ textDecoration: 'none' }}>
+                            <Navbar.Brand href="#" className="d-flex align-items" onClick={(e) => e.preventDefault()} style={{ backgroundColor: "transparent" }}     >
+                                <img src={logoImage} alt="Sunshine Logo" className="navbar-logo"
+                                    style={{ height: "70px", width: "140px", objectFit: "fill", display: "block" }}
+                                />
+                            </Navbar.Brand>
+                        </Link>
+                    </div>
 
                 {/* Center - Navigation links */}
                 <Navbar.Toggle aria-controls="basic-navbar-nav" className="custom-toggler" />
@@ -68,58 +70,60 @@ const CustomNavbar = () => {
 
                         <Nav.Link as={NavLink} to="/TeamPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/TeamPage') ? 'active' : ''}`}>Team</Nav.Link>
 
-                        {/* Events Dropdown */}
-                        <Dropdown
-                            show={showEventsDropdown}
-                            onMouseEnter={() => setShowEventsDropdown(true)}
-                            onMouseLeave={() => setShowEventsDropdown(false)}
-                            className="mx-2"
-                        >
-                            <Dropdown.Toggle as={Nav.Link} className={`nav-link-custom fw-medium ${isActive('/PastEvents') || isActive('/UpcomingEvents') || isActive('/PublishedArticles') ? 'active' : ''}`}>
-                                Events
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu className="dropdown-menu-custom">
-                                <Dropdown.Item as={Link} to="/PastEvents" className="dropdown-item-custom">
-                                    Past Events
-                                </Dropdown.Item>
-                                <Dropdown.Item as={Link} to="/UpcomingEvents" className="dropdown-item-custom">
-                                    Upcoming Events
-                                </Dropdown.Item>
-                                <Dropdown.Item as={Link} to="/PublishedArticles" className="dropdown-item-custom">
-                                    Articles
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                            {/* Events Dropdown */}
+                            <Dropdown
+                                show={showEventsDropdown}
+                                onMouseEnter={() => setShowEventsDropdown(true)}
+                                onMouseLeave={() => setShowEventsDropdown(false)}
+                                className="mx-2"
+                            >
+                                <Dropdown.Toggle as={Nav.Link} className={`nav-link-custom fw-medium ${isActive('/PastEvents') || isActive('/UpcomingEvents') || isActive('/PublishedArticles') ? 'active' : ''}`}>
+                                    Events
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu className="dropdown-menu-custom">
+                                    <Dropdown.Item as={Link} to="/PastEvents" className="dropdown-item-custom">
+                                        Past Events
+                                    </Dropdown.Item>
+                                    <Dropdown.Item as={Link} to="/UpcomingEvents" className="dropdown-item-custom">
+                                        Upcoming Events
+                                    </Dropdown.Item>
+                                    <Dropdown.Item as={Link} to="/PublishedArticles" className="dropdown-item-custom">
+                                        Articles
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
 
-                        <Nav.Link as={NavLink} to="/BlogPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/BlogPage') ? 'active' : ''}`}>Blogs</Nav.Link>
+                            <Nav.Link as={NavLink} to="/BlogPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/BlogPage') ? 'active' : ''}`}>Blogs</Nav.Link>
 
-                        {/* Careers Dropdown */}
-                        <Dropdown
-                            show={showCareersDropdown}
-                            onMouseEnter={() => setShowCareersDropdown(true)}
-                            onMouseLeave={() => setShowCareersDropdown(false)}
-                            className="mx-2"
-                        >
-                            <Dropdown.Toggle as={Nav.Link} className={`nav-link-custom fw-medium ${isActive('/Training') || isActive('/Job') ? 'active' : ''}`}>
-                                Career
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu className="dropdown-menu-custom">
-                                <Dropdown.Item as={Link} to="/Training" className="dropdown-item-custom">
-                                    Training and Certification
-                                </Dropdown.Item>
-                                <Dropdown.Item as={Link} to="/Job" className="dropdown-item-custom">
-                                    Jobs
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                            {/* Careers Dropdown */}
+                            <Dropdown
+                                show={showCareersDropdown}
+                                onMouseEnter={() => setShowCareersDropdown(true)}
+                                onMouseLeave={() => setShowCareersDropdown(false)}
+                                className="mx-2"
+                            >
+                                <Dropdown.Toggle as={Nav.Link} className={`nav-link-custom fw-medium ${isActive('/Training') || isActive('/Job') ? 'active' : ''}`}>
+                                    Career
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu className="dropdown-menu-custom">
+                                    <Dropdown.Item as={Link} to="/Training" className="dropdown-item-custom">
+                                        Training and Certification
+                                    </Dropdown.Item>
+                                    <Dropdown.Item as={Link} to="/Job" className="dropdown-item-custom">
+                                        Jobs
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
 
-                        <Nav.Link as={NavLink} to="/ContactUs" className={`mx-2 fw-medium nav-link-custom ${isActive('/ContactUs') ? 'active' : ''}`}>Contact Us</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
+                            <Nav.Link as={NavLink} to="/ContactUs" className={`mx-2 fw-medium nav-link-custom ${isActive('/ContactUs') ? 'active' : ''}`}>Contact Us</Nav.Link>
 
-                {/* Right side - Search and Make Appointment Button */}
-                <div className="navbar-actions d-none d-lg-flex align-items-center gap-3">
-                    {/* <div className="search-container">
+                        </Nav>
+
+                    </Navbar.Collapse>
+
+                    {/* Right side - Search and Make Appointment Button */}
+                    <div className="navbar-actions d-none d-lg-flex align-items-center gap-3">
+                        {/* <div className="search-container">
                         <input
                             type="text"
                             className="search-input"
@@ -129,11 +133,22 @@ const CustomNavbar = () => {
                             <i className="fas fa-search"></i>
                         </button>
                     </div> */}
-                    <Link to={"/BookAppointment"}><button className="appointment-btn">Make Appointment</button></Link>
-                </div>
-            </Container>
+                        <a
+                            href="https://empathy-foundation-frontend.netlify.app"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ textDecoration: 'none' }}
 
-            <style jsx>{`
+                        >
+                            <button className="appointment-btn donate-btn">
+                                <IoMdHeart  style={{ marginRight: "0px" }} /> Donate
+                            </button>
+                        </a>
+                        <Link to={"/BookAppointment"}><button className="appointment-btn">Make Appointment</button></Link>
+                    </div>
+                </Container>
+
+                <style jsx>{`
                 .custom-navbar {
                     background: linear-gradient(135deg,   	 #1f1f35  0%, #174593ff 100%);
                     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -389,8 +404,8 @@ const CustomNavbar = () => {
                     }
                 }
             `}</style>
-          
-        </Navbar>
+
+            </Navbar>
         </>
     );
 };

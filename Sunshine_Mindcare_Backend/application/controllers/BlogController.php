@@ -6,7 +6,7 @@ class BlogController extends CI_Controller {
      public function __construct()
     {
         parent::__construct(); 
-        $this->load->library(['Api', 'Bloglib']); 
+        $this->load->library(['Api', 'BlogLib']); 
     }
 
     // Add blog 
