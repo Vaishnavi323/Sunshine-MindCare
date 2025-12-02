@@ -848,7 +848,7 @@ const BookAppointment = () => {
                         <div className="progress-steps">
                             {[1, 2, 3, 4].map(step => (
                                 <div key={step} className={`step ${step === currentStep ? 'active' : ''} ${step < currentStep ? 'completed' : ''}`}>
-                                    <div className="step-circle">{step < currentStep ? 'Check' : step}</div>
+                                    <div className="step-circle">{step < currentStep ? '' : step}</div>
                                     <div className="step-label">
                                         {step === 1 && 'Basic Details'}
                                         {step === 2 && 'Service'}
