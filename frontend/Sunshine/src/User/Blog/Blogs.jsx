@@ -930,15 +930,7 @@ const BlogPage = () => {
 
           {/* Search and Filter */}
           <div className="filter-section">
-            <div className="search-bar">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search blogs by title, content, or tags..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+          
             
             <div className="category-filters">
               {categories.map((category) => (
@@ -1025,7 +1017,7 @@ const BlogPage = () => {
         {/* Blog Detail Modal - PROPERLY SIZED AND ALIGNED */}
         {showModal && selectedBlog && (
           <div className="blog-modal-overlay" onClick={handleCloseModal}>
-            <div className="blog-modal mt-10 " onClick={(e) => e.stopPropagation()}>
+            <div className="blog-modal mt-5 " onClick={(e) => e.stopPropagation()}>
               <button className="modal-close-btn" onClick={handleCloseModal}>
                 <i className="fas fa-times"></i>
               </button>
