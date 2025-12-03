@@ -524,6 +524,7 @@ const BlogPage = () => {
           animation: modalSlideIn 0.4s ease-out;
           display: flex;
           flex-direction: column;
+          z-index: 1001;
         }
 
         .modal-close-btn {
@@ -1024,7 +1025,7 @@ const BlogPage = () => {
         {/* Blog Detail Modal - PROPERLY SIZED AND ALIGNED */}
         {showModal && selectedBlog && (
           <div className="blog-modal-overlay" onClick={handleCloseModal}>
-            <div className="blog-modal mt-5" onClick={(e) => e.stopPropagation()}>
+            <div className="blog-modal mt-5 " onClick={(e) => e.stopPropagation()}>
               <button className="modal-close-btn" onClick={handleCloseModal}>
                 <i className="fas fa-times"></i>
               </button>
