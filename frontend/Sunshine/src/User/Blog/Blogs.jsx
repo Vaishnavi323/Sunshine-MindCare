@@ -1024,7 +1024,7 @@ const BlogPage = () => {
         {/* Blog Detail Modal - PROPERLY SIZED AND ALIGNED */}
         {showModal && selectedBlog && (
           <div className="blog-modal-overlay" onClick={handleCloseModal}>
-            <div className="blog-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="blog-modal mt-5" onClick={(e) => e.stopPropagation()}>
               <button className="modal-close-btn" onClick={handleCloseModal}>
                 <i className="fas fa-times"></i>
               </button>
