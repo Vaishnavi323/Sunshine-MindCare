@@ -995,7 +995,7 @@ const BlogPage = () => {
                       ))}
                     </div>
 
-                    <div className="blog-footer">
+                    {/* <div className="blog-footer">
                       <div className="blog-author">
                         <span className="author-name">{blog.author}</span>
                         <span className="author-role">{blog.authorRole}</span>
@@ -1009,7 +1009,7 @@ const BlogPage = () => {
                       >
                         Read More →
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))}
@@ -1025,7 +1025,7 @@ const BlogPage = () => {
         {/* Blog Detail Modal - PROPERLY SIZED AND ALIGNED */}
         {showModal && selectedBlog && (
           <div className="blog-modal-overlay" onClick={handleCloseModal}>
-            <div className="blog-modal mt-5 " onClick={(e) => e.stopPropagation()}>
+            <div className="blog-modal mt-10 " onClick={(e) => e.stopPropagation()}>
               <button className="modal-close-btn" onClick={handleCloseModal}>
                 <i className="fas fa-times"></i>
               </button>
@@ -1051,7 +1051,7 @@ const BlogPage = () => {
                 <div className="modal-header">
                   {/* <div className="modal-category">{selectedBlog.category}</div> */}
                   <h1 className="modal-title">{selectedBlog.title}</h1><br/>
-                  <div className="modal-meta">
+                  <div className="modal-meta"><br/>
                     {/* <div className="modal-meta-item">
                       <i className="fas fa-user"></i>
                       <span>{selectedBlog.author}</span>
