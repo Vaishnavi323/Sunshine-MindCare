@@ -554,7 +554,7 @@ const BlogPage = () => {
 
         .modal-image-container {
           position: relative;
-          height: 200px;
+          height: 300px;
           {/* overflow: hidden; */}
           flex-shrink: 0;
         }
@@ -975,7 +975,7 @@ const BlogPage = () => {
                     <div className="image-fallback" style={{ display: 'none' }}>
                       <i className="fas fa-image" style={{ fontSize: '2.5rem' }}></i>
                     </div>
-                    <div className="blog-category-badge">{blog.category}</div>
+                    {/* <div className="blog-category-badge">{blog.category}</div> */}
                   </div>
 
                   <div className="blog-content">
@@ -1048,21 +1048,18 @@ const BlogPage = () => {
               {/* Content wrapper with proper alignment */}
               <div className="modal-content-wrapper">
                 <div className="modal-header">
-                  <div className="modal-category">{selectedBlog.category}</div>
-                  <h1 className="modal-title">{selectedBlog.title}</h1>
+                  {/* <div className="modal-category">{selectedBlog.category}</div> */}
+                  <h1 className="modal-title">{selectedBlog.title}</h1><br/>
                   <div className="modal-meta">
-                    <div className="modal-meta-item">
+                    {/* <div className="modal-meta-item">
                       <i className="fas fa-user"></i>
                       <span>{selectedBlog.author}</span>
-                    </div>
+                    </div> */}
                     <div className="modal-meta-item">
                       <i className="fas fa-calendar"></i>
                       <span>{selectedBlog.date}</span>
                     </div>
-                    <div className="modal-meta-item">
-                      <i className="fas fa-clock"></i>
-                      <span>{selectedBlog.readTime}</span>
-                    </div>
+                    
                   </div>
                 </div>
 
@@ -1077,15 +1074,7 @@ const BlogPage = () => {
                   ))}
                 </div>
 
-                <div className="modal-actions">
-                  <button 
-                    className="share-btn"
-                    onClick={() => handleShareBlog(selectedBlog)}
-                  >
-                    <i className="fas fa-share-alt"></i>
-                    Share This Blog
-                  </button>
-                </div>
+                
               </div>
             </div>
           </div>
