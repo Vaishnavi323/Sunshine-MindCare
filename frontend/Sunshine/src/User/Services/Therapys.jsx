@@ -152,9 +152,9 @@ const Therapys = () => {
                             </div>
 
                             {/* Learn More Button */}
-                            <button className="w-full py-3 bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-medium rounded-lg hover:from-sky-600 hover:to-emerald-600 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                            {/* <button className="w-full py-3 bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-medium rounded-lg hover:from-sky-600 hover:to-emerald-600 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
                                 Learn More
-                            </button>
+                            </button> */}
                         </div>
                     ))}
                 </div>
@@ -173,7 +173,7 @@ const Therapys = () => {
                 )}
 
                 {/* Info Section */}
-                <div className="mt-12 p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+                {/* <div className="mt-12 p-6 bg-white rounded-xl shadow-sm border border-gray-100">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">
                         How to Choose a Therapy
                     </h3>
@@ -185,7 +185,7 @@ const Therapys = () => {
                         Remember, the most important factor is finding an approach that feels right for you
                         and a therapist you connect with.
                     </p>
-                </div>
+                </div> */}
             </div>
         </div>
     );
