@@ -554,7 +554,7 @@ const BlogPage = () => {
 
         .modal-image-container {
           position: relative;
-          height: 300px;
+          height: 70px;
           overflow: hidden;
           flex-shrink: 0;
         }
@@ -1095,4 +1095,4 @@ const BlogPage = () => {
   );
 };
 
-export default BlogPage;
+export default BlogPage; 
