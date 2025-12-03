@@ -982,7 +982,7 @@ const BlogPage = () => {
                     <div className="blog-meta">
                       <span className="blog-date">📅 {blog.date}</span>
                       <span>•</span>
-                      <span className="blog-read-time">⏱️ {blog.readTime}</span>
+                      {/* <span className="blog-read-time">⏱️ {blog.readTime}</span> */}
                     </div>
 
                     <h3 className="blog-title">{blog.title}</h3>
