@@ -555,7 +555,7 @@ const BlogPage = () => {
         .modal-image-container {
           position: relative;
           height: 70px;
-          overflow: hidden;
+          {/* overflow: hidden; */}
           flex-shrink: 0;
         }
 
