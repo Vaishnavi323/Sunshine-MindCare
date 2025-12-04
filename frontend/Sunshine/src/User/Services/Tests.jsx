@@ -91,12 +91,7 @@ const Tests = () => {
             description: 'Identifies specific substances that trigger allergic reactions through skin tests or blood tests measuring IgE antibodies.',
             category: 'Immunology'
         },
-        {
-            id: 15,
-            name: 'EEG (Electroencephalogram)',
-            description: 'Records electrical activity of brain to detect problems related to brain function such as seizures, tumors, or sleep disorders.',
-            category: 'Neurology'
-        }
+        
     ];
 
     const categories = ['All', 'Hematology', 'Cardiology', 'Radiology', 'Endocrinology', 'Genetics', 'Pulmonology', 'Nephrology', 'Neurology', 'Immunology', 'Urology', 'Gynecology', 'Nutrition', 'Hepatology'];
@@ -105,7 +100,7 @@ const Tests = () => {
         const icons = {
             'Hematology': <FaVial className="text-red-500" />,
             'Cardiology': <FaHeartbeat className="text-red-400" />,
-            'Radiology': <FaXRay className="text-blue-500" />,
+            'Radiology': <FaXRay className="text-#1e3c72" />,
             'Neurology': <FaBrain className="text-purple-500" />,
             'Genetics': <FaDna className="text-green-500" />,
             'Pulmonology': <GiLungs className="text-teal-500" />,
@@ -152,7 +147,7 @@ const Tests = () => {
                             placeholder="Search medical tests..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all shadow-sm"
+                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-#1e3c72 focus:border-transparent outline-none transition-all shadow-sm"
                         />
                     </div>
 
@@ -165,7 +160,7 @@ const Tests = () => {
                                     onClick={() => setSelectedCategory(category)}
                                     className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === category
                                             ? 'bg-blue-600 text-white shadow-md'
-                                            : 'bg-white text-gray-700 border border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                                            : 'bg-white text-gray-700 border border-gray-200 hover:border-blue-300 hover:bg-#1e3c72'
                                         }`}
                                 >
                                     {getCategoryIcon(category)}
@@ -189,7 +184,7 @@ const Tests = () => {
                                     <div className="text-lg">
                                         {getCategoryIcon(test.category)}
                                     </div>
-                                    <span className="px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 rounded-full">
+                                    <span className="px-3 py-1 text-xs font-semibold text-blue-600 bg-#1e3c72 rounded-full">
                                         {test.category}
                                     </span>
                                 </div>

@@ -1,0 +1,320 @@
+.team-page {
+  padding: 60px 20px;
+  background: #ffffff;
+  min-height: 100vh;
+}
+.team-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.page-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.page-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #1e3c72;
+}
+.page-subtitle {
+  font-size: 20px;
+  color: #666;
+  opacity: 0.9;
+}
+
+/* Founder Section - Big Horizontal Card */
+.founder-section {
+  margin-bottom: 80px;
+}
+.founder-card {
+  background: #f8f9fa;
+  border: 2px solid #1e3c72;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(30, 60, 114, 0.1);
+  display: flex;
+  max-width: 100%;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 400px;
+}
+.founder-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(30, 60, 114, 0.2);
+}
+.founder-image-container {
+  position: relative;
+  flex: 0 0 400px;
+}
+.founder-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.founder-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #1e3c72;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 18px;
+}
+.founder-info {
+  padding: 50px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.founder-name {
+  font-size: 42px;
+  margin-bottom: 15px;
+  color: #1e3c72;
+  font-weight: 700;
+}
+.founder-profession {
+  font-size: 24px;
+  color: #2a5298;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+.founder-specialization {
+  font-size: 20px;
+  color: #666;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+.founder-bio {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 30px;
+}
+.founder-contact {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: #1e3c72;
+}
+.contact-icon {
+  font-size: 20px;
+}
+
+/* Team Sections */
+.team-section {
+  margin-bottom: 80px;
+}
+.section-title {
+  text-align: center;
+  font-size: 38px;
+  color: #1e3c72;
+  margin-bottom: 50px;
+  font-weight: 700;
+  position: relative;
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: #1e3c72;
+  border-radius: 2px;
+}
+.team-grids {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+.team-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(30, 60, 114, 0.08);
+  transition: all 0.4s;
+  cursor: pointer;
+}
+.team-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(30, 60, 114, 0.15);
+  border-color: #1e3c72;
+}
+.image-container {
+  position: relative;
+  overflow: hidden;
+}
+.member-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  transition: 0.5s;
+}
+.team-card:hover .member-image {
+  transform: scale(1.05);
+}
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 60, 114, 0.8);
+  opacity: 0;
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.team-card:hover .image-overlay {
+  opacity: 1;
+}
+.view-profile {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+.member-info {
+  padding: 25px;
+  text-align: center;
+}
+.member-name {
+  font-size: 22px;
+  color: #1e3c72;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.member-profession {
+  font-size: 16px;
+  color: #2a5298;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.member-specialization {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: #1e3c72;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-image {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 20px 20px 0 0;
+}
+.modal-info {
+  padding: 40px;
+  text-align: center;
+}
+.modal-name {
+  font-size: 36px;
+  color: #1e3c72;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.modal-profession {
+  font-size: 22px;
+  color: #2a5298;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.modal-specialization {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+.modal-bio {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 30px;
+}
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 18px;
+}
+.contact-icon {
+  font-size: 24px;
+  color: #1e3c72;
+}
+.contact-text {
+  color: #1e3c72;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .founder-card {
+    flex-direction: column;
+    min-height: auto;
+  }
+  .founder-image-container {
+    flex: 0 0 300px;
+  }
+  .founder-info {
+    padding: 30px;
+  }
+  .founder-name {
+    font-size: 32px;
+  }
+  .team-grids {
+    grid-template-columns: 1fr;
+  }
+}
