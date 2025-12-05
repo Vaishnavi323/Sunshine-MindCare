@@ -222,6 +222,225 @@ const SunshineFooter = () => {
           transform: scale(1.05);
           border-color: #ffa726;
         }
+
+        /* Tablet Responsive Styles (768px to 1024px) */
+        @media (max-width: 1024px) {
+          .footer-section {
+            padding: 50px 0 35px;
+          }
+
+          .info-card {
+            padding: 18px;
+          }
+
+          .info-title {
+            font-size: 20px;
+            margin-bottom: 12px;
+          }
+
+          .info-texts {
+            font-size: 13px;
+            line-height: 1.5;
+          }
+
+          .icon-box {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 12px;
+          }
+
+          .icon-box svg {
+            width: 35px;
+            height: 35px;
+          }
+
+          .logo {
+            width: 240px;
+            margin-bottom: 18px;
+          }
+
+          .subscribe-text {
+            font-size: 16px;
+            margin-bottom: 18px;
+          }
+
+          .email-form {
+            max-width: 350px;
+          }
+
+          .email-input {
+            padding: 13px 55px 13px 18px;
+            font-size: 13px;
+          }
+
+          .submit-btn {
+            padding: 9px 13px;
+          }
+
+          .submit-btn svg {
+            width: 18px;
+            height: 18px;
+          }
+
+          .social-links {
+            gap: 12px;
+            margin-top: 22px;
+          }
+
+          .social-btn {
+            width: 42px;
+            height: 42px;
+          }
+
+          .social-btn svg {
+            width: 18px;
+            height: 18px;
+          }
+
+          .links-section h5 {
+            font-size: 19px;
+            margin-bottom: 20px;
+          }
+
+          .link-list li {
+            margin-bottom: 10px;
+          }
+
+          .link-list a {
+            font-size: 14px;
+            gap: 6px;
+          }
+
+          .event-images {
+            gap: 12px;
+            margin-top: 18px;
+          }
+
+          .event-img {
+            width: 110px;
+            height: 85px;
+          }
+
+          .row {
+            margin-bottom: 3rem !important;
+          }
+
+          .col-lg-3 {
+            margin-bottom: 28px;
+          }
+        }
+
+        /* Small Tablet Responsive Styles (576px to 768px) */
+        @media (max-width: 768px) {
+          .footer-section {
+            padding: 45px 0 30px;
+          }
+
+          .info-card {
+            padding: 16px;
+          }
+
+          .info-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+          }
+
+          .info-texts {
+            font-size: 12px;
+            line-height: 1.4;
+          }
+
+          .icon-box {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 10px;
+          }
+
+          .icon-box svg {
+            width: 32px;
+            height: 32px;
+          }
+
+          .logo {
+            width: 220px;
+            margin-bottom: 16px;
+          }
+
+          .subscribe-text {
+            font-size: 15px;
+            margin-bottom: 16px;
+          }
+
+          .email-form {
+            max-width: 100%;
+          }
+
+          .email-input {
+            padding: 12px 50px 12px 16px;
+            font-size: 13px;
+          }
+
+          .submit-btn {
+            padding: 8px 12px;
+          }
+
+          .submit-btn svg {
+            width: 17px;
+            height: 17px;
+          }
+
+          .social-links {
+            gap: 10px;
+            margin-top: 20px;
+          }
+
+          .social-btn {
+            width: 40px;
+            height: 40px;
+          }
+
+          .social-btn svg {
+            width: 17px;
+            height: 17px;
+          }
+
+          .links-section h5 {
+            font-size: 17px;
+            margin-bottom: 18px;
+          }
+
+          .link-list li {
+            margin-bottom: 9px;
+          }
+
+          .link-list a {
+            font-size: 13px;
+            gap: 5px;
+          }
+
+          .event-images {
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+          }
+
+          .event-img {
+            width: 100px;
+            height: 80px;
+            flex: 1;
+            min-width: 90px;
+          }
+
+          .col-md-4,
+          .col-md-6,
+          .col-lg-3 {
+            margin-bottom: 25px;
+          }
+
+          .mb-5 {
+            margin-bottom: 2rem !important;
+          }
+        }
       `}</style>
 
       <footer className="footer-section">
