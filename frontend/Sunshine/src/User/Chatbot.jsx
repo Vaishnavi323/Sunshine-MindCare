@@ -284,7 +284,7 @@ const ChatBot = () => {
                 }
 
                 .message-bubble {
-                    max-width: 80%;
+                    max-width: 95%;
                     padding: 12px 16px;
                     border-radius: 18px;
                     font-size: 0.9rem;
