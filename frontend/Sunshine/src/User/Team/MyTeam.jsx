@@ -1,236 +1,8 @@
 
-
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import "./MyTeam.css";
-
-// const TeamPage = () => {
-//   const [teamMembers, setTeamMembers] = useState([]);
-//   const [selectedMember, setSelectedMember] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   const baseURL = import.meta.env.VITE_BACKEND_URL;
-//   // const defaultImage = "";
-
-//   const fetchTeamMembers = async () => {
-//     try {
-//       const response = await axios.get(`${baseURL}/doctor/list`);
-//       const members = response?.data?.data || [];
-
-//       const fetchedMembers = members.map((member) => {
-//         // Clean image path
-//         let cleanImage = defaultImage;
-//         if (member.photo) {
-//           const photo = member.photo.replace(/\\/g, "/").trim();
-//           cleanImage = photo.startsWith("http")
-//             ? photo
-//             : `${import.meta.env.VITE_BACKEND_URL}/${photo}`;
-//         }
-
-//         // Category mapping - simplified for founder, senior, junior
-//         const categoryMap = {
-//           Founder: "founder",
-//           founder: "founder",
-//           senior: "senior",
-//           Senior: "senior",
-//           junior: "junior",
-//           Junior: "junior",
-//           psychologist: "junior",
-//           counselor: "junior",
-//           educator: "junior",
-//         };
-
-//         const rawCategory = (member.category || "").toString().trim().toLowerCase();
-//         const category = categoryMap[rawCategory] || "junior";
-
-//         return {
-//           id: member.id,
-//           name: member.full_name?.trim() || "Dr. Unknown",
-//           profession: member.qualification?.trim() || "Mental Health Specialist",
-//           specialization: member.description?.trim() || "General Psychology",
-//           image: cleanImage,
-//           bio: member.description?.trim() || "Dedicated to improving mental well-being.",
-//           email: member.email?.trim(),
-//           phone: member.phone?.trim(),
-//           category: category,
-//         };
-//       });
-
-//       // Sort by hierarchy: founder → senior → junior
-//       const categoryOrder = { founder: 1, senior: 2, junior: 3 };
-//       fetchedMembers.sort((a, b) => {
-//         return categoryOrder[a.category] - categoryOrder[b.category];
-//       });
-
-//       setTeamMembers(fetchedMembers);
-//     } catch (error) {
-//       console.error("Error fetching team members:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchTeamMembers();
-//   }, []);
-
-//   const handleMemberClick = (member) => setSelectedMember(member);
-//   const closeModal = () => setSelectedMember(null);
-
-//   // Filter members by category in hierarchical order
-//   const founder = teamMembers.find((m) => m.category === "founder");
-//   const seniorDoctors = teamMembers.filter((m) => m.category === "senior");
-//   const juniorDoctors = teamMembers.filter((m) => m.category === "junior");
-
-//   return (
-//     <>
-//       {loading && (
-//         <div style={{ color: "#1e3c72", textAlign: "center", marginTop: "50px", fontSize: "22px" }}>
-//           Loading team members...
-//         </div>
-//       )}
-
-//       {!loading && teamMembers.length === 0 && (
-//         <div style={{ color: "#1e3c72", textAlign: "center", marginTop: "50px", fontSize: "20px" }}>
-//           No team members found.
-//         </div>
-//       )}
-
-//       {!loading && teamMembers.length > 0 && (
-//         <>
-
-//           <div className={`team-page ${selectedMember ? "modal-open" : ""}`}>
-//             <div className="team-container">
-//               <div className="page-header">
-//                 <h1 className="page-title">Meet Our Team</h1>
-//                 <p className="page-subtitle">
-//                   Dedicated professionals committed to your mental health and well-being.
-//                 </p>
-//               </div>
-
-//               {/* Founder Section - Big Horizontal Card */}
-//               {founder && (
-//                 <div className="founder-section">
-//                   <h2 className="section-title">Founder</h2>
-//                   <div className="founder-card" onClick={() => handleMemberClick(founder)}>
-//                     <div className="founder-image-container">
-//                       <img src={founder.image} alt={founder.name} className="founder-image" onError={(e) => (e.target.src = defaultImage)} />
-//                       <div className="founder-badge">Founder</div>
-//                     </div>
-//                     <div className="founder-info">
-//                       <h2 className="founder-name">{founder.name}</h2>
-//                       <p className="founder-profession">{founder.profession}</p>
-//                       <p className="founder-specialization">{founder.specialization}</p>
-//                       <p className="founder-bio">{founder.bio}</p>
-//                       <div className="founder-contact">
-//                         {founder.email && (
-//                           <div className="contact-item">
-//                             <span className="contact-icon">📧</span>
-//                             <span>{founder.email}</span>
-//                           </div>
-//                         )}
-//                         {founder.phone && (
-//                           <div className="contact-item">
-//                             <span className="contact-icon">📞</span>
-//                             <span>{founder.phone}</span>
-//                           </div>
-//                         )}
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </div>
-//               )}
-
-//               {/* Senior Doctors Section */}
-//               {seniorDoctors.length > 0 && (
-//                 <div className="team-section">
-//                   <h2 className="section-title">Senior Doctors</h2>
-//                   <div className="team-grids">
-//                     {seniorDoctors.map((member) => (
-//                       <div key={member.id} className="team-card" onClick={() => handleMemberClick(member)}>
-//                         <div className="image-container">
-//                           <img src={member.image} alt={member.name} className="member-image" onError={(e) => (e.target.src = defaultImage)} />
-//                           <div className="image-overlay">
-//                             <div className="view-profile">View Profile</div>
-//                           </div>
-//                         </div>
-//                         <div className="member-info">
-//                           <h3 className="member-name">{member.name}</h3>
-//                           <p className="member-profession">{member.profession}</p>
-//                           <p className="member-specialization">{member.specialization}</p>
-//                         </div>
-//                       </div>
-//                     ))}
-//                   </div>
-//                 </div>
-//               )}
-
-//               {/* Junior Doctors Section */}
-//               {juniorDoctors.length > 0 && (
-//                 <div className="team-section">
-//                   <h2 className="section-title">Our Team</h2>
-//                   <div className="team-grids">
-//                     {juniorDoctors.map((member) => (
-//                       <div key={member.id} className="team-card" onClick={() => handleMemberClick(member)}>
-//                         <div className="image-container">
-//                           <img src={member.image} alt={member.name} className="member-image" onError={(e) => (e.target.src = defaultImage)} />
-//                           <div className="image-overlay">
-//                             <div className="view-profile">View Profile</div>
-//                           </div>
-//                         </div>
-//                         <div className="member-info">
-//                           <h3 className="member-name">{member.name}</h3>
-//                           <p className="member-profession">{member.profession}</p>
-//                           <p className="member-specialization">{member.specialization}</p>
-//                         </div>
-//                       </div>
-//                     ))}
-//                   </div>
-//                 </div>
-//               )}
-//             </div>
-
-//             {/* Modal */}
-//             {selectedMember && (
-//               <div className="modal-overlay" onClick={closeModal}>
-//                 <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-//                   <button className="modal-close" onClick={closeModal}>×</button>
-//                   <img src={selectedMember.image} alt={selectedMember.name} className="modal-image" onError={(e) => (e.target.src = defaultImage)} />
-//                   <div className="modal-info">
-//                     <h2 className="modal-name">{selectedMember.name}</h2>
-//                     <p className="modal-profession">{selectedMember.profession}</p>
-//                     <p className="modal-specialization">{selectedMember.specialization}</p>
-//                     <p className="modal-bio">{selectedMember.bio}</p>
-//                     <div className="contact-info">
-//                       {selectedMember.email && (
-//                         <div className="contact-item">
-//                           <div className="contact-icon">📧</div>
-//                           <span className="contact-text">{selectedMember.email}</span>
-//                         </div>
-//                       )}
-//                       {selectedMember.phone && (
-//                         <div className="contact-item">
-//                           <div className="contact-icon">📞</div>
-//                           <span className="contact-text">{selectedMember.phone}</span>
-//                         </div>
-//                       )}
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             )}
-//           </div>
-//         </>
-//       )}
-//     </>
-//   );
-// };
-
-// export default TeamPage;
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./MyTeam.css";
+import defaultProfile from '../../assets/Sunshine_logo.png';
 
 const TeamPage = () => {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -239,8 +11,8 @@ const TeamPage = () => {
 
   const baseURL = import.meta.env.VITE_BACKEND_URL;
 
-  // FIXED DEFAULT IMAGE
-  const defaultImage = "https://www.example.com/default-profile.png";
+  // Use local placeholder to avoid external network failures
+  const defaultImage = defaultProfile;
 
   const fetchTeamMembers = async () => {
     try {
@@ -345,7 +117,7 @@ const TeamPage = () => {
                       src={founder.image}
                       alt={founder.name}
                       className="founder-image"
-                      onError={(e) => (e.target.src = defaultImage)}
+                      onError={(e) => { e.target.onerror = null; e.target.src = defaultImage; }}
                     />
                     <div className="founder-badge">Founder</div>
                   </div>
@@ -371,7 +143,7 @@ const TeamPage = () => {
                           src={member.image}
                           alt={member.name}
                           className="member-image"
-                          onError={(e) => (e.target.src = defaultImage)}
+                          onError={(e) => { e.target.onerror = null; e.target.src = defaultImage; }}
                         />
                         <div className="image-overlay">
                           <div className="view-profile">View Profile</div>
@@ -427,7 +199,7 @@ const TeamPage = () => {
                   src={selectedMember.image}
                   alt={selectedMember.name}
                   className="modal-image"
-                  onError={(e) => (e.target.src = defaultImage)}
+                  onError={(e) => { e.target.onerror = null; e.target.src = defaultImage; }}
                 />
                 <div className="modal-info">
                   <h2 className="modal-name">{selectedMember.name}</h2>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import placeholderImg from '../../assets/Sunshine_logo.png';
 
 const PublishedArticles = () => {
     const [articles, setArticles] = useState([]);
@@ -36,7 +37,11 @@ const PublishedArticles = () => {
                         title: `Article ${article.id}`,
                         newspaper: "Sunshine MindCare",
                         date: article.created_at,
-                        image: `${import.meta.env.VITE_BACKEND_URL}/${article.image}`, 
+                        image: article.image
+                            ? (article.image.startsWith('http') || article.image.startsWith('data:')
+                                ? article.image
+                                : `${import.meta.env.VITE_BACKEND_URL}/uploads/articles/${article.image}`)
+                            : placeholderImg,
                         originalImage: article.image
                     }));
                     
@@ -156,7 +161,7 @@ const PublishedArticles = () => {
                                                     backgroundRepeat: 'no-repeat'
                                                 }}
                                             >
-                                            <img src={article.image}/>
+                                            <img src={article.image} onError={(e)=>{ e.target.onerror=null; e.target.src=placeholderImg }} alt={article.title} />
                                                 <div className="image-overlay">
                                                     <div className="image-overlay-text">
                                                         <div className="newspaper-name">{article.newspaper}</div>
@@ -225,7 +230,7 @@ const PublishedArticles = () => {
                         <Modal.Body>
                             <div className="modal-content">
                                 <div className="modal-image">
-                                    <div 
+                                        <div 
                                         className="newspaper-image-modal"
                                         style={{ 
                                             backgroundImage: `url(${selectedArticle.image})`,
@@ -234,7 +239,7 @@ const PublishedArticles = () => {
                                             backgroundRepeat: 'no-repeat'
                                         }}
                                     >
-                                    <img src={selectedArticle.image}/>
+                                    <img src={selectedArticle.image} onError={(e)=>{ e.target.onerror=null; e.target.src=placeholderImg }} alt={selectedArticle.title} />
                                         <div className="image-overlay-modal">
                                             <div className="image-overlay-text-modal">
                                                 <div className="newspaper-name">{selectedArticle.newspaper}</div>
