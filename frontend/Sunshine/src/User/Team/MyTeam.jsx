@@ -279,7 +279,7 @@ const TeamPage = () => {
           name: member.full_name?.trim() || "Unknown Member",
           profession: member.qualification || "Mental Health Specialist",
           specialization: member.description || "General Psychology",
-          image: cleanImage,
+          image: member.photo ? cleanImage : defaultImage,
           bio: member.description || "Dedicated to improving mental well-being.",
           email: member.email?.trim(),
           phone: member.phone?.trim(),
