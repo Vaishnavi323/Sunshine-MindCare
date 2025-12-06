@@ -240,7 +240,7 @@ const TeamPage = () => {
   const baseURL = import.meta.env.VITE_BACKEND_URL;
 
   // FIXED DEFAULT IMAGE
-  const defaultImage = "https://via.placeholder.com/300x300?text=No+Image";
+  const defaultImage = "https://www.example.com/default-profile.png";
 
   const fetchTeamMembers = async () => {
     try {
