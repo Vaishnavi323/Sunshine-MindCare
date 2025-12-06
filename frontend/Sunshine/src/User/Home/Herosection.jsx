@@ -27,54 +27,7 @@ const HeroSection = () => {
         }
 
         /* Animated Background Elements */
-        .floating-elements {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-        }
-
-        .floating-element {
-          position: absolute;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 50%;
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .element-1 {
-          width: 80px;
-          height: 80px;
-          top: 20%;
-          left: 10%;
-          animation-delay: 0s;
-        }
-
-        .element-2 {
-          width: 120px;
-          height: 120px;
-          top: 60%;
-          left: 5%;
-          animation-delay: 2s;
-        }
-
-        .element-3 {
-          width: 60px;
-          height: 60px;
-          top: 30%;
-          right: 10%;
-          animation-delay: 4s;
-        }
-
-        .element-4 {
-          width: 100px;
-          height: 100px;
-          bottom: 20%;
-          right: 8%;
-          animation-delay: 1s;
-        }
-
+        
         @keyframes float {
           0%, 100% {
             transform: translateY(0px) rotate(0deg);
@@ -84,70 +37,7 @@ const HeroSection = () => {
           }
         }
 
-        .gear-background {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0.15;
-          overflow: hidden;
-        }
-
-        .gear {
-          position: absolute;
-          fill: #95a5a6;
-          animation: rotate 20s linear infinite;
-          filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-        }
-
-        .gear-1 {
-          width: 300px;
-          height: 300px;
-          top: 10%;
-          left: 5%;
-          animation-duration: 25s;
-          animation-delay: 0s;
-        }
-
-        .gear-2 {
-          width: 200px;
-          height: 200px;
-          top: 60%;
-          left: 15%;
-          animation-duration: 18s;
-          animation-direction: reverse;
-          animation-delay: 1s;
-        }
-
-        .gear-3 {
-          width: 250px;
-          height: 250px;
-          top: 5%;
-          right: 10%;
-          animation-duration: 22s;
-          animation-delay: 2s;
-        }
-
-        .gear-4 {
-          width: 180px;
-          height: 180px;
-          bottom: 15%;
-          right: 5%;
-          animation-duration: 20s;
-          animation-direction: reverse;
-          animation-delay: 3s;
-        }
-
-        .gear-5 {
-          width: 150px;
-          height: 150px;
-          top: 45%;
-          right: 20%;
-          animation-duration: 16s;
-          animation-delay: 4s;
-        }
-
+       
         @keyframes rotate {
           from {
             transform: rotate(0deg);
@@ -165,6 +55,7 @@ const HeroSection = () => {
           color: white;
           opacity: 0;
           animation: fadeInUp 1.5s ease-out 0.5s forwards;
+          margin-top: 50px;
         }
 
         @keyframes fadeInUp {
@@ -473,7 +364,7 @@ const HeroSection = () => {
                 </div> */}
 
                 {/* Hero Content */}
-                <div className="hero-content">
+                <div className="hero-content ">
                     <h1 className="hero-title">
                         Bringing Light to Your Journey
                     </h1>

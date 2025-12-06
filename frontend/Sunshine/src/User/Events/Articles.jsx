@@ -248,7 +248,7 @@ const PublishedArticles = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="modal-actions">
+                                {/* <div className="modal-actions">
                                     <button 
                                         className="view-original-btn"
                                         onClick={() => window.open(selectedArticle.image, '_blank')}
@@ -256,7 +256,7 @@ const PublishedArticles = () => {
                                         <i className="fas fa-external-link-alt"></i>
                                         View Full Image
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
                         </Modal.Body>
                     </>
