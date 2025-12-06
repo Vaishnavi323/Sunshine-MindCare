@@ -55,7 +55,7 @@ const HeroSection = () => {
           color: white;
           opacity: 0;
           animation: fadeInUp 1.5s ease-out 0.5s forwards;
-          margin-top: 50px;
+          
         }
 
         @keyframes fadeInUp {
@@ -364,7 +364,7 @@ const HeroSection = () => {
                 </div> */}
 
                 {/* Hero Content */}
-                <div className="hero-content ">
+                <div className="hero-content mt-5 ">
                     <h1 className="hero-title">
                         Bringing Light to Your Journey
                     </h1>
