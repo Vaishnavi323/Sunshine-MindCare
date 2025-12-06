@@ -36,7 +36,7 @@ const PublishedArticles = () => {
                         title: `Article ${article.id}`,
                         newspaper: "Sunshine MindCare",
                         date: article.created_at,
-                        image: `${import.meta.env.VITE_BACKEND_URL}/${article.image}`,
+                        image: `${import.meta.env.VITE_BACKEND_URL}/${article.image}`, 
                         originalImage: article.image
                     }));
                     
