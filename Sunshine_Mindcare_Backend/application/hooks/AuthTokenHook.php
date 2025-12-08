@@ -25,6 +25,9 @@ class AuthTokenHook
 		'contactcontroller/add',
 		'contactcontroller/list',
 		'feedbackcontroller/delete',
+		'therapycontroller/list',
+		'testcontroller/list',
+		
 
 		
     ];
