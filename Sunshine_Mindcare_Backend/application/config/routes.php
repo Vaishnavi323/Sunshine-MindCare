@@ -100,3 +100,10 @@ $route['subservice/update/(:num)'] = 'SubServiceController/update/$1';
 $route['subservice/delete/(:num)'] = 'SubServiceController/delete/$1';
 $route['appointment/delete/(:num)'] = 'AppointmentController/delete/$1';
 
+$route['therapy/add'] = 'TherapyController/add';
+$route['therapy/list'] = 'TherapyController/list';
+$route['therapy/delete'] = 'TherapyController/delete';
+
+$route['test/add'] = 'TestController/add';
+$route['test/list']= 'TestController/list';
+$route['test/delete'] = 'TestController/delete';

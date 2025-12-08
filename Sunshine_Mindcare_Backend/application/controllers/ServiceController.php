@@ -16,56 +16,45 @@ public function add()
     $this->api->request_method('POST');
 
     $input = $this->input->post();
-    // Ensure directory exists
 
+    // Ensure upload directory exists
     if (!is_dir(FCPATH . 'uploads/services/')) {
-
         mkdir(FCPATH . 'uploads/services/', 0777, true);
-
     }
 
+    // Handle image upload
     if (!empty($_FILES['image']['name'])) {
 
-
         $config['upload_path']   = FCPATH . 'uploads/services/';
-
         $config['allowed_types'] = 'jpg|jpeg|png|webp';
-
         $config['max_size']      = 2048;
 
         $this->load->library('upload', $config);
-
         $this->upload->initialize($config);
-
 
         if ($this->upload->do_upload('image')) {
 
             $fileData = $this->upload->data();
 
-            $input['image'] = 'uploads/services/' . $fileData['file_name'];
+            // 🔥 FULL URL path send karne ka fix
+            $input['image'] = base_url('uploads/services/' . $fileData['file_name']);
 
         } else {
-
             $this->api->send_response(400, $this->upload->display_errors());
-
             return;
-
         }
-
     }
+
+    // Save in DB
     $response = $this->serviceservice->addService($input);
 
     if ($response['status']) {
-
         $this->api->send_response(200, $response['message']);
-
     } else {
-
         $this->api->send_response(400, $response['message']);
-
     }
-
 }
+
 
 
 	public function list()
