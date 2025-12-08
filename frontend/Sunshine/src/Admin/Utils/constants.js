@@ -40,6 +40,8 @@ import {
   faMessage,
   faEarListen,
   faPaperclip,
+  faHeartbeat,
+  faThermometer,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const APP_CONFIG = {
@@ -107,6 +109,16 @@ export const SIDEBAR_MENU = [
     title: "Services",
     icon: faServicestack,
     path: "/admin/Services",
+  },
+  {
+    title: "Therapy",
+    icon: faHeartbeat,
+    path: "/admin/AdminTherapy",
+  },
+  {
+    title: "Tests",
+    icon: faThermometer,
+    path: "/admin/AdminTest",
   },
   {
     title: "Messages",

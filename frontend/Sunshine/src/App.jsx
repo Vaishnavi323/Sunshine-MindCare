@@ -37,6 +37,8 @@ import AdminEnquiries from './Admin/Pages/AdminEnquiry.jsx';
 import AdminArticles from './Admin/Pages/AdminArticles.jsx'
 import Therapys from './User/Services/Therapys.jsx'
 import Tests from './User/Services/Tests.jsx'
+import AdminTherapy from './Admin/Pages/AdminTherapy.jsx'
+import AdminTest from './Admin/Pages/AdminTest.jsx'
 
 
 // Protected Route Component
@@ -88,6 +90,9 @@ const AdminLayout = () => {
             <Route path="/AdminMessages" element={<AdminMessages />} />
             <Route path="/AdminEnquiries" element={<AdminEnquiries />} />
             <Route path="/AdminArticles" element={<AdminArticles/>} />
+            <Route path="/AdminTherapy" element={<AdminTherapy/>} />
+            <Route path="/AdminTest" element={<AdminTest/>} />
+
             
           </Routes>
         </main>
