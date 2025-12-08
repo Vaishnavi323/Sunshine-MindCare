@@ -36,7 +36,7 @@ public function add()
 
             $fileData = $this->upload->data();
 
-            // ⭐ FULL URL path save karo (fix)
+            //  FULL URL path save karo (fix)
             $data['image'] = base_url('uploads/subservices/' . $fileData['file_name']);
 
         } else {
