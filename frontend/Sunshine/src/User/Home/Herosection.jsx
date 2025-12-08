@@ -1,5 +1,5 @@
 import React from 'react';
-import banner from '../../assets/banner.jpg';
+import banner from '../../assets/HeroBanner.jpg';
 
 const HeroSection = () => {
     return (
@@ -27,54 +27,7 @@ const HeroSection = () => {
         }
 
         /* Animated Background Elements */
-        .floating-elements {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-        }
-
-        .floating-element {
-          position: absolute;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 50%;
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .element-1 {
-          width: 80px;
-          height: 80px;
-          top: 20%;
-          left: 10%;
-          animation-delay: 0s;
-        }
-
-        .element-2 {
-          width: 120px;
-          height: 120px;
-          top: 60%;
-          left: 5%;
-          animation-delay: 2s;
-        }
-
-        .element-3 {
-          width: 60px;
-          height: 60px;
-          top: 30%;
-          right: 10%;
-          animation-delay: 4s;
-        }
-
-        .element-4 {
-          width: 100px;
-          height: 100px;
-          bottom: 20%;
-          right: 8%;
-          animation-delay: 1s;
-        }
-
+        
         @keyframes float {
           0%, 100% {
             transform: translateY(0px) rotate(0deg);
@@ -84,70 +37,7 @@ const HeroSection = () => {
           }
         }
 
-        .gear-background {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0.15;
-          overflow: hidden;
-        }
-
-        .gear {
-          position: absolute;
-          fill: #95a5a6;
-          animation: rotate 20s linear infinite;
-          filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-        }
-
-        .gear-1 {
-          width: 300px;
-          height: 300px;
-          top: 10%;
-          left: 5%;
-          animation-duration: 25s;
-          animation-delay: 0s;
-        }
-
-        .gear-2 {
-          width: 200px;
-          height: 200px;
-          top: 60%;
-          left: 15%;
-          animation-duration: 18s;
-          animation-direction: reverse;
-          animation-delay: 1s;
-        }
-
-        .gear-3 {
-          width: 250px;
-          height: 250px;
-          top: 5%;
-          right: 10%;
-          animation-duration: 22s;
-          animation-delay: 2s;
-        }
-
-        .gear-4 {
-          width: 180px;
-          height: 180px;
-          bottom: 15%;
-          right: 5%;
-          animation-duration: 20s;
-          animation-direction: reverse;
-          animation-delay: 3s;
-        }
-
-        .gear-5 {
-          width: 150px;
-          height: 150px;
-          top: 45%;
-          right: 20%;
-          animation-duration: 16s;
-          animation-delay: 4s;
-        }
-
+       
         @keyframes rotate {
           from {
             transform: rotate(0deg);
@@ -165,6 +55,7 @@ const HeroSection = () => {
           color: white;
           opacity: 0;
           animation: fadeInUp 1.5s ease-out 0.5s forwards;
+          
         }
 
         @keyframes fadeInUp {
@@ -399,17 +290,7 @@ const HeroSection = () => {
           .cta-button {
             padding: 15px 35px;
             font-size: 1rem;
-          }
-
-          .gear-1, .gear-3 {
-            width: 200px;
-            height: 200px;
-          }
-
-          .gear-2, .gear-4, .gear-5 {
-            width: 120px;
-            height: 120px;
-          }
+          }        
 
           .floating-element {
             width: 40px !important;
@@ -449,31 +330,9 @@ const HeroSection = () => {
                     <div className="floating-element element-4"></div>
                 </div>
 
-                {/* Animated Gear Background */}
-                {/* <div className="gear-background">
-                    <svg className="gear gear-1" viewBox="0 0 100 100">
-                        <path d="M50,10 L55,25 L70,25 L58,35 L63,50 L50,42 L37,50 L42,35 L30,25 L45,25 Z M50,5 C47,5 45,7 45,10 L40,10 C37,10 35,12 35,15 L30,20 C28,22 28,25 30,27 L27,32 C25,34 25,37 27,39 L30,44 C28,46 28,49 30,51 L35,56 C35,59 37,61 40,61 L45,61 C45,64 47,66 50,66 C53,66 55,64 55,61 L60,61 C63,61 65,59 65,56 L70,51 C72,49 72,46 70,44 L73,39 C75,37 75,34 73,32 L70,27 C72,25 72,22 70,20 L65,15 C65,12 63,10 60,10 L55,10 C55,7 53,5 50,5 Z" />
-                    </svg>
-
-                    <svg className="gear gear-2" viewBox="0 0 100 100">
-                        <path d="M50,10 L55,25 L70,25 L58,35 L63,50 L50,42 L37,50 L42,35 L30,25 L45,25 Z M50,5 C47,5 45,7 45,10 L40,10 C37,10 35,12 35,15 L30,20 C28,22 28,25 30,27 L27,32 C25,34 25,37 27,39 L30,44 C28,46 28,49 30,51 L35,56 C35,59 37,61 40,61 L45,61 C45,64 47,66 50,66 C53,66 55,64 55,61 L60,61 C63,61 65,59 65,56 L70,51 C72,49 72,46 70,44 L73,39 C75,37 75,34 73,32 L70,27 C72,25 72,22 70,20 L65,15 C65,12 63,10 60,10 L55,10 C55,7 53,5 50,5 Z" />
-                    </svg>
-
-                    <svg className="gear gear-3" viewBox="0 0 100 100">
-                        <path d="M50,10 L55,25 L70,25 L58,35 L63,50 L50,42 L37,50 L42,35 L30,25 L45,25 Z M50,5 C47,5 45,7 45,10 L40,10 C37,10 35,12 35,15 L30,20 C28,22 28,25 30,27 L27,32 C25,34 25,37 27,39 L30,44 C28,46 28,49 30,51 L35,56 C35,59 37,61 40,61 L45,61 C45,64 47,66 50,66 C53,66 55,64 55,61 L60,61 C63,61 65,59 65,56 L70,51 C72,49 72,46 70,44 L73,39 C75,37 75,34 73,32 L70,27 C72,25 72,22 70,20 L65,15 C65,12 63,10 60,10 L55,10 C55,7 53,5 50,5 Z" />
-                    </svg>
-
-                    <svg className="gear gear-4" viewBox="0 0 100 100">
-                        <path d="M50,10 L55,25 L70,25 L58,35 L63,50 L50,42 L37,50 L42,35 L30,25 L45,25 Z M50,5 C47,5 45,7 45,10 L40,10 C37,10 35,12 35,15 L30,20 C28,22 28,25 30,27 L27,32 C25,34 25,37 27,39 L30,44 C28,46 28,49 30,51 L35,56 C35,59 37,61 40,61 L45,61 C45,64 47,66 50,66 C53,66 55,64 55,61 L60,61 C63,61 65,59 65,56 L70,51 C72,49 72,46 70,44 L73,39 C75,37 75,34 73,32 L70,27 C72,25 72,22 70,20 L65,15 C65,12 63,10 60,10 L55,10 C55,7 53,5 50,5 Z" />
-                    </svg>
-
-                    <svg className="gear gear-5" viewBox="0 0 100 100">
-                        <path d="M50,10 L55,25 L70,25 L58,35 L63,50 L50,42 L37,50 L42,35 L30,25 L45,25 Z M50,5 C47,5 45,7 45,10 L40,10 C37,10 35,12 35,15 L30,20 C28,22 28,25 30,27 L27,32 C25,34 25,37 27,39 L30,44 C28,46 28,49 30,51 L35,56 C35,59 37,61 40,61 L45,61 C45,64 47,66 50,66 C53,66 55,64 55,61 L60,61 C63,61 65,59 65,56 L70,51 C72,49 72,46 70,44 L73,39 C75,37 75,34 73,32 L70,27 C72,25 72,22 70,20 L65,15 C65,12 63,10 60,10 L55,10 C55,7 53,5 50,5 Z" />
-                    </svg>
-                </div> */}
-
+                
                 {/* Hero Content */}
-                <div className="hero-content">
+                <div className="hero-content mt-5 ">
                     <h1 className="hero-title">
                         Bringing Light to Your Journey
                     </h1>

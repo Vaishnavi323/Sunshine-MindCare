@@ -10,7 +10,7 @@ const OurExperts = () => {
         <Row className="align-items-center">
           <Col lg={6}>
             <div className="content-wrapper">
-              <h2 className="section-title mb-4 animate-fade-in text-white">
+              <h2 className="sections-title mb-4 animate-fade-in text-white">
                 Our Experts
               </h2>
               <p className="section-description mb-4 animate-slide-up">
@@ -104,7 +104,7 @@ const OurExperts = () => {
           }
         }
         
-        .section-title {
+        .sections-title {
           font-size: 3rem;
           font-weight: 700;
           color: #ffffff;
@@ -112,7 +112,7 @@ const OurExperts = () => {
           position: relative;
         }
         
-        .section-title::after {
+        .sections-title::after {
           content: '';
           position: absolute;
           bottom: -10px;
@@ -353,7 +353,7 @@ const OurExperts = () => {
         
         /* Responsive Design */
         @media (max-width: 768px) {
-          .section-title {
+          .sections-title {
             font-size: 2.5rem;
           }
           
@@ -373,7 +373,7 @@ const OurExperts = () => {
         }
         
         @media (max-width: 576px) {
-          .section-title {
+          .sections-title {
             font-size: 2rem;
           }
           

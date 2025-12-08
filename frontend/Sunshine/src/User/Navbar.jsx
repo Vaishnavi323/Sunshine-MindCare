@@ -11,6 +11,7 @@ import { IoMdHeart } from "react-icons/io";
 const CustomNavbar = () => {
     const [showEventsDropdown, setShowEventsDropdown] = useState(false);
     const [showCareersDropdown, setShowCareersDropdown] = useState(false);
+    const [showServicesDropdown, setShowServicesDropdown] = useState(false);
     const location = useLocation();
 
     // Helper function to check if a path is active
@@ -21,7 +22,7 @@ const CustomNavbar = () => {
     return (
 
 
-
+        
         <>
             <TopBar />
             <Navbar expand="xl" className="custom-navbar" sticky="top">
@@ -37,14 +38,37 @@ const CustomNavbar = () => {
                         </Link>
                     </div>
 
-                    {/* Center - Navigation links */}
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" className="custom-toggler" />
-                    <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
-                        <Nav className="mx-auto nav-links">
-                            <Nav.Link as={Link} to="/" className={`mx-2 fw-medium nav-link-custom ${isActive('/') && location.pathname === '/' ? 'active' : ''}`}>Home</Nav.Link>
-                            <Nav.Link as={NavLink} to="/AboutUs" className={`mx-2 fw-medium nav-link-custom ${isActive('/AboutUs') ? 'active' : ''}`}>About Us</Nav.Link>
-                            <Nav.Link as={NavLink} to="/ServicePage" className={`mx-2 fw-medium nav-link-custom ${isActive('/ServicePage') ? 'active' : ''}`}>Services</Nav.Link>
-                            <Nav.Link as={NavLink} to="/TeamPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/TeamPage') ? 'active' : ''}`}>Team</Nav.Link>
+                {/* Center - Navigation links */}
+                <Navbar.Toggle aria-controls="basic-navbar-nav" className="custom-toggler" />
+                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
+                    <Nav className="mx-auto nav-links">
+                        <Nav.Link as={Link} to="/" className={`mx-2 fw-medium nav-link-custom ${isActive('/') && location.pathname === '/' ? 'active' : ''}`}>Home</Nav.Link>
+                        <Nav.Link as={NavLink} to="/AboutUs" className={`mx-2 fw-medium nav-link-custom ${isActive('/AboutUs') ? 'active' : ''}`}>About Us</Nav.Link>
+                        {/* <Nav.Link as={NavLink} to="/ServicePage" className={`mx-2 fw-medium nav-link-custom ${isActive('/ServicePage') ? 'active' : ''}`}>Services</Nav.Link> */}
+
+                        <Dropdown
+                            show={showServicesDropdown}
+                            onMouseEnter={() => setShowServicesDropdown(true)}
+                            onMouseLeave={() => setShowServicesDropdown(false)}
+                            className="mx-2"
+                        >   
+                            <Dropdown.Toggle as={Nav.Link} className={`nav-link-custom fw-medium ${isActive('/ServicePage') || isActive('/Tests') || isActive('/Therapys') ? 'active' : ''}`}>
+                                Services
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu className="dropdown-menu-custom">
+                                <Dropdown.Item as={Link} to="/ServicePage" className="dropdown-item-custom">
+                                    Our Services
+                                </Dropdown.Item>
+                                <Dropdown.Item as={Link} to="/Tests" className="dropdown-item-custom">
+                                    Tests
+                                </Dropdown.Item>
+                                <Dropdown.Item as={Link} to="/Therapys" className="dropdown-item-custom">
+                                    Therapys
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+
+                        <Nav.Link as={NavLink} to="/TeamPage" className={`mx-2 fw-medium nav-link-custom ${isActive('/TeamPage') ? 'active' : ''}`}>Team</Nav.Link>
 
                             {/* Events Dropdown */}
                             <Dropdown

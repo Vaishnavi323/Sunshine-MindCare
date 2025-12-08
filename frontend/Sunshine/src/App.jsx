@@ -35,6 +35,8 @@ import AdminAppoint from "./Admin/Pages/AdminAppoint";
 import AdminMessages from './Admin/Pages/AdminMessage.jsx';
 import AdminEnquiries from './Admin/Pages/AdminEnquiry.jsx';
 import AdminArticles from './Admin/Pages/AdminArticles.jsx'
+import Therapys from './User/Services/Therapys.jsx'
+import Tests from './User/Services/Tests.jsx'
 
 
 // Protected Route Component
@@ -117,6 +119,9 @@ function App() {
       <Route path="Job" element={<Job/>}/>
       <Route path="BookAppointment" element={<Book/>}/>
       <Route path="Chatbot" element={<ChatBot/>}/>
+      <Route path="Therapys" element={<Therapys/>} />
+      <Route path="Tests" element={<Tests/>} />
+
 
       {/* <Route path="/login" element={<Login />} /> */}
 

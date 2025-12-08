@@ -28,11 +28,23 @@ const EnquiryForm = () => {
 
     const validateForm = () => {
         const newErrors = {};
+        // Name validation
         if (!formData.name.trim()) newErrors.name = 'Name is required';
+        else if (formData.name.trim().length < 3) newErrors.name = 'Name must be at least 3 characters';
+        else if (!/^[a-zA-Z\s]*$/.test(formData.name)) newErrors.name = 'Name can only contain letters and spaces';
+        
+        // Email validation
         if (!formData.email.trim()) newErrors.email = 'Email is required';
-        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Please enter a valid email address';
+        
+        // Age validation
         if (!formData.age) newErrors.age = 'Age is required';
+        else if (formData.age < 18 || formData.age > 60) newErrors.age = 'Age must be between 18 and 60';
+        
+        // College validation
         if (!formData.college.trim()) newErrors.college = 'College name is required';
+        else if (formData.college.trim().length < 3) newErrors.college = 'College name must be at least 3 characters';
+        
         if (!formData.year) newErrors.year = 'Year of study is required';
         if (!formData.purpose) newErrors.purpose = 'Purpose is required';
         if (!formData.hours) newErrors.hours = 'Training hours are required';

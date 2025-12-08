@@ -34,7 +34,7 @@ const BlogPage = () => {
           const transformedBlogs = data.error.map(blog => ({
             id: blog.id,
             title: blog.heading,
-            excerpt: blog.description || 'No description available',
+            excerpt: blog.description ? blog.description.substring(0, 150) + '...' : 'No description available',
             author: 'Sunshine MindCare Team',
             authorRole: 'Mental Health Professionals',
             date: blog.created_at ? new Date(blog.created_at).toLocaleDateString('en-US', { 
@@ -84,11 +84,15 @@ const BlogPage = () => {
   const handleBlogClick = (blog) => {
     setSelectedBlog(blog);
     setShowModal(true);
+    // Prevent scrolling when modal is open
+    document.body.style.overflow = 'hidden';
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedBlog(null);
+    // Re-enable scrolling when modal is closed
+    document.body.style.overflow = 'auto';
   };
 
   const handleShareBlog = (blog) => {
@@ -104,6 +108,23 @@ const BlogPage = () => {
       alert('Blog link copied to clipboard!');
     }
   };
+
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleEscKey = (e) => {
+      if (e.key === 'Escape' && showModal) {
+        handleCloseModal();
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [showModal]);
 
   if (loading) {
     return (
@@ -198,14 +219,14 @@ const BlogPage = () => {
           }
         }
 
-        @keyframes modalFadeIn {
+        @keyframes modalSlideIn {
           from {
             opacity: 0;
-            transform: scale(0.8) translateY(-50px);
+            transform: translateY(30px) scale(0.95);
           }
           to {
             opacity: 1;
-            transform: scale(1) translateY(0);
+            transform: translateY(0) scale(1);
           }
         }
 
@@ -470,39 +491,48 @@ const BlogPage = () => {
           box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        /* Blog Detail Modal */
+        /* Blog Detail Modal - FIXED SIZE AND ALIGNMENT */
         .blog-modal-overlay {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.8);
+          background: rgba(0, 0, 0, 0.7);
           display: flex;
           align-items: center;
           justify-content: center;
           z-index: 1000;
           padding: 20px;
-          animation: modalFadeIn 0.3s ease-out;
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
 
         .blog-modal {
           background: white;
           border-radius: 20px;
-          max-width: 900px;
+          max-width: 800px;
           width: 100%;
-          max-height: 90vh;
-          overflow-y: auto;
+          max-height: 85vh;
+          overflow: hidden;
           position: relative;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+          animation: modalSlideIn 0.4s ease-out;
+          display: flex;
+          flex-direction: column;
+          z-index: 1001;
         }
 
         .modal-close-btn {
           position: absolute;
-          top: 20px;
-          right: 20px;
-          background: rgba(0, 0, 0, 0.7);
-          color: white;
+          top: 15px;
+          right: 15px;
+          background: rgba(255, 255, 255, 0.9);
+          color: #2c3e50;
           border: none;
           width: 40px;
           height: 40px;
@@ -514,60 +544,68 @@ const BlogPage = () => {
           z-index: 10;
           transition: all 0.3s ease;
           font-size: 1.2rem;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .modal-close-btn:hover {
-          background: rgba(0, 0, 0, 0.9);
+          background: #3567c3;
+          color: white;
           transform: scale(1.1);
         }
 
         .modal-image-container {
           position: relative;
-          height: 400px;
-          overflow: hidden;
+          height: 300px;
+          {/* overflow: hidden; */}
+          flex-shrink: 0;
         }
 
         .modal-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          display: block;
         }
 
-        .modal-content {
-          padding: 40px;
+        .modal-content-wrapper {
+          flex: 1;
+          overflow-y: auto;
+          padding: 30px;
         }
 
         .modal-header {
-          margin-bottom: 30px;
+          margin-bottom: 25px;
         }
 
         .modal-category {
           background: linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%);
           color: white;
-          padding: 8px 20px;
+          padding: 6px 18px;
           border-radius: 20px;
-          font-size: 0.9rem;
-          font-weight: 700;
+          font-size: 0.85rem;
+          font-weight: 600;
           text-transform: uppercase;
           display: inline-block;
-          margin-bottom: 20px;
+          margin-bottom: 15px;
+          letter-spacing: 0.5px;
         }
 
         .modal-title {
-          font-size: 2.5rem;
-          font-weight: 800;
+          font-size: 1.8rem;
+          font-weight: 700;
           color: #2c3e50;
           margin-bottom: 20px;
-          line-height: 1.3;
+          line-height: 1.4;
         }
 
         .modal-meta {
           display: flex;
           align-items: center;
           gap: 20px;
-          margin-bottom: 30px;
+          margin-bottom: 25px;
           color: #666;
-          font-size: 0.95rem;
+          font-size: 0.9rem;
+          flex-wrap: wrap;
         }
 
         .modal-meta-item {
@@ -576,11 +614,16 @@ const BlogPage = () => {
           gap: 8px;
         }
 
+        .modal-meta-item i {
+          color: #3567c3;
+          font-size: 0.9rem;
+        }
+
         .modal-description {
-          font-size: 1.1rem;
-          line-height: 1.8;
+          font-size: 1rem;
+          line-height: 1.7;
           color: #444;
-          margin-bottom: 30px;
+          margin-bottom: 25px;
           white-space: pre-line;
         }
 
@@ -588,15 +631,22 @@ const BlogPage = () => {
           display: flex;
           gap: 10px;
           flex-wrap: wrap;
-          margin-bottom: 30px;
+          margin-bottom: 25px;
+          align-items: center;
+        }
+
+        .modal-tags-label {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #2c3e50;
         }
 
         .modal-tag {
           background: #f0f0f0;
           color: #667eea;
-          padding: 8px 16px;
+          padding: 6px 14px;
           border-radius: 20px;
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           font-weight: 600;
         }
 
@@ -604,13 +654,15 @@ const BlogPage = () => {
           display: flex;
           gap: 15px;
           align-items: center;
+          padding-top: 20px;
+          border-top: 1px solid #e0e0e0;
         }
 
         .share-btn {
           background: #f8f9fa;
           border: 2px solid #e0e0e0;
           color: #666;
-          padding: 10px 20px;
+          padding: 10px 22px;
           border-radius: 20px;
           font-weight: 600;
           cursor: pointer;
@@ -618,12 +670,24 @@ const BlogPage = () => {
           display: flex;
           align-items: center;
           gap: 8px;
+          font-size: 0.9rem;
         }
 
         .share-btn:hover {
           background: #3567c3;
           color: white;
           border-color: #3567c3;
+        }
+
+        /* Image Fallback */
+        .image-fallback {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%);
+          width: 100%;
+          height: 100%;
+          color: white;
         }
 
         /* Loading State */
@@ -704,7 +768,26 @@ const BlogPage = () => {
           font-weight: 600;
         }
 
-        /* Responsive */
+        /* Modal Scrollbar */
+        .modal-content-wrapper::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .modal-content-wrapper::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+
+        .modal-content-wrapper::-webkit-scrollbar-thumb {
+          background: #c3cfe2;
+          border-radius: 10px;
+        }
+
+        .modal-content-wrapper::-webkit-scrollbar-thumb:hover {
+          background: #a8b4d0;
+        }
+
+        /* Responsive Styles */
         @media (max-width: 1024px) {
           .blog-grid {
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -713,10 +796,6 @@ const BlogPage = () => {
 
           .blog-hero-title {
             font-size: 3rem;
-          }
-
-          .modal-title {
-            font-size: 2rem;
           }
         }
 
@@ -750,16 +829,22 @@ const BlogPage = () => {
             font-size: 0.85rem;
           }
 
-          .modal-content {
-            padding: 30px 20px;
+          /* Mobile Modal */
+          .blog-modal {
+            max-width: 95%;
+            max-height: 90vh;
           }
 
           .modal-image-container {
-            height: 300px;
+            height: 250px;
+          }
+
+          .modal-content-wrapper {
+            padding: 25px;
           }
 
           .modal-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
           }
 
           .modal-meta {
@@ -788,17 +873,46 @@ const BlogPage = () => {
             align-items: flex-start;
           }
 
-          .modal-title {
-            font-size: 1.5rem;
+          /* Small Mobile Modal */
+          .blog-modal {
+            max-width: 100%;
+            max-height: 100vh;
+            border-radius: 0;
+            margin: 0;
           }
 
           .modal-image-container {
             height: 200px;
           }
 
+          .modal-content-wrapper {
+            padding: 20px;
+          }
+
+          .modal-title {
+            font-size: 1.4rem;
+          }
+
+          .modal-category {
+            font-size: 0.8rem;
+            padding: 5px 15px;
+          }
+
           .modal-actions {
             flex-direction: column;
             align-items: stretch;
+          }
+
+          .share-btn {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .modal-close-btn {
+            width: 35px;
+            height: 35px;
+            top: 10px;
+            right: 10px;
           }
         }
       `}</style>
@@ -816,15 +930,7 @@ const BlogPage = () => {
 
           {/* Search and Filter */}
           <div className="filter-section">
-            {/* <div className="search-bar">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search blogs by title, content, or tags..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div> */}
+          
             
             <div className="category-filters">
               {categories.map((category) => (
@@ -856,13 +962,13 @@ const BlogPage = () => {
                       className="blog-image"
                       onError={(e) => {
                         e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
+                        e.target.parentNode.querySelector('.image-fallback').style.display = 'flex';
                       }}
                     />
-                    <div className="image-fallback" style={{ display: 'none', background: 'linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%)', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '3rem' }}>
-                      <i className="fas fa-image"></i>
+                    <div className="image-fallback" style={{ display: 'none' }}>
+                      <i className="fas fa-image" style={{ fontSize: '2.5rem' }}></i>
                     </div>
-                    <div className="blog-category-badge">{blog.category}</div>
+                    {/* <div className="blog-category-badge">{blog.category}</div> */}
                   </div>
 
                   <div className="blog-content">
@@ -875,21 +981,27 @@ const BlogPage = () => {
                     <h3 className="blog-title">{blog.title}</h3>
                     <p className="blog-excerpt">{blog.excerpt}</p>
 
-                    <div className="blog-tags mb-2">
+                    <div className="blog-tags">
                       {blog.tags && blog.tags.map((tag, tagIndex) => (
                         <span key={tagIndex} className="tag">{tag}</span>
                       ))}
                     </div>
 
-                    <div className="blog-footer">
+                    {/* <div className="blog-footer">
                       <div className="blog-author">
                         <span className="author-name">{blog.author}</span>
                         <span className="author-role">{blog.authorRole}</span>
                       </div>
-                      <button className="read-more-btn">
+                      <button 
+                        className="read-more-btn" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBlogClick(blog);
+                        }}
+                      >
                         Read More →
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))}
@@ -902,14 +1014,15 @@ const BlogPage = () => {
           )}
         </div>
 
-        {/* Blog Detail Modal */}
-        {/* {showModal && selectedBlog && (
+        {/* Blog Detail Modal - PROPERLY SIZED AND ALIGNED */}
+        {showModal && selectedBlog && (
           <div className="blog-modal-overlay" onClick={handleCloseModal}>
-            <div className="blog-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="blog-modal mt-5 " onClick={(e) => e.stopPropagation()}>
               <button className="modal-close-btn" onClick={handleCloseModal}>
                 <i className="fas fa-times"></i>
               </button>
               
+              {/* Fixed size image */}
               <div className="modal-image-container">
                 <img
                   src={selectedBlog.image}
@@ -917,31 +1030,29 @@ const BlogPage = () => {
                   className="modal-image"
                   onError={(e) => {
                     e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
+                    e.target.parentNode.querySelector('.image-fallback').style.display = 'flex';
                   }}
                 />
-                <div className="image-fallback" style={{ display: 'none', background: 'linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%)', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '4rem' }}>
+                <div className="image-fallback" style={{ display: 'none', fontSize: '3rem' }}>
                   <i className="fas fa-image"></i>
                 </div>
               </div>
 
-              <div className="modal-content">
+              {/* Content wrapper with proper alignment */}
+              <div className="modal-content-wrapper">
                 <div className="modal-header">
-                  <div className="modal-category">{selectedBlog.category}</div>
-                  <h1 className="modal-title">{selectedBlog.title}</h1>
-                  <div className="modal-meta">
-                    <div className="modal-meta-item">
+                  {/* <div className="modal-category">{selectedBlog.category}</div> */}
+                  <h1 className="modal-title">{selectedBlog.title}</h1><br/>
+                  <div className="modal-meta"><br/>
+                    {/* <div className="modal-meta-item">
                       <i className="fas fa-user"></i>
                       <span>{selectedBlog.author}</span>
-                    </div>
+                    </div> */}
                     <div className="modal-meta-item">
                       <i className="fas fa-calendar"></i>
                       <span>{selectedBlog.date}</span>
                     </div>
-                    <div className="modal-meta-item">
-                      <i className="fas fa-clock"></i>
-                      <span>{selectedBlog.readTime}</span>
-                    </div>
+                    
                   </div>
                 </div>
 
@@ -950,27 +1061,20 @@ const BlogPage = () => {
                 </div>
 
                 <div className="modal-tags">
+                  <span className="modal-tags-label">Tags:</span>
                   {selectedBlog.tags && selectedBlog.tags.map((tag, tagIndex) => (
-                    <span key={tagIndex} className="modal-tag">#{tag}</span>
+                    <span key={tagIndex} className="modal-tag">{tag}</span>
                   ))}
                 </div>
 
-                <div className="modal-actions">
-                  <button 
-                    className="share-btn"
-                    onClick={() => handleShareBlog(selectedBlog)}
-                  >
-                    <i className="fas fa-share-alt"></i>
-                    Share This Blog
-                  </button>
-                </div>
+                
               </div>
             </div>
           </div>
-        )} */}
+        )}
       </div>
     </>
   );
 };
 
-export default BlogPage;
+export default BlogPage; 

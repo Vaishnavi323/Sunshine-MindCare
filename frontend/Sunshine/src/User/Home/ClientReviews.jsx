@@ -167,7 +167,7 @@ const ClientTestimonials = () => {
                 <Row className="justify-content-center">
                     <Col lg={8} className="text-center">
                         <div className="section-header animate-fade-in">
-                            <h2 className="sections-title">What Our Clients Say</h2>
+                            <h2 className="sectionss-title">What Our Clients Say</h2>
                             <p className="section-subtitle">
                                 Real experiences from our valued clients. Your feedback helps us grow and improve our services.
                             </p>
@@ -386,7 +386,7 @@ const ClientTestimonials = () => {
                 }
 
                 /* Section Header */
-                .sections-title {
+                .sectionss-title {
                     color: #2a5298;
                     font-size: 2.5rem;
                     font-weight: 700;
@@ -639,7 +639,7 @@ const ClientTestimonials = () => {
 
                 /* Responsive Design */
                 @media (max-width: 768px) {
-                    .sections-title {
+                    .sectionss-title {
                         font-size: 2rem;
                     }
 
@@ -671,7 +671,7 @@ const ClientTestimonials = () => {
                 }
 
                 @media (max-width: 576px) {
-                    .sections-title {
+                    .sectionss-title {
                         font-size: 1.8rem;
                     }
 
