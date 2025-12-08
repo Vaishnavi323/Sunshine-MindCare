@@ -41,6 +41,7 @@ import {
   faEarListen,
   faPaperclip,
   faHeartbeat,
+  faThermometer,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const APP_CONFIG = {
@@ -113,6 +114,11 @@ export const SIDEBAR_MENU = [
     title: "Therapy",
     icon: faHeartbeat,
     path: "/admin/AdminTherapy",
+  },
+  {
+    title: "Tests",
+    icon: faThermometer,
+    path: "/admin/AdminTest",
   },
   {
     title: "Messages",
