@@ -14,11 +14,12 @@ public function add()
 
     $data = $this->input->post();
 
-    // Ensure directory exists
+    // Ensure folder exists
     if (!is_dir(FCPATH . 'uploads/subservices/')) {
         mkdir(FCPATH . 'uploads/subservices/', 0777, true);
     }
 
+    // Handle image upload
     if (!empty($_FILES['image']['name'])) {
 
         $config = [
@@ -34,7 +35,9 @@ public function add()
         if ($this->upload->do_upload('image')) {
 
             $fileData = $this->upload->data();
-            $data['image'] = 'uploads/subservices/' . $fileData['file_name'];
+
+            // ⭐ FULL URL path save karo (fix)
+            $data['image'] = base_url('uploads/subservices/' . $fileData['file_name']);
 
         } else {
 
@@ -44,10 +47,12 @@ public function add()
             $this->api->send_response(400, $error);
             return;
         }
+
     } else {
         $data['image'] = null;
     }
 
+    // Save to DB via service
     $response = $this->subserviceservice->add($data);
 
     if ($response['status']) {
@@ -56,6 +61,7 @@ public function add()
         $this->api->send_response(400, $response['message']);
     }
 }
+
 
 
     public function list()
