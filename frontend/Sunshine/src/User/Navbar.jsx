@@ -344,7 +344,7 @@ const CustomNavbar = () => {
 
                 /* Appointment Button */
                 .appointment-btn {
-                    background: linear-gradient(45deg, #ff6b35, #ff8e53);
+                    background: linear-gradient(45deg, #ffb235a9, #ff8e53);
                     border: none;
                     padding: 0.65rem 1.25rem;
                     font-size: 0.92rem;
@@ -359,7 +359,7 @@ const CustomNavbar = () => {
                 .appointment-btn:hover {
                     transform: translateY(-2px);
                     box-shadow: 0 10px 30px rgba(255, 107, 53, 0.34);
-                    background: linear-gradient(45deg, #ff8e53, #ff6b35);
+                    background: linear-gradient(45deg, #ff8f53b8, #ff6b35);
                 }
 
                 /* Mobile Responsive */

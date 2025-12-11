@@ -92,7 +92,7 @@ const OurStory = () => {
                   <p>Your journey to well-being starts here. Schedule a therapeutic session, and let our experienced team guide you towards a happier, healthier life.</p>
                 </div>
                 <Link to={"/BookAppointment"}>
-                  <Button className="appointment-btn animate-btn">
+                  <Button className="appointments-btn animate-btn">
                     Book <br/>Appointment
                   </Button>
                 </Link>
@@ -337,7 +337,7 @@ const OurStory = () => {
           font-size: 0.95rem;
         }
 
-        .appointment-btn {
+        .appointments-btn {
           background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
           border: none;
           padding: 15px 35px;
@@ -353,7 +353,7 @@ const OurStory = () => {
           min-width: 140px;
         }
 
-        .appointment-btn::before {
+        .appointments-btn::before {
           content: '';
           position: absolute;
           top: 0;
@@ -365,11 +365,11 @@ const OurStory = () => {
           z-index: -1;
         }
 
-        .appointment-btn:hover::before {
+        .appointments-btn:hover::before {
           left: 100%;
         }
 
-        .appointment-btn:hover {
+        .appointments-btn:hover {
           transform: translateY(-5px) scale(1.05);
           box-shadow: 0 15px 30px rgba(255, 107, 53, 0.4);
         }
