@@ -21,7 +21,7 @@ const HeroSection = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%);
+          // background: linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%);
           overflow: hidden;
           padding: 40px 20px;
         }
@@ -316,7 +316,7 @@ const HeroSection = () => {
             <section
               className="hero-section"
               style={{
-                backgroundImage: `linear-gradient(135deg, rgba(53,103,195,0.45) 0%, rgba(42,82,152,0.35) 100%), url(${banner})`,
+               backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${banner})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
@@ -348,3 +348,95 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+
+
+
+// import React from 'react';
+// import banner from '../../assets/HeroBanner.jpg';
+
+// const HeroSection = () => {
+//   return (
+//     <>
+//       <style>{`
+//         .hero-wrapper {
+//           width: 100%;
+//           background: #e8f3ff; 
+//           padding: 60px 40px;
+//         }
+
+//         .hero-container {
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           gap: 60px;
+//           max-width: 1400px;
+//           margin: auto;
+//         }
+
+//         .hero-left img {
+//           width: 500px;
+//           height: auto;
+//           border-radius: 10px;
+//         }
+
+//         .hero-right {
+//           max-width: 600px;
+//         }
+
+//         .hero-title {
+//           font-size: 42px;
+//           font-weight: 800;
+//           color: #0c346d;
+//           line-height: 1.2;
+//         }
+
+//         .hero-subtitle {
+//           font-size: 18px;
+//           margin-top: 15px;
+//           color: #1a2b49;
+//         }
+
+//         .highlight {
+//           color: #006eff;
+//           font-weight: 800;
+//         }
+
+//         @media (max-width: 900px) {
+//           .hero-container {
+//             flex-direction: column;
+//             text-align: center;
+//           }
+
+//           .hero-left img {
+//             width: 100%;
+//           }
+//         }
+//       `}</style>
+
+//       <section className="hero-wrapper">
+//         <div className="hero-container">
+          
+//           {/* LEFT IMAGE */}
+//           <div className="hero-left">
+//             <img src={banner} alt="Hero Banner" />
+//           </div>
+
+//           {/* RIGHT CONTENT */}
+//           <div className="hero-right">
+//             <h1 className="hero-title">
+//               BRINGING LIGHT <br /> TO YOUR JOURNEY
+//             </h1>
+
+//             <p className="hero-subtitle">
+//               <span className="highlight">SUNSHINE MINDCARE</span> Discover healing and growth at 
+//               Sunshine Counseling. Our compassionate team is here for your mental well-being journey.
+//             </p>
+//           </div>
+
+//         </div>
+//       </section>
+//     </>
+//   );
+// };
+
+// export default HeroSection;
