@@ -331,7 +331,7 @@ const MentalHealthSection = () => {
                 }
 
                 .main-container {
-                    background: #f8f9fa;
+                    background: #7ab4ee3c;
                     padding: 60px 20px;
                 }
 
