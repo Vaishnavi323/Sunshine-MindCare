@@ -20,8 +20,8 @@ const MentalHealthSection = () => {
                 setLoading(true);
                 setError(null);
                 
-                // Fetch all services
-                const serviceIds = [1, 2, 3, 4, 5, 6];
+                // Fetch all services - maximum 4
+                const serviceIds = [1, 2, 3, 4]; // Limit to 4 IDs
                 const servicePromises = serviceIds.map(id => 
                     fetch(`${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`)
                         .then(response => {
@@ -55,15 +55,15 @@ const MentalHealthSection = () => {
                     return null;
                 }).filter(service => service !== null);
 
-                // Get the 2 most recent services
-                const recent = transformedServices.slice(0, 2);
+                // Limit to maximum 4 services
+                const recent = transformedServices.slice(0, 4);
                 setRecentServices(recent);
                 
             } catch (error) {
                 console.error('Error fetching services:', error);
                 setError(error.message);
-                // Fallback to mock data if API fails
-                setRecentServices(getMockRecentServices());
+                // Fallback to mock data if API fails - maximum 4 cards
+                setRecentServices(getMockRecentServices().slice(0, 4));
             } finally {
                 setLoading(false);
             }
@@ -77,10 +77,10 @@ const MentalHealthSection = () => {
         const imageMap = {
             1: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
             2: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&h=600&fit=crop',
-            3: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
-            4: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
-            5: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
-            6: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop'
+            3: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=600&fit=crop',
+            4: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=600&fit=crop',
+            5: 'https://images.unsplash.com/photo-1573496799652-408c2ac9fe98?w=600&h=600&fit=crop',
+            6: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&h=600&fit=crop'
         };
         return imageMap[id] || 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop';
     };
@@ -111,6 +111,30 @@ const MentalHealthSection = () => {
                     description: "Work through relationship challenges with expert support and guidance.",
                     duration: "60 mins"
                 }
+            ],
+            3: [
+                {
+                    title: "Family Counseling",
+                    description: "Improve family dynamics and resolve conflicts with professional guidance.",
+                    duration: "60 mins"
+                },
+                {
+                    title: "Parenting Support",
+                    description: "Develop effective parenting strategies and improve family communication.",
+                    duration: "50 mins"
+                }
+            ],
+            4: [
+                {
+                    title: "Anxiety Management",
+                    description: "Learn techniques to manage and reduce anxiety symptoms effectively.",
+                    duration: "50 mins"
+                },
+                {
+                    title: "Stress Reduction",
+                    description: "Develop coping strategies to manage daily stress and improve resilience.",
+                    duration: "50 mins"
+                }
             ]
         };
         return defaultSubservices[id] || [{
@@ -120,7 +144,7 @@ const MentalHealthSection = () => {
         }];
     };
 
-    // Fallback mock data
+    // Fallback mock data - Maximum 4 services
     const getMockRecentServices = () => [
         {
             id: 1,
@@ -155,6 +179,42 @@ const MentalHealthSection = () => {
                     title: "Relationship Counseling",
                     description: "Work through relationship challenges with expert support and guidance.",
                     duration: "60 mins"
+                }
+            ]
+        },
+        {
+            id: 3,
+            title: "Family Therapy",
+            image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=600&fit=crop',
+            description: "Improve family relationships and resolve conflicts in a supportive environment.",
+            subservices: [
+                {
+                    title: "Family Counseling",
+                    description: "Improve family dynamics and resolve conflicts with professional guidance.",
+                    duration: "60 mins"
+                },
+                {
+                    title: "Parenting Support",
+                    description: "Develop effective parenting strategies and improve family communication.",
+                    duration: "50 mins"
+                }
+            ]
+        },
+        {
+            id: 4,
+            title: "Anxiety Treatment",
+            image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=600&fit=crop',
+            description: "Evidence-based treatments for anxiety disorders and stress management.",
+            subservices: [
+                {
+                    title: "Anxiety Management",
+                    description: "Learn techniques to manage and reduce anxiety symptoms effectively.",
+                    duration: "50 mins"
+                },
+                {
+                    title: "Stress Reduction",
+                    description: "Develop coping strategies to manage daily stress and improve resilience.",
+                    duration: "50 mins"
                 }
             ]
         }
@@ -245,7 +305,7 @@ const MentalHealthSection = () => {
                     padding: 20px;
                     font-size: 1.3rem;
                     font-weight: 700;
-                    color: #ff9800;
+                    color: #ff990073;
                     text-align: left;
                 }
 
@@ -272,16 +332,40 @@ const MentalHealthSection = () => {
 
                 .services-grid {
                     display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-                    gap: 30px;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 25px;
+                    justify-items: center;
+                }
+
+                /* Limit to maximum 4 cards in a row */
+                @media (min-width: 1200px) {
+                    .services-grid {
+                        grid-template-columns: repeat(4, 1fr);
+                        max-width: 1200px;
+                        margin: 0 auto;
+                    }
+                }
+
+                @media (min-width: 900px) and (max-width: 1199px) {
+                    .services-grid {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+                }
+
+                @media (min-width: 600px) and (max-width: 899px) {
+                    .services-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
                 }
 
                 /* Flip Card Styles */
                 .flip-card {
                     background: transparent;
                     perspective: 1000px;
-                    height: 400px;
+                    height: 380px;
                     cursor: pointer;
+                    width: 100%;
+                    max-width: 300px;
                 }
 
                 .flip-card-inner {
@@ -319,29 +403,30 @@ const MentalHealthSection = () => {
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
-                    padding: 30px;
+                    padding: 25px;
                     text-align: left;
                 }
 
                 .service-image {
                     width: 100%;
-                    height: 250px;
+                    height: 200px;
                     object-fit: cover;
                 }
 
                 .service-title-front {
-                    padding: 20px;
-                    font-size: 1.3rem;
+                    padding: 15px;
+                    font-size: 1.2rem;
                     font-weight: 700;
                     color: #ff9800;
                     text-align: left;
                 }
 
                 .service-description-front {
-                    padding: 0 20px 20px;
+                    padding: 0 15px 15px;
                     color: #666;
-                    font-size: 0.9rem;
+                    font-size: 0.85rem;
                     line-height: 1.5;
+                    min-height: 60px;
                 }
 
                 .flip-indicator {
@@ -350,9 +435,9 @@ const MentalHealthSection = () => {
                     right: 15px;
                     background: rgba(255, 152, 0, 0.9);
                     color: white;
-                    padding: 8px 12px;
+                    padding: 6px 10px;
                     border-radius: 20px;
-                    font-size: 0.8rem;
+                    font-size: 0.75rem;
                     font-weight: 600;
                     transition: all 0.3s ease;
                 }
@@ -363,43 +448,44 @@ const MentalHealthSection = () => {
                 }
 
                 .back-title {
-                    font-size: 1.5rem;
+                    font-size: 1.3rem;
                     font-weight: 700;
                     color: white;
-                    margin-bottom: 20px;
+                    margin-bottom: 15px;
                     text-align: center;
                 }
 
                 .subservices-list-back {
-                    max-height: 250px;
+                    max-height: 200px;
                     overflow-y: auto;
-                    padding-right: 10px;
+                    padding-right: 8px;
+                    flex: 1;
                 }
 
                 .subservice-item-back {
                     background: rgba(255, 255, 255, 0.1);
-                    padding: 12px 15px;
-                    margin-bottom: 10px;
-                    border-radius: 8px;
+                    padding: 10px 12px;
+                    margin-bottom: 8px;
+                    border-radius: 6px;
                     border-left: 3px solid #ff9800;
                 }
 
                 .subservice-title-back {
-                    font-size: 0.95rem;
+                    font-size: 0.9rem;
                     font-weight: 600;
                     color: white;
-                    margin-bottom: 5px;
+                    margin-bottom: 4px;
                 }
 
                 .subservice-description-back {
-                    font-size: 0.8rem;
+                    font-size: 0.75rem;
                     color: rgba(255, 255, 255, 0.8);
-                    line-height: 1.4;
-                    margin-bottom: 5px;
+                    line-height: 1.3;
+                    margin-bottom: 4px;
                 }
 
                 .subservice-duration-back {
-                    font-size: 0.75rem;
+                    font-size: 0.7rem;
                     color: #ff9800;
                     font-weight: 600;
                 }
@@ -408,12 +494,13 @@ const MentalHealthSection = () => {
                     background: #ff9800;
                     color: white;
                     border: none;
-                    padding: 10px 20px;
-                    border-radius: 25px;
+                    padding: 8px 16px;
+                    border-radius: 20px;
                     font-weight: 600;
-                    margin-top: 20px;
+                    margin-top: 15px;
                     width: 100%;
                     transition: all 0.3s ease;
+                    font-size: 0.85rem;
                 }
 
                 .view-details-btn:hover {
@@ -591,6 +678,7 @@ const MentalHealthSection = () => {
 
                     .flip-card {
                         height: 350px;
+                        max-width: 100%;
                     }
 
                     .service-image {
@@ -622,7 +710,7 @@ const MentalHealthSection = () => {
 
                 @media (max-width: 480px) {
                     .flip-card {
-                        height: 300px;
+                        height: 320px;
                     }
 
                     .service-image {
@@ -634,8 +722,8 @@ const MentalHealthSection = () => {
                     }
 
                     .back-title {
-                        font-size: 1.3rem;
-                    margin-bottom: 15px;
+                        font-size: 1.2rem;
+                        margin-bottom: 15px;
                     }
                 }
             `}</style>
@@ -673,7 +761,7 @@ const MentalHealthSection = () => {
                     </div>
                 </div>
 
-                {/* Wellness Section with Dynamic Services */}
+                {/* Wellness Section with Dynamic Services - Maximum 4 cards */}
                 <div className="wellness-section">
                     <h2 className="wellness-title">Your Wellness, Our Priority</h2>
                     <p className="wellness-subtitle">
@@ -683,7 +771,7 @@ const MentalHealthSection = () => {
                     </p>
 
                     <div className="services-grid">
-                        {recentServices.map((service) => (
+                        {recentServices.slice(0, 4).map((service) => (
                             <div 
                                 key={service.id}
                                 className={`flip-card ${flippedCards[service.id] ? 'flipped' : ''}`}
