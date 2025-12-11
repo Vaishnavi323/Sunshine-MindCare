@@ -465,7 +465,7 @@ const ClientTestimonials = () => {
                 /* Testimonial Card */
                 .testimonial-card {
                     background: white;
-                    padding: 50px 40px;
+                    padding: 30px 25px;
                     border-radius: 20px;
                     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
                     border-left: 5px solid #ff6b35;
@@ -477,12 +477,12 @@ const ClientTestimonials = () => {
                 }
 
                 .quote-icon {
-                    font-size: 4rem;
+                    font-size: 2.5rem;
                     color: #ff6b35;
                     opacity: 0.2;
                     position: absolute;
-                    top: 20px;
-                    left: 30px;
+                    top: 15px;
+                    left: 20px;
                     font-family: serif;
                     line-height: 1;
                 }
@@ -494,11 +494,11 @@ const ClientTestimonials = () => {
 
                 /* Rating Stars */
                 .testimonial-rating {
-                    margin-bottom: 20px;
+                    margin-bottom: 15px;
                 }
 
                 .testimonial-rating .star {
-                    font-size: 1.3rem;
+                    font-size: 1rem;
                     color: #e9ecef;
                     margin-right: 2px;
                 }
@@ -509,9 +509,9 @@ const ClientTestimonials = () => {
 
                 .testimonial-text {
                     color: #495057;
-                    font-size: 1.1rem;
-                    line-height: 1.8;
-                    margin-bottom: 30px;
+                    font-size: 0.95rem;
+                    line-height: 1.6;
+                    margin-bottom: 20px;
                     font-style: italic;
                 }
 
