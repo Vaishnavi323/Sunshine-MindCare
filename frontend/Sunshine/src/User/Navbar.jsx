@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../../styles/Navbar.css';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logoImage from '../assets/Sunshine_logo.png';
+import logoImage from '../assets/ChatGPT Image Dec 11, 2025, 04_24_07 PM.png';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import TopBar from './TopBar';
 // import { FaRegHeart } from "react-icons/fa6";
@@ -32,7 +32,7 @@ const CustomNavbar = () => {
                         <Link to="/" className="d-flex align-items" style={{ textDecoration: 'none' }}>
                             <Navbar.Brand href="#" className="d-flex align-items" onClick={(e) => e.preventDefault()} style={{ backgroundColor: "transparent" }}     >
                                 <img src={logoImage} alt="Sunshine Logo" className="navbar-logo"
-                                    style={{ height: "70px", width: "140px", objectFit: "fill", display: "block" }}
+                                    style={{ height: "70px", width: "155px", objectFit: "cover", display: "block", }}
                                 />
                             </Navbar.Brand>
                         </Link>
@@ -150,7 +150,8 @@ const CustomNavbar = () => {
 
                 <style jsx>{`
                 .custom-navbar {
-                    background: linear-gradient(135deg,   	 #1f1f35  0%, #174593ff 100%);
+                      background: linear-gradient(to right, #f8f8f8ff 5%, #7aa6e0ff 100%);
+
                     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                     // padding: 0.8rem 0;
                     border-bottom: 3px solid #ff6b35;
@@ -164,7 +165,7 @@ const CustomNavbar = () => {
 
             
                 .nav-link-custom {
-                    color: #ffffff !important;
+                    color: #000000ff !important;
                     font-size: 0.95rem;
                     font-weight: 500;
                     padding: 0.3rem 0.9rem !important;
@@ -268,7 +269,7 @@ const CustomNavbar = () => {
                 
                 .dropdown-item-custom:hover {
                     background: rgba(255, 107, 53, 0.2) !important;
-                    color: #ff6b35 !important;
+                    color: #ffff !important;
                     padding-left: 2rem;
                 }
                 
