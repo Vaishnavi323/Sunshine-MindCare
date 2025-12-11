@@ -255,7 +255,7 @@ const CustomNavbar = () => {
                 }
                 
                 .dropdown-item-custom {
-                    color: #ffffff !important;
+                    color: #000000ff !important;
                     padding: 0.75rem 1.5rem;
                     font-size: 0.9rem;
                     font-weight: 500;
