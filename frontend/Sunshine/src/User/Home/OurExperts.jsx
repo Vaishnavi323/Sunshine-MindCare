@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import expertImage from '../../assets/a2.jpg'; // You'll need to add this image
 
 const OurExperts = () => {
   return (
@@ -20,31 +21,57 @@ const OurExperts = () => {
                 dedicated professionals. Take the first step towards a healthier mind—schedule your 
                 appointment today.
               </p>
-              <Link to="/TeamPage"><Button className="view-all-btn animate-pulse-glow">
-              View All Team
-              </Button></Link>
+              <Link to="/TeamPage">
+                <Button className="view-all-btn animate-pulse-glow">
+                  View All Team
+                </Button>
+              </Link>
             </div>
           </Col>
+          
           <Col lg={6}>
-            <div className="experts-visual mt-4 mt-lg-0">
-              {/* Animated Brain Icon */}
-              <div className="brain-animation">
-                <div className="brain-lobe lobe-left"></div>
-                <div className="brain-lobe lobe-right"></div>
-                <div className="brain-stem"></div>
+            <div className="image-wrapper position-relative">
+              <div className="main-image-container animate-float">
+                <div 
+                  className="main-image"
+                  style={{
+                    backgroundImage: `url(${expertImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    borderRadius: '20px',
+                    height: '400px',
+                    position: 'relative',
+                    zIndex: 2,
+                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
+                  }}
+                />
               </div>
               
-              {/* Floating Particles */}
-              <div className="particle particle-1"></div>
-              <div className="particle particle-2"></div>
-              <div className="particle particle-3"></div>
-              <div className="particle particle-4"></div>
-              <div className="particle particle-5"></div>
+              {/* Floating Elements */}
+              <div className="floating-element element-1">
+                <div className="icon-circle">
+                  <i className="fas fa-brain"></i>
+                </div>
+                <span className="element-text">Mind Care</span>
+              </div>
               
-              {/* Pulsing Circles */}
-              <div className="pulse-circle circle-1"></div>
-              <div className="pulse-circle circle-2"></div>
-              <div className="pulse-circle circle-3"></div>
+              <div className="floating-element element-2">
+                <div className="icon-circle">
+                  <i className="fas fa-heartbeat"></i>
+                </div>
+                <span className="element-text">Wellness</span>
+              </div>
+              
+              <div className="floating-element element-3">
+                <div className="icon-circle">
+                  <i className="fas fa-hands-helping"></i>
+                </div>
+                <span className="element-text">Support</span>
+              </div>
+              
+              {/* Animated Background Pattern */}
+              <div className="pattern-dots"></div>
+              <div className="pattern-lines"></div>
             </div>
           </Col>
         </Row>
@@ -174,184 +201,166 @@ const OurExperts = () => {
           transform: translateY(-3px);
         }
         
-        /* Brain Animation */
-        .brain-animation {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 120px;
-          height: 100px;
-          animation: floatBrain 6s ease-in-out infinite;
+        /* Image Animation */
+        .image-wrapper {
+          padding: 30px;
+          position: relative;
         }
         
-        .brain-lobe {
-          position: absolute;
-          width: 50px;
-          height: 70px;
-          background: rgba(255, 107, 53, 0.1);
-          border: 2px solid rgba(255, 107, 53, 0.5);
-          border-radius: 50% 50% 40% 40%;
-          animation: brainPulse 4s ease-in-out infinite;
+        .main-image-container {
+          position: relative;
+          animation: float 6s ease-in-out infinite;
         }
         
-        .lobe-left {
-          left: 0;
-          transform: rotate(-5deg);
-        }
-        
-        .lobe-right {
-          right: 0;
-          transform: rotate(5deg);
-        }
-        
-        .brain-stem {
-          position: absolute;
-          bottom: -10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 20px;
-          height: 15px;
-          background: rgba(255, 107, 53, 0.2);
-          border: 2px solid rgba(255, 107, 53, 0.4);
-          border-radius: 0 0 10px 10px;
-        }
-        
-        @keyframes floatBrain {
+        @keyframes float {
           0%, 100% {
-            transform: translate(-50%, -50%) rotate(0deg);
-          }
-          33% {
-            transform: translate(-50%, -52%) rotate(2deg);
-          }
-          66% {
-            transform: translate(-50%, -48%) rotate(-2deg);
-          }
-        }
-        
-        @keyframes brainPulse {
-          0%, 100% {
-            transform: scale(1);
-            border-color: rgba(255, 107, 53, 0.5);
+            transform: translateY(0px);
           }
           50% {
-            transform: scale(1.05);
-            border-color: rgba(255, 107, 53, 0.8);
+            transform: translateY(-20px);
           }
         }
         
-        /* Floating Particles */
-        .particle {
+        .main-image::before {
+          content: '';
           position: absolute;
-          background: rgba(255, 107, 53, 0.6);
+          top: -10px;
+          left: -10px;
+          right: -10px;
+          bottom: -10px;
+          background: linear-gradient(45deg, #ff6b35, #2a5298);
+          border-radius: 25px;
+          z-index: -1;
+          opacity: 0.5;
+          filter: blur(15px);
+          animation: glowPulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes glowPulse {
+          0%, 100% {
+            opacity: 0.3;
+            transform: scale(0.95);
+          }
+          50% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+        }
+        
+        /* Floating Elements */
+        .floating-element {
+          position: absolute;
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border-radius: 15px;
+          padding: 15px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          z-index: 3;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .icon-circle {
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          animation: floatParticle 15s linear infinite;
+          background: linear-gradient(45deg, #ff6b35, #ff8e53);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.2rem;
         }
         
-        .particle-1 {
-          width: 8px;
-          height: 8px;
-          top: 20%;
-          left: 10%;
-          animation-delay: 0s;
+        .element-text {
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: white;
         }
         
-        .particle-2 {
-          width: 6px;
-          height: 6px;
+        .element-1 {
+          top: 10%;
+          left: -10%;
+          animation: floatElement 8s ease-in-out infinite;
+        }
+        
+        .element-2 {
           top: 60%;
-          right: 15%;
-          animation-delay: -3s;
+          right: -5%;
+          animation: floatElement 10s ease-in-out infinite 1s;
         }
         
-        .particle-3 {
-          width: 10px;
-          height: 10px;
-          bottom: 30%;
-          left: 20%;
-          animation-delay: -6s;
+        .element-3 {
+          bottom: 10%;
+          left: 0%;
+          animation: floatElement 12s ease-in-out infinite 2s;
         }
         
-        .particle-4 {
-          width: 5px;
-          height: 5px;
-          top: 40%;
-          right: 25%;
-          animation-delay: -9s;
-        }
-        
-        .particle-5 {
-          width: 7px;
-          height: 7px;
-          bottom: 20%;
-          right: 10%;
-          animation-delay: -12s;
-        }
-        
-        @keyframes floatParticle {
-          0% {
-            transform: translateY(0) translateX(0) rotate(0deg);
-            opacity: 0;
+        @keyframes floatElement {
+          0%, 100% {
+            transform: translateY(0) translateX(0);
           }
-          10% {
-            opacity: 1;
+          25% {
+            transform: translateY(-20px) translateX(10px);
           }
-          90% {
-            opacity: 1;
+          50% {
+            transform: translateY(0) translateX(20px);
           }
-          100% {
-            transform: translateY(-100px) translateX(50px) rotate(360deg);
-            opacity: 0;
+          75% {
+            transform: translateY(20px) translateX(10px);
           }
         }
         
-        /* Pulsing Circles */
-        .pulse-circle {
+        /* Pattern Background */
+        .pattern-dots {
           position: absolute;
-          border: 2px solid rgba(255, 107, 53, 0.3);
-          border-radius: 50%;
-          animation: pulse 4s ease-out infinite;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+          background-size: 30px 30px;
+          z-index: 1;
+          opacity: 0.5;
+          animation: patternMove 20s linear infinite;
         }
         
-        .circle-1 {
-          width: 150px;
-          height: 150px;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          animation-delay: 0s;
+        .pattern-lines {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: 
+            linear-gradient(90deg, transparent 49%, rgba(255, 107, 53, 0.1) 50%, transparent 51%),
+            linear-gradient(transparent 49%, rgba(255, 107, 53, 0.1) 50%, transparent 51%);
+          background-size: 50px 50px;
+          z-index: 1;
+          opacity: 0.3;
+          animation: patternMove 30s linear infinite reverse;
         }
         
-        .circle-2 {
-          width: 200px;
-          height: 200px;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          animation-delay: 1s;
-        }
-        
-        .circle-3 {
-          width: 250px;
-          height: 250px;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          animation-delay: 2s;
-        }
-        
-        @keyframes pulse {
+        @keyframes patternMove {
           0% {
-            transform: translate(-50%, -50%) scale(0.8);
-            opacity: 1;
+            transform: translate(0, 0);
           }
           100% {
-            transform: translate(-50%, -50%) scale(1.5);
-            opacity: 0;
+            transform: translate(50px, 50px);
           }
         }
         
         /* Responsive Design */
+        @media (max-width: 992px) {
+          .main-image {
+            height: 350px !important;
+          }
+          
+          .floating-element {
+            transform: scale(0.9);
+          }
+        }
+        
         @media (max-width: 768px) {
           .sections-title {
             font-size: 2.5rem;
@@ -361,14 +370,30 @@ const OurExperts = () => {
             font-size: 1rem;
           }
           
-          .brain-animation {
-            width: 100px;
-            height: 80px;
+          .image-wrapper {
+            padding: 20px;
+            margin-top: 30px;
           }
           
-          .brain-lobe {
-            width: 40px;
-            height: 60px;
+          .main-image {
+            height: 300px !important;
+          }
+          
+          .floating-element {
+            padding: 10px;
+            transform: scale(0.8);
+          }
+          
+          .element-1 {
+            left: -5%;
+          }
+          
+          .element-2 {
+            right: -5%;
+          }
+          
+          .element-3 {
+            left: -5%;
           }
         }
         
@@ -380,6 +405,14 @@ const OurExperts = () => {
           .view-all-btn {
             padding: 10px 30px;
             font-size: 1rem;
+          }
+          
+          .main-image {
+            height: 250px !important;
+          }
+          
+          .floating-element {
+            transform: scale(0.7);
           }
         }
       `}</style>
