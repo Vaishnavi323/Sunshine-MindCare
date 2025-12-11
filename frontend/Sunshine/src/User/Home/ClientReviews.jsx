@@ -424,7 +424,7 @@ const ClientTestimonials = () => {
 
                 .slider-container {
                     position: relative;
-                    height: 400px;
+                    height: 320px;
                     overflow: hidden;
                 }
 
@@ -519,12 +519,12 @@ const ClientTestimonials = () => {
                 .client-info {
                     display: flex;
                     align-items: center;
-                    gap: 15px;
+                    gap: 12px;
                 }
 
                 .avatar {
-                    width: 60px;
-                    height: 60px;
+                    width: 50px;
+                    height: 50px;
                     border-radius: 50%;
                     background: linear-gradient(45deg, #2a5298, #1e3c72);
                     display: flex;
@@ -532,7 +532,7 @@ const ClientTestimonials = () => {
                     justify-content: center;
                     color: white;
                     font-weight: 700;
-                    font-size: 1.2rem;
+                    font-size: 1rem;
                     box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
                     flex-shrink: 0;
                 }
@@ -544,34 +544,35 @@ const ClientTestimonials = () => {
                 .client-details h4 {
                     color: #2a5298;
                     font-weight: 700;
-                    margin-bottom: 5px;
+                    margin-bottom: 3px;
+                    font-size: 0.95rem;
                 }
 
                 .client-meta {
                     display: flex;
                     align-items: center;
-                    gap: 10px;
-                    margin-bottom: 5px;
+                    gap: 8px;
+                    margin-bottom: 3px;
                 }
 
                 .client-contributions {
                     color: #ff6b35;
-                    font-size: 0.9rem;
+                    font-size: 0.8rem;
                     font-weight: 600;
                 }
 
                 .verified-badge {
                     background: #28a745;
                     color: white;
-                    padding: 2px 8px;
-                    border-radius: 10px;
-                    font-size: 0.7rem;
+                    padding: 1px 6px;
+                    border-radius: 8px;
+                    font-size: 0.65rem;
                     font-weight: 600;
                 }
 
                 .review-date {
                     color: #6c757d;
-                    font-size: 0.8rem;
+                    font-size: 0.75rem;
                 }
 
                 /* Navigation Arrows */
