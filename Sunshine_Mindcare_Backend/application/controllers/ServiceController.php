@@ -36,7 +36,7 @@ public function add()
 
             $fileData = $this->upload->data();
 
-            // 🔥 FULL URL path send karne ka fix
+            //  FULL URL path send karne ka fix
             $input['image'] = base_url('uploads/services/' . $fileData['file_name']);
 
         } else {
