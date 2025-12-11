@@ -9,7 +9,7 @@ const ClientTestimonials = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;    
 
     // Fetch approved feedbacks from API
     const fetchApprovedFeedbacks = async () => {
