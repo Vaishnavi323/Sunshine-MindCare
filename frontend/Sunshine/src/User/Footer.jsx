@@ -562,7 +562,7 @@ const SunshineFooter = () => {
                   <li><Link to="/UpcomingEvents">Upcoming Events</Link></li>
                   <li><Link to="/PastEvents">Past Events</Link></li>
                   <li><Link to="/PublishedArticles">Articles</Link></li>
-                  <li><Link to="/Training">Inquiry</Link></li>
+                  <li><Link to="/Training">Enquiry</Link></li>
                 </ul>
               </div>
             </div>
