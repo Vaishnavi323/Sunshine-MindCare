@@ -108,53 +108,49 @@ const ServicesPage = () => {
     const getDefaultSubservices = (id) => {
         const defaultSubservices = {
             1: [
-                {
-                    title: "Individual Counseling",
-                    description: "Personalized one-on-one therapy sessions tailored to your specific needs and goals.",
-                    duration: "50 mins",
-                    price: "Contact for pricing"
-                }
+                { title: "Intelligence Quotient (IQ) Tests" },
+                { title: "Developmental Quotient (DQ) Test" },
+                { title: "Social Quotient (SQ) Test" },
+                { title: "Tests for emotional expression CAT (Children Apperception Test)" },
+                { title: "TAT (Thematic Apperception Test)" },
+                { title: "ROR (Rorschach Ink Blot Test)" },
+                { title: "Autism assessment" },
+                { title: "ADHD assessment" },
+                { title: "Career Guidance/Aptitude Test" },
+                { title: "Personality Test (MMPI/MCMI 4)" },
+                { title: "Millon Adolescent Clinical Inventory II (MACI-II): for identifying temperamental and behavioral issues in the Adolescents" },
+                { title: "Test for Obsessive Compulsive Disorders" },
+                { title: "HAM-A and BDI for Anxiety/ Depression" },
+                { title: "WRAT 5 India: for diagnosing learning difficulty" },
+                { title: "CBCL 1 % to 5 years and CBCL. 6 to 18 years (Child Behavioral Checklist): To identify behavioral and emotional challenges in children." }
             ],
             2: [
-                {
-                    title: "Couples Therapy",
-                    description: "Professional guidance to strengthen relationships and improve communication.",
-                    duration: "60 mins",
-                    price: "Contact for pricing"
-                }
+                { title: "Cognitive Behavior Therapy" },
+                { title: "Behavior Therapy" },
+                { title: "Psychoanalysis" },
+                { title: "Humanistic Therapy" },
+                { title: "Grief Counselling" },
+                { title: "Marriage / Couple Therapy" },
+                { title: "Family Therapy" },
+                { title: "Supportive psychotherapy" },
+                { title: "Social Skill Training" },
+                { title: "Motivational Enhancement Therapy for De-addiction" },
+                { title: "Relaxation Therapy" },
+                { title: "Habit Reversal Training" },
+                { title: "Career Guidance Counselling" },
+                { title: "Remedial Therapy" },
+                { title: "REBT" }
             ],
             3: [
-                {
-                    title: "Family Counseling",
-                    description: "Therapy sessions focused on improving family dynamics and relationships.",
-                    duration: "60 mins",
-                    price: "Contact for pricing"
-                }
+                { title: "Family Counseling", description: "Improve family dynamics and resolve conflicts with professional guidance.", duration: "60 mins" },
+                { title: "Parenting Support", description: "Develop effective parenting strategies and improve family communication.", duration: "50 mins" }
             ],
             4: [
-                {
-                    title: "Child & Adolescent Therapy",
-                    description: "Specialized therapy for young individuals facing emotional challenges.",
-                    duration: "45 mins",
-                    price: "Contact for pricing"
-                }
+                { title: "Anxiety Management", description: "Learn techniques to manage and reduce anxiety symptoms effectively.", duration: "50 mins" },
+                { title: "Stress Reduction", description: "Develop coping strategies to manage daily stress and improve resilience.", duration: "50 mins" }
             ],
-            5: [
-                {
-                    title: "Anxiety & Depression Treatment",
-                    description: "Evidence-based approaches for managing anxiety and depressive symptoms.",
-                    duration: "50 mins",
-                    price: "Contact for pricing"
-                }
-            ],
-            6: [
-                {
-                    title: "Trauma Therapy",
-                    description: "Specialized treatment for trauma recovery and PTSD management.",
-                    duration: "50 mins",
-                    price: "Contact for pricing"
-                }
-            ]
+            5: [],
+            6: []
         };
         return defaultSubservices[id] || [{
             title: "Professional Counseling",
