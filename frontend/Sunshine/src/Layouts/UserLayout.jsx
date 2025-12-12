@@ -8,7 +8,7 @@ import Navbar from '../User/Navbar.jsx'
 
 const UserLayout = () => {
     return (
-        <div className="app-container">
+        <div>
             <ScrollToTop/>
             <Navbar  />
             <div className="content" >
