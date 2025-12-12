@@ -304,7 +304,8 @@ const Tests = () => {
         const fetchSubservices = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://localhost/Sunshine-MindCare/Sunshine_Mindcare_Backend/subservice/list');
+                const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                const response = await fetch(`${VITE_BACKEND_URL}/subservice/list`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
