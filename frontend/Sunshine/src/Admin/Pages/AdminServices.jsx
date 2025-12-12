@@ -16,7 +16,7 @@ const Services = () => {
   const [alert, setAlert] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true);
 
-  const { token } = useAuth();  
+const token = sessionStorage.getItem("admin_token");
 
   // API Base URL from environment variable
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
@@ -135,32 +135,32 @@ const Services = () => {
   };
 
   // API function to add service
-  const addServiceAPI = async (serviceData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/service/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: serviceData.name,
-          description: serviceData.description,
-          image: serviceData.image || "default.jpg"
-        }),
-      });
+const addServiceAPI = async (serviceData) => {
+  try {
+    const formData = new FormData();
+    formData.append("title", serviceData.name);
+    formData.append("description", serviceData.description);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error adding service:', error);
-      throw error;
+    if (serviceData.imageFile) {
+      formData.append("image", serviceData.imageFile);
     }
-  };
+
+    const response = await fetch(`${API_BASE_URL}/service/add`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`, 
+        // ❌ Do NOT add Content-Type → browser automatically sets multipart/form-data
+      },
+      body: formData,
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding service:", error);
+    throw error;
+  }
+};
+
 
   // API function to update service
   const updateServiceAPI = async (serviceId, serviceData) => {
@@ -754,16 +754,32 @@ const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) { alert('Please select an image'); return; }
-      if (file.size > 5 * 1024 * 1024) { alert('Max 5MB'); return; }
-      const reader = new FileReader();
-      reader.onloadend = () => { setImagePreview(reader.result); setFormData({ ...formData, image: reader.result }); };
-      reader.readAsDataURL(file);
-    }
-  };
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("Please select a valid image");
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert("Max size 5MB allowed");
+    return;
+  }
+
+  // Preview
+  const reader = new FileReader();
+  reader.onloadend = () => setImagePreview(reader.result);
+  reader.readAsDataURL(file);
+
+  // IMPORTANT: actual file ko save karo
+  setFormData((prev) => ({
+    ...prev,
+    imageFile: file,
+  }));
+};
+
 
   const handleSubmit = () => {
     if (!formData.name || !formData.description || !formData.duration) { 
