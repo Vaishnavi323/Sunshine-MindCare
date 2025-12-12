@@ -16,7 +16,7 @@ const Services = () => {
   const [alert, setAlert] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true);
 
-  const { token } = useAuth();  
+const token = sessionStorage.getItem("admin_token");
 
   // API Base URL from environment variable
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
@@ -30,16 +30,16 @@ const Services = () => {
   // API function to fetch services
   const fetchServices = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/service/list?id=1`, {
+      const response = await fetch(${API_BASE_URL}/service/list?id=1, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': Bearer ${token},
         },
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(HTTP error! status: ${response.status});
       }
 
       const result = await response.json();
@@ -65,18 +65,18 @@ const Services = () => {
   // API function to fetch all subservices
   const fetchSubservices = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/subservice/list`, {
+      const response = await fetch(${API_BASE_URL}/subservice/list, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': Bearer ${token},
         },
       });
 
       console.log(response);
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(HTTP error! status: ${response.status});
       }
 
       const result = await response.json();
@@ -103,7 +103,7 @@ const Services = () => {
             name: sub.title,
             description: sub.description,
             duration: sub.duration || "60 mins",
-            price: sub.price ? `₹${sub.price}` : "₹2,500",
+            price: sub.price ? ₹${sub.price} : "₹2,500",
             status: sub.status === "1" ? "active" : "inactive"
           }))
       }))
@@ -125,51 +125,51 @@ const Services = () => {
       createdDate: serviceData.created_at ? serviceData.created_at.split(' ')[0] : "2024-01-15",
       subservices: serviceData.sub_services ? serviceData.sub_services.map((sub, index) => ({
         id: sub.id || index + 1,
-        name: sub.title || `Subservice ${index + 1}`,
+        name: sub.title || Subservice ${index + 1},
         description: sub.description || "No description available",
         duration: sub.duration || "60 mins",
-        price: sub.price ? `₹${sub.price}` : "₹2,500",
+        price: sub.price ? ₹${sub.price} : "₹2,500",
         status: "active"
       })) : []
     }];
   };
 
   // API function to add service
-  const addServiceAPI = async (serviceData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/service/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: serviceData.name,
-          description: serviceData.description,
-          image: serviceData.image || "default.jpg"
-        }),
-      });
+const addServiceAPI = async (serviceData) => {
+  try {
+    const formData = new FormData();
+    formData.append("title", serviceData.name);
+    formData.append("description", serviceData.description);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error adding service:', error);
-      throw error;
+    if (serviceData.imageFile) {
+      formData.append("image", serviceData.imageFile);
     }
-  };
+
+    const response = await fetch(${API_BASE_URL}/service/add, {
+      method: "POST",
+      headers: {
+        "Authorization": Bearer ${token}, 
+        // ❌ Do NOT add Content-Type → browser automatically sets multipart/form-data
+      },
+      body: formData,
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding service:", error);
+    throw error;
+  }
+};
+
 
   // API function to update service
   const updateServiceAPI = async (serviceId, serviceData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/service/update/${serviceId}`, {
+      const response = await fetch(${API_BASE_URL}/service/update/${serviceId}, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': Bearer ${token},
         },
         body: JSON.stringify({
           title: serviceData.name,
@@ -179,7 +179,7 @@ const Services = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(HTTP error! status: ${response.status});
       }
 
       const result = await response.json();
@@ -193,16 +193,16 @@ const Services = () => {
   // API function to delete service
   const deleteServiceAPI = async (serviceId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/service/delete/${serviceId}`, {
+      const response = await fetch(${API_BASE_URL}/service/delete/${serviceId}, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': Bearer ${token},
         },
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(HTTP error! status: ${response.status});
       }
 
       const result = await response.json();
@@ -216,11 +216,11 @@ const Services = () => {
   // API function to add subservice
   const addSubserviceAPI = async (subserviceData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/subservice/add`, {
+      const response = await fetch(${API_BASE_URL}/subservice/add, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': Bearer ${token},
         },
         body: JSON.stringify({
           servicetitle: subserviceData.name,
@@ -232,7 +232,7 @@ const Services = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(HTTP error! status: ${response.status});
       }
 
       const result = await response.json();
@@ -246,11 +246,11 @@ const Services = () => {
   // API function to update subservice
   const updateSubserviceAPI = async (subserviceId, subserviceData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/subservice/update/${subserviceId}`, {
+      const response = await fetch(${API_BASE_URL}/subservice/update/${subserviceId}, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': Bearer ${token},
         },
         body: JSON.stringify({
           servicetitle: subserviceData.name,
@@ -261,7 +261,7 @@ const Services = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(HTTP error! status: ${response.status});
       }
 
       const result = await response.json();
@@ -275,16 +275,16 @@ const Services = () => {
   // API function to delete subservice
   const deleteSubserviceAPI = async (subserviceId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/subservice/delete/${subserviceId}`, {
+      const response = await fetch(${API_BASE_URL}/subservice/delete/${subserviceId}, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': Bearer ${token},
         },
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(HTTP error! status: ${response.status});
       }
 
       const result = await response.json();
@@ -400,7 +400,7 @@ const Services = () => {
       console.error('Error submitting service:', error);
       setAlert({
         type: "error",
-        message: error.message || `Failed to ${editingService ? 'update' : 'create'} service. Please try again.`,
+        message: error.message || Failed to ${editingService ? 'update' : 'create'} service. Please try again.,
       });
       return; // Don't close the form if there's an error
     } finally {
@@ -451,7 +451,7 @@ const Services = () => {
       console.error('Error submitting subservice:', error);
       setAlert({
         type: "error",
-        message: error.message || `Failed to ${editingSubservice ? 'update' : 'create'} subservice. Please try again.`,
+        message: error.message || Failed to ${editingSubservice ? 'update' : 'create'} subservice. Please try again.,
       });
       return; // Don't close the form if there's an error
     } finally {
@@ -581,14 +581,14 @@ const Services = () => {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="text-lg font-bold text-gray-900">{service.name}</h3>
-                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getCatColor(service.category)}`}>
+                        <span className={px-2 py-1 rounded-full text-xs font-semibold ${getCatColor(service.category)}}>
                           {service.category}
                         </span>
                       </div>
                       <p className="text-gray-600 text-sm">{service.description}</p>
                     </div>
                     <button onClick={() => toggleExpansion(service.id)} className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200">
-                      <span className={`transition-transform ${expandedServices.has(service.id) ? 'rotate-180' : ''}`}>▼</span>
+                      <span className={transition-transform ${expandedServices.has(service.id) ? 'rotate-180' : ''}}>▼</span>
                     </button>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
@@ -754,16 +754,32 @@ const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) { alert('Please select an image'); return; }
-      if (file.size > 5 * 1024 * 1024) { alert('Max 5MB'); return; }
-      const reader = new FileReader();
-      reader.onloadend = () => { setImagePreview(reader.result); setFormData({ ...formData, image: reader.result }); };
-      reader.readAsDataURL(file);
-    }
-  };
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("Please select a valid image");
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert("Max size 5MB allowed");
+    return;
+  }
+
+  // Preview
+  const reader = new FileReader();
+  reader.onloadend = () => setImagePreview(reader.result);
+  reader.readAsDataURL(file);
+
+  // IMPORTANT: actual file ko save karo
+  setFormData((prev) => ({
+    ...prev,
+    imageFile: file,
+  }));
+};
+
 
   const handleSubmit = () => {
     if (!formData.name || !formData.description || !formData.duration) { 
@@ -785,7 +801,7 @@ const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
         <div className="p-6 overflow-y-auto max-h-[70vh] space-y-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Service Image</label>
-            <div onClick={() => fileRef.current?.click()} className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${imagePreview ? 'border-[#174593]' : 'border-gray-300 hover:border-[#174593]'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <div onClick={() => fileRef.current?.click()} className={border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${imagePreview ? 'border-[#174593]' : 'border-gray-300 hover:border-[#174593]'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}}>
               {imagePreview ? (
                 <div>
                   <img src={imagePreview} alt="Preview" className="max-h-48 mx-auto rounded-lg mb-3" />
