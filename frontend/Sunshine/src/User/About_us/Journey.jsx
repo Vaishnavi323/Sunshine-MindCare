@@ -12,8 +12,8 @@ const JourneySection = () => {
           <Col lg={6}>
             <div className="content-wrapper">
               <div className="section-header animate-fade-in">
-                <h6 className="section-subtitle">GUIDING YOUR JOURNEY WITH EMPATHY AND EXPERTISE</h6>
-                <h1 className="section-title">Your Compassionate Mental Health Support</h1>
+                <h6 className="section-subtitle">Guiding Your Journey With Emapathy And Expertised</h6>
+                <h1 className="journey-title">Your Compassionate Mental Health Support</h1>
               </div>
               
               <div className="description-content animate-slide-up">
@@ -58,10 +58,8 @@ const JourneySection = () => {
                   <small className="image-caption">Compassionate Care Environment</small>
                 </div>
                 
-                {/* Floating Elements */}
-                <div className="floating-element element-1">💭</div>
-                <div className="floating-element element-2">❤️</div>
-                <div className="floating-element element-3">🌟</div>
+                
+                
               </div>
 
               {/* Stats Cards */}
@@ -202,9 +200,9 @@ const JourneySection = () => {
           display: block;
         }
 
-        .section-title {
+        .journey-title {
           color: #2a5298;
-          font-size: 2.8rem;
+          font-size: 2.2rem;
           font-weight: 700;
           line-height: 1.2;
           margin-bottom: 30px;
@@ -450,7 +448,7 @@ const JourneySection = () => {
 
         /* Responsive Design */
         @media (max-width: 768px) {
-          .section-title {
+          .journey-title {
             font-size: 2.2rem;
           }
 
@@ -477,7 +475,7 @@ const JourneySection = () => {
         }
 
         @media (max-width: 576px) {
-          .section-title {
+          .journey-title {
             font-size: 1.8rem;
           }
 

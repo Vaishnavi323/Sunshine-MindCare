@@ -317,7 +317,7 @@ const ReviewFeedback = () => {
                                                     <h4 className="section-title">Your Feedback *</h4>
                                                     <div className="form-group">
                                                         <label>Share your experience *</label>
-                                                       <textarea
+                                                    <textarea
     name="message"
     value={formData.message}
     onChange={handleInputChange}
@@ -743,7 +743,7 @@ const ReviewFeedback = () => {
 
                 .star {
                     font-size: 3rem;
-                    color: #e9ecef;
+                    color: #1c75cd72;
                     cursor: pointer;
                     transition: all 0.70s ease;
                     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -809,7 +809,7 @@ const ReviewFeedback = () => {
 
                 .form-input, .form-select, .form-textarea {
                     padding: 12px 15px;
-                    border: 2px solid #e9ecef;
+                    border: 2px solid #418bd5ff;
                     border-radius: 8px;
                     font-size: 1rem;
                     transition: all 0.1s ease;
