@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Jobmodel extends CI_Model {
+class JobModel extends CI_Model {
 
     public function insertJob($data) {
         $this->db->insert('jobs', $data);
