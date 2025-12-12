@@ -141,8 +141,8 @@ const OurCenter = () => {
           animation: slideInRight 0.8s ease-out 0.2s both;
         }
 
-        .section-title {
-          font-size: 3rem;
+        .about-title {
+          font-size: 5rem;
           font-weight: 700;
           color: #1e88e5;
           margin-bottom: 30px;
@@ -292,7 +292,7 @@ const OurCenter = () => {
             height: 180px;
           }
 
-          .section-title {
+          .about-title {
             font-size: 2.5rem;
           }
         }
@@ -308,7 +308,7 @@ const OurCenter = () => {
             height: 150px;
           }
 
-          .section-title {
+          .about-title {
             font-size: 2rem;
           }
 

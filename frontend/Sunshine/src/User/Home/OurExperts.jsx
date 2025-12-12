@@ -79,7 +79,7 @@ const OurExperts = () => {
 
       <style jsx>{`
         .experts-section {
-          background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+          background: linear-gradient(135deg, #346fdecb 0%, #2a5298b1 100%);
           color: white;
           position: relative;
           overflow: hidden;
@@ -146,7 +146,7 @@ const OurExperts = () => {
           left: 0;
           width: 80px;
           height: 4px;
-          background: #ff6b35;
+          background: #ff6b35f8;
           border-radius: 2px;
           animation: expandWidth 1s ease-out 0.8s both;
         }
