@@ -299,29 +299,7 @@ const ServicesPage = () => {
         );
     }
 
-    if (error) {
-        return (
-            <div className="service-page">
-                <Container>
-                    <Row className="justify-content-center">
-                        <Col lg={8} className="text-center">
-                            <div className="error-state">
-                                <div className="error-icon">⚠️</div>
-                                <h3>Error Loading Services</h3>
-                                <p>{error}</p>
-                                <button 
-                                    className="retry-btn"
-                                    onClick={() => window.location.reload()}
-                                >
-                                    Try Again
-                                </button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
-        );
-    }
+    // Removed error state check - show default data instead of error
 
     return (
         <div className="service-page">
