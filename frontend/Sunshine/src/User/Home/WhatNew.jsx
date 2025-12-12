@@ -148,43 +148,113 @@ const MentalHealthSection = () => {
     const getMockRecentServices = () => [
         {
             id: 1,
-            title: "Individual Therapy",
+            title: "Assesments",
             image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
             description: "One-on-one counseling sessions tailored to your unique needs and goals.",
             subservices: [
                 {
-                    title: "Individual Counseling",
-                    description: "Personalized one-on-one therapy sessions tailored to your specific needs and goals.",
-                    duration: "50 mins"
+                    title: "Intelligence Quotient (IQ) Tests",
                 },
                 {
-                    title: "Cognitive Behavioral Therapy",
-                    description: "Evidence-based approach to identify and change negative thought patterns.",
-                    duration: "50 mins"
+                    title: "Developmental Quotient (DQ) Test",
+                },
+                {
+                    title: "Social Quotient (SQ) Test",
+                },
+                {
+                    title: "Tests for emotional expression CAT (Children Apperception Test)",
+                },
+                {
+                    title: "TAT (Thematic Apperception Test)",
+                },
+                {
+                    title: "ROR (Rorschach Ink Blot Test)",
+                },
+                {
+                    title: "Autism assessment",
+                },
+                {
+                    title: "ADHD assessment",
+                },
+                {
+                    title: "Career Guidance/Aptitude Test",
+                },
+                {
+                    title: "Personality Test (MMPI/MCMI 4)",
+                },
+                {
+                    title: "Millon Adolescent Clinical Inventory II (MACI-II): for identifying temperamental and behavioral issues in the Adolescents",
+                },
+                {
+                    title: "Test for Obsessive Compulsive Disorders",
+                },
+                {
+                    title: "HAM-A and BDI for Anxiety/ Depression",
+                },
+                {
+                    title: "WRAT 5 India: for diagnosing learning difficulty",
+                },
+                {
+                    title: "CBCL 1 % to 5 years and CBCL. 6 to 18 years (Child Behavioral Checklist): To identify behavioral and emotional challenges in children.",
                 }
             ]
         },
         {
             id: 2,
-            title: "Couples Counseling",
+            title: "Therapy",
             image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&h=600&fit=crop',
             description: "Strengthen your relationship and improve communication patterns with professional guidance.",
             subservices: [
                 {
-                    title: "Couples Therapy",
-                    description: "Professional guidance to strengthen relationships and improve communication.",
-                    duration: "60 mins"
+                    title: "Cognitive Behavior Therapy",
                 },
                 {
-                    title: "Relationship Counseling",
-                    description: "Work through relationship challenges with expert support and guidance.",
-                    duration: "60 mins"
-                }
+                    title: "Behavior Therapy",
+                },
+                {
+                    title: "Psychoanalysis",
+                },
+                {
+                    title: "Humanistic Therapy",
+                },
+                {
+                    title: "Grief Counselling",
+                },
+                {
+                    title: "Marriage / Couple Therapy",
+                },
+                {
+                    title: "Family Therapy",
+                },
+                {
+                    title: "Supportive psychotherapy",
+                },
+                {
+                    title: "Social Skill Training",
+                },
+                {
+                    title: "Motivational Enhancement Therapy for De-addiction",
+                },
+                {
+                    title:"Relaxation Therapy",
+                },
+                {
+                    title:"Habit Reversal Training",
+                },
+                {
+                    title:"Career Guidance Counselling",
+                },
+                {
+                    title:"Remedial Therapy",
+                },
+                {
+                    title:"REBT",
+                }   
             ]
         },
         {
             id: 3,
-            title: "Family Therapy",
+            title: "Group & Support",
             image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=600&fit=crop',
             description: "Improve family relationships and resolve conflicts in a supportive environment.",
             subservices: [
@@ -202,7 +272,7 @@ const MentalHealthSection = () => {
         },
         {
             id: 4,
-            title: "Anxiety Treatment",
+            title: "Education & Training",
             image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=600&fit=crop',
             description: "Evidence-based treatments for anxiety disorders and stress management.",
             subservices: [
@@ -261,7 +331,7 @@ const MentalHealthSection = () => {
                 }
 
                 .main-container {
-                    background: #f8f9fa;
+                    background: #7ab4ee3c;
                     padding: 60px 20px;
                 }
 
@@ -799,8 +869,6 @@ const MentalHealthSection = () => {
                                             {service.subservices.map((subservice, index) => (
                                                 <div key={index} className="subservice-item-back">
                                                     <h4 className="subservice-title-back">{subservice.title}</h4>
-                                                    <p className="subservice-description-back">{subservice.description}</p>
-                                                    <div className="subservice-duration-back">{subservice.duration}</div>
                                                 </div>
                                             ))}
                                         </div>
@@ -850,11 +918,9 @@ const MentalHealthSection = () => {
                                             <div className="subservice-content">
                                                 <div className="subservice-header-modal">
                                                     <h5 className="subservice-title-modal">{subservice.title}</h5>
-                                                    <div className="subservice-meta-modal">
-                                                        <span className="duration-modal">{subservice.duration}</span>
-                                                    </div>
+                                                    
                                                 </div>
-                                                <p className="subservice-description-modal">{subservice.description}</p>
+                                                
                                             </div>
                                         </div>
                                     ))}

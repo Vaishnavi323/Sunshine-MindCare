@@ -141,7 +141,7 @@ const OurCenter = () => {
           animation: slideInRight 0.8s ease-out 0.2s both;
         }
 
-        .section-title {
+        .about-title {
           font-size: 3rem;
           font-weight: 700;
           color: #1e88e5;
@@ -292,7 +292,7 @@ const OurCenter = () => {
             height: 180px;
           }
 
-          .section-title {
+          .about-title {
             font-size: 2.5rem;
           }
         }
@@ -308,7 +308,7 @@ const OurCenter = () => {
             height: 150px;
           }
 
-          .section-title {
+          .about-title {
             font-size: 2rem;
           }
 
@@ -345,7 +345,7 @@ const OurCenter = () => {
             left: -20px;
           }
 
-          .section-title {
+          .about-title {
             font-size: 1.8rem;
           }
 
@@ -383,7 +383,7 @@ const OurCenter = () => {
 
                     {/* Content Section */}
                     <div className="content-section">
-                        <h2 className="section-title">About Our Centre</h2>
+                        <h2 className="about-title">About Our Centre</h2>
 
                         <p className="section-description">
                             Welcome to Sunshine Counseling and Therapy Centre, a leading mental health

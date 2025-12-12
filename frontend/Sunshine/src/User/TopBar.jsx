@@ -35,7 +35,7 @@ const TopBar = () => {
 
             <style jsx>{`
                 .topbar {
-                    background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
+                    background: linear-gradient(135deg, #35a1ffb1 0%, #ffba53ca 100%);
                     padding: 12px 0;
                     position: relative;
                     top: 0;
@@ -61,7 +61,7 @@ const TopBar = () => {
                     display: flex;
                     align-items: center;
                     gap: 8px;
-                    color: #ffffff;
+                    color: black;
                     font-size: 0.9rem;
                     font-weight: 500;
                 }
@@ -84,7 +84,7 @@ const TopBar = () => {
                     justify-content: center;
                     background: rgba(255, 255, 255, 0.2);
                     border-radius: 50%;
-                    color: #ffffff;
+                    color: black;
                     transition: all 0.3s ease;
                     text-decoration: none;
                     border: 1px solid rgba(255, 255, 255, 0.3);

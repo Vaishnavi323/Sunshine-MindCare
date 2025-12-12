@@ -13,13 +13,7 @@ const Internship = () => {
             description: "Embark on a developing four-week experience, blending observation, case analysis, and hands-on experience at Sunshine Counseling. Our structured program develops practical skills, imparts theoretical knowledge, and hones competencies for a successful psychology career. Engage in real-world scenarios, from history taking to clinical interviewing, emerging well-equipped for the dynamic field."
         },
         sections: [
-            {
-                id: 'duration',
-                title: 'Program Duration',
-                content: 'The internship program at Sunshine Counseling and Therapy Centre spans four weeks, providing a comprehensive learning experience.',
-                icon: '⏳',
-                color: '#ff6b35'
-            },
+            
             {
                 id: 'structure',
                 title: 'Program Structure',

@@ -87,8 +87,8 @@
   font-size: 0.9rem;
 }
 
-.appointment-btn {
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+/* .appointment-btn {
+  background: linear-gradient(135deg, #ff6b358f 0%, #ff8c42 100%);
   color: #ffffff !important;
   border: none;
   padding: 0.6rem 1.8rem;
@@ -100,18 +100,18 @@
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
   text-decoration: none !important;
-}
+} */
 
-.appointment-btn:hover {
+/* .appointment-btn:hover {
   background: linear-gradient(135deg, #ff8c42 0%, #ff6b35 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
   color: #ffffff !important;
-}
+} */
 
-.appointment-btn:active {
+/* .appointment-btn:active {
   transform: translateY(0);
-}
+} */
 
 .search-container {
   display: flex;

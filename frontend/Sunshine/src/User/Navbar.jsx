@@ -150,7 +150,7 @@ const CustomNavbar = () => {
 
                 <style jsx>{`
                 .custom-navbar {
-                      background: linear-gradient(to right, #f8f8f8ff 5%, #7aa6e0ff 100%);
+                    background: linear-gradient(to right, #f8f8f8ff 5%, #7aa6e0ff 100%);
 
                     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                     // padding: 0.8rem 0;
@@ -233,7 +233,7 @@ const CustomNavbar = () => {
                     display: none !important;
                 }
                 .dropdown-menu-custom {
-                    background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+                    background: linear-gradient(to right, rgba(24, 122, 183, 0.63) 5%, #7aa6e0ff 100%);
                     border: none;
                     border-radius: 10px;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -255,7 +255,7 @@ const CustomNavbar = () => {
                 }
                 
                 .dropdown-item-custom {
-                    color: #ffffff !important;
+                    color: #000000ff !important;
                     padding: 0.75rem 1.5rem;
                     font-size: 0.9rem;
                     font-weight: 500;
@@ -344,7 +344,7 @@ const CustomNavbar = () => {
 
                 /* Appointment Button */
                 .appointment-btn {
-                    background: linear-gradient(45deg, #ff6b35, #ff8e53);
+                    background: linear-gradient(45deg, #ffb235a9, #ff8e53);
                     border: none;
                     padding: 0.65rem 1.25rem;
                     font-size: 0.92rem;
@@ -359,7 +359,7 @@ const CustomNavbar = () => {
                 .appointment-btn:hover {
                     transform: translateY(-2px);
                     box-shadow: 0 10px 30px rgba(255, 107, 53, 0.34);
-                    background: linear-gradient(45deg, #ff8e53, #ff6b35);
+                    background: linear-gradient(45deg, #ff8f53b8, #ff6b35);
                 }
 
                 /* Mobile Responsive */

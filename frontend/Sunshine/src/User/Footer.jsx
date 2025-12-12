@@ -23,7 +23,7 @@ const SunshineFooter = () => {
         }
         
         .footer-section {
-          background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+          background: linear-gradient(135deg, #346fdecb 0%, #2a5298b1 100%);
           color: white;
           padding: 60px 0 40px;
           border-top: 5px solid #ff6b35;
@@ -473,7 +473,7 @@ const SunshineFooter = () => {
                 <h3 className="info-title">Working Hours</h3>
                 <p className="info-texts">
                   Consultation by appointment only<br />
-                  Mon To Fri 10am - 8pm
+                  Mon To Sat 10am - 8pm
                 </p>
               </div>
             </div>
@@ -562,7 +562,7 @@ const SunshineFooter = () => {
                   <li><Link to="/UpcomingEvents">Upcoming Events</Link></li>
                   <li><Link to="/PastEvents">Past Events</Link></li>
                   <li><Link to="/PublishedArticles">Articles</Link></li>
-                  <li><Link to="/Training">Inquiry</Link></li>
+                  <li><Link to="/Training">Enquiry</Link></li>
                 </ul>
               </div>
             </div>

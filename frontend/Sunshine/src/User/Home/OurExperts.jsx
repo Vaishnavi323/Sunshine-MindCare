@@ -70,8 +70,8 @@ const OurExperts = () => {
               </div>
               
               {/* Animated Background Pattern */}
-              <div className="pattern-dots"></div>
-              <div className="pattern-lines"></div>
+              {/* <div className="pattern-dots"></div>
+              <div className="pattern-lines"></div> */}
             </div>
           </Col>
         </Row>
@@ -79,7 +79,7 @@ const OurExperts = () => {
 
       <style jsx>{`
         .experts-section {
-          background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+          background: linear-gradient(135deg, #346fdecb 0%, #2a5298b1 100%);
           color: white;
           position: relative;
           overflow: hidden;
@@ -94,9 +94,9 @@ const OurExperts = () => {
           animation: slideUp 1.2s ease-out 0.3s both;
         }
         
-        .animate-pulse-glow {
+        {/* .animate-pulse-glow {
           animation: pulseGlow 2s infinite, slideUp 1s ease-out 0.6s both;
-        }
+        } */}
         
         @keyframes fadeIn {
           from {
@@ -120,7 +120,7 @@ const OurExperts = () => {
           }
         }
         
-        @keyframes pulseGlow {
+        {/* @keyframes pulseGlow {
           0%, 100% {
             box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
             transform: scale(1);
@@ -129,7 +129,7 @@ const OurExperts = () => {
             box-shadow: 0 4px 25px rgba(255, 107, 53, 0.6), 0 0 30px rgba(255, 107, 53, 0.4);
             transform: scale(1.05);
           }
-        }
+        } */}
         
         .sections-title {
           font-size: 3rem;
@@ -146,7 +146,7 @@ const OurExperts = () => {
           left: 0;
           width: 80px;
           height: 4px;
-          background: #ff6b35;
+          background: #ff6b35f8;
           border-radius: 2px;
           animation: expandWidth 1s ease-out 0.8s both;
         }
@@ -221,7 +221,7 @@ const OurExperts = () => {
           }
         }
         
-        .main-image::before {
+        {/* .main-image::before {
           content: '';
           position: absolute;
           top: -10px;
@@ -245,7 +245,7 @@ const OurExperts = () => {
             opacity: 0.6;
             transform: scale(1);
           }
-        }
+        } */}
         
         /* Floating Elements */
         .floating-element {
