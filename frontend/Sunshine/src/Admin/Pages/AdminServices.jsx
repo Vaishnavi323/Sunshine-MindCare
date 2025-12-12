@@ -135,32 +135,32 @@ const Services = () => {
   };
 
   // API function to add service
-  const addServiceAPI = async (serviceData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/service/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: serviceData.name,
-          description: serviceData.description,
-          image: serviceData.image || "default.jpg"
-        }),
-      });
+const addServiceAPI = async (serviceData) => {
+  try {
+    const formData = new FormData();
+    formData.append("title", serviceData.name);
+    formData.append("description", serviceData.description);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error adding service:', error);
-      throw error;
+    if (serviceData.imageFile) {
+      formData.append("image", serviceData.imageFile);
     }
-  };
+
+    const response = await fetch(`${API_BASE_URL}/service/add`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`, 
+        // ❌ Do NOT add Content-Type → browser automatically sets multipart/form-data
+      },
+      body: formData,
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error adding service:", error);
+    throw error;
+  }
+};
+
 
   // API function to update service
   const updateServiceAPI = async (serviceId, serviceData) => {

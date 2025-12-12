@@ -5,7 +5,7 @@ class JobController extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library(['Api', 'Joblib']);
+        $this->load->library(['Api', 'JobLib']);
     }
 
 	public function add() {

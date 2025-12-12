@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
       if (data.success === true) {
         sessionStorage.setItem("admin_token", data.token);
-
+         setToken(data.token);
         if (data.user) {
           sessionStorage.setItem("admin_user", JSON.stringify(data.user));
           setUser(data.user);
