@@ -473,7 +473,7 @@ const SunshineFooter = () => {
                 <h3 className="info-title">Working Hours</h3>
                 <p className="info-texts">
                   Consultation by appointment only<br />
-                  Mon To Fri 10am - 8pm
+                  Mon To Sat 10am - 8pm
                 </p>
               </div>
             </div>
