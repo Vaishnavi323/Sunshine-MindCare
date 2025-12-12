@@ -345,7 +345,7 @@ const OurCenter = () => {
             left: -20px;
           }
 
-          .section-title {
+          .about-title {
             font-size: 1.8rem;
           }
 
@@ -383,7 +383,7 @@ const OurCenter = () => {
 
                     {/* Content Section */}
                     <div className="content-section">
-                        <h2 className="section-title">About Our Centre</h2>
+                        <h2 className="about-title">About Our Centre</h2>
 
                         <p className="section-description">
                             Welcome to Sunshine Counseling and Therapy Centre, a leading mental health
