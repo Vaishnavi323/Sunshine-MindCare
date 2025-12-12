@@ -142,7 +142,7 @@ const OurCenter = () => {
         }
 
         .about-title {
-          font-size: 5rem;
+          font-size: 3rem;
           font-weight: 700;
           color: #1e88e5;
           margin-bottom: 30px;
