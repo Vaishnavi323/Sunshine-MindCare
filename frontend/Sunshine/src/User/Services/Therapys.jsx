@@ -493,12 +493,8 @@ const Therapys = () => {
                                 </div>
                             )}
 
-                            {/* View Details Button */}
-                            <div className="mt-4">
-                                <button className="w-full py-2 text-sm font-medium text-sky-600 hover:text-sky-700 border border-sky-200 hover:border-sky-300 rounded-lg transition-colors">
-                                    Learn More
-                                </button>
-                            </div>
+                            
+                            
                         </div>
                     ))}
                 </div>
