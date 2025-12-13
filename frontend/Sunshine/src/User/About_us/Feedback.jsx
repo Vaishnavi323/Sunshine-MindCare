@@ -26,13 +26,13 @@ const ReviewFeedback = () => {
         setError('');
         try {
             const response = await fetch(`${backendUrl}/feedback/getapproved`);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const result = await response.json();
-            
+
             if (result.status && result.data) {
                 // Transform API data to match our component structure
                 const transformedReviews = result.data.map(feedback => ({
@@ -70,7 +70,7 @@ const ReviewFeedback = () => {
 
         const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
         const averageRating = totalRating / reviews.length;
-        
+
         const ratingDistribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
         reviews.forEach(review => {
             ratingDistribution[review.rating]++;
@@ -111,59 +111,59 @@ const ReviewFeedback = () => {
         }));
     };
 
-   const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    if (rating === 0) {
-        setSubmitError('Please select a rating');
-        return;
-    }
-   
-
-    setIsSubmitting(true);
-    setSubmitError('');
-
-    try {
-        // Convert to FormData
-        const formDataToSend = new FormData();
-        formDataToSend.append('rating', rating);
-
-        if (formData.message.trim()) formDataToSend.append('message', formData.message.trim());
-
-        // Optional fields
-        if (formData.full_name.trim()) formDataToSend.append('full_name', formData.full_name.trim());
-        if (formData.email.trim()) formDataToSend.append('email', formData.email.trim());
-
-        const response = await fetch(`${backendUrl}/feedback/add`, {
-            method: 'POST',
-            body: formDataToSend
-        });
-
-        const data = await response.json();
-
-        if (data.status) {
-            setIsSubmitted(true);
-            setTimeout(() => {
-                setRating(0);
-                setFormData({ full_name: '', email: '', message: '' });
-                setIsSubmitted(false);
-            }, 3000);
-        } else {
-            throw new Error(data.message || 'Failed to submit feedback');
+        if (rating === 0) {
+            setSubmitError('Please select a rating');
+            return;
         }
-    } catch (error) {
-        setSubmitError(error.message || 'Failed to submit feedback. Please try again.');
-    } finally {
-        setIsSubmitting(false);
-    }
-};
+
+
+        setIsSubmitting(true);
+        setSubmitError('');
+
+        try {
+            // Convert to FormData
+            const formDataToSend = new FormData();
+            formDataToSend.append('rating', rating);
+
+            if (formData.message.trim()) formDataToSend.append('message', formData.message.trim());
+
+            // Optional fields
+            if (formData.full_name.trim()) formDataToSend.append('full_name', formData.full_name.trim());
+            if (formData.email.trim()) formDataToSend.append('email', formData.email.trim());
+
+            const response = await fetch(`${backendUrl}/feedback/add`, {
+                method: 'POST',
+                body: formDataToSend
+            });
+
+            const data = await response.json();
+
+            if (data.status) {
+                setIsSubmitted(true);
+                setTimeout(() => {
+                    setRating(0);
+                    setFormData({ full_name: '', email: '', message: '' });
+                    setIsSubmitted(false);
+                }, 3000);
+            } else {
+                throw new Error(data.message || 'Failed to submit feedback');
+            }
+        } catch (error) {
+            setSubmitError(error.message || 'Failed to submit feedback. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
 
     const renderStars = (ratingValue, forDisplay = false) => {
         return Array.from({ length: 5 }, (_, index) => {
             const starValue = index + 1;
             let starClass = 'star';
-            
+
             if (forDisplay) {
                 starClass += starValue <= ratingValue ? ' filled' : '';
             } else {
@@ -173,7 +173,7 @@ const ReviewFeedback = () => {
                     starClass += ' filled';
                 }
             }
-            
+
             return (
                 <span
                     key={index}
@@ -228,14 +228,14 @@ const ReviewFeedback = () => {
 
                         {/* Tabs */}
                         <div className="feedback-tabs animate-tabs">
-                            <button 
+                            <button
                                 className={`tab-button ${activeTab === 'give' ? 'active' : ''}`}
                                 onClick={() => setActiveTab('give')}
                             >
                                 <span className="tab-icon">✍️</span>
                                 Give Feedback
                             </button>
-                            <button 
+                            <button
                                 className={`tab-button ${activeTab === 'reviews' ? 'active' : ''}`}
                                 onClick={() => setActiveTab('reviews')}
                             >
@@ -262,7 +262,7 @@ const ReviewFeedback = () => {
                                         </div>
                                         <h3 className="success-title">Thank You!</h3>
                                         <p className="success-message">
-                                            Your feedback has been submitted successfully. 
+                                            Your feedback has been submitted successfully.
                                             We appreciate you taking the time to share your experience.
                                         </p>
                                     </div>
@@ -285,7 +285,7 @@ const ReviewFeedback = () => {
 
                                                 {/* Personal Information */}
                                                 <div className="form-section">
-                                                    <h4 className="section-title">Your Information (Optional)</h4>
+                                                    <h4 className="section-title mb-5">Your Information (Optional)</h4>
                                                     <div className="form-row">
                                                         <div className="form-group">
                                                             <label>Full Name</label>
@@ -317,15 +317,15 @@ const ReviewFeedback = () => {
                                                     <h4 className="section-title">Your Feedback *</h4>
                                                     <div className="form-group">
                                                         <label>Share your experience *</label>
-                                                    <textarea
-    name="message"
-    value={formData.message}
-    onChange={handleInputChange}
-    className="form-textarea"
-    placeholder="Tell us about your experience with our services..."
-    rows="5"
-    maxLength="500"
-></textarea>
+                                                        <textarea
+                                                            name="message"
+                                                            value={formData.message}
+                                                            onChange={handleInputChange}
+                                                            className="form-textarea"
+                                                            placeholder="Tell us about your experience with our services..."
+                                                            rows="5"
+                                                            maxLength="500"
+                                                        ></textarea>
                                                         <div className="char-count">
                                                             {formData.message.length}/500 characters
                                                         </div>
@@ -375,7 +375,7 @@ const ReviewFeedback = () => {
                                         <div className="error-icon">⚠️</div>
                                         <h4>Unable to Load Reviews</h4>
                                         <p>{error}</p>
-                                        <button 
+                                        <button
                                             className="retry-btn"
                                             onClick={fetchApprovedFeedbacks}
                                         >
@@ -403,7 +403,7 @@ const ReviewFeedback = () => {
                                                     <div key={stars} className="rating-bar">
                                                         <span className="stars">{stars} ★</span>
                                                         <div className="bar-container">
-                                                            <div 
+                                                            <div
                                                                 className="bar-fill"
                                                                 style={{ width: `${getPercentage(stats.ratingDistribution[stars])}%` }}
                                                             ></div>
@@ -416,7 +416,7 @@ const ReviewFeedback = () => {
 
                                         <div className="reviews-grid">
                                             {reviews.map((review, index) => (
-                                                <div 
+                                                <div
                                                     key={review.id}
                                                     className="review-card animate-card"
                                                     style={{ animationDelay: `${index * 0.1}s` }}
@@ -776,7 +776,7 @@ const ReviewFeedback = () => {
                 /* Form Sections */
                 .form-section {
                     border-bottom: 1px solid #e9ecef;
-                    padding-bottom: 2rem;
+                    
                 }
 
                 .form-section:last-of-type {
