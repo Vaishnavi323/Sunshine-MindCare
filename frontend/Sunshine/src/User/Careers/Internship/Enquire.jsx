@@ -142,7 +142,7 @@ const EnquiryForm = () => {
 
             <Container>
                 <Row className="justify-content-center">
-                    <Col lg={8} xl={6}>
+                    <Col lg={10} xl={9}>
                         <div className="form-header text-center animate-header">
                             <h1 className="form-title">Enquire Now</h1>
                             <p className="form-subtitle">
@@ -156,7 +156,9 @@ const EnquiryForm = () => {
                             <Form onSubmit={handleSubmit} className="enquiry-form">
                                 {errors.submit && <div className="error-message text-center mb-4 fw-bold">{errors.submit}</div>}
 
+                                <Row className="g-3">
                                 {/* Name */}
+                                <Col md={6}>
                                 <div className="form-field-group">
                                     <label htmlFor="name" className="form-label">Your Name *</label>
                                     <div className="input-container">
@@ -168,8 +170,10 @@ const EnquiryForm = () => {
                                     </div>
                                     {errors.name && <span className="error-message">{errors.name}</span>}
                                 </div>
+                                </Col>
 
                                 {/* Email */}
+                                <Col md={6}>
                                 <div className="form-field-group">
                                     <label htmlFor="email" className="form-label">Your Email *</label>
                                     <div className="input-container">
@@ -179,8 +183,10 @@ const EnquiryForm = () => {
                                     </div>
                                     {errors.email && <span className="error-message">{errors.email}</span>}
                                 </div>
+                                </Col>
 
                                 {/* Age */}
+                                <Col md={6}>
                                 <div className="form-field-group">
                                     <label htmlFor="age" className="form-label">Your Age *</label>
                                     <div className="input-container">
@@ -190,8 +196,10 @@ const EnquiryForm = () => {
                                     </div>
                                     {errors.age && <span className="error-message">{errors.age}</span>}
                                 </div>
+                                </Col>
 
                                 {/* College */}
+                                <Col md={6}>
                                 <div className="form-field-group">
                                     <label htmlFor="college" className="form-label">College Name *</label>
                                     <div className="input-container">
@@ -201,8 +209,10 @@ const EnquiryForm = () => {
                                     </div>
                                     {errors.college && <span className="error-message">{errors.college}</span>}
                                 </div>
+                                </Col>
 
                                 {/* Year */}
+                                <Col md={6}>
                                 <div className="form-field-group">
                                     <label htmlFor="year" className="form-label">Year In Which You Are Studying *</label>
                                     <div className="input-container">
@@ -215,8 +225,10 @@ const EnquiryForm = () => {
                                     </div>
                                     {errors.year && <span className="error-message">{errors.year}</span>}
                                 </div>
+                                </Col>
 
                                 {/* Purpose */}
+                                <Col md={6}>
                                 <div className="form-field-group">
                                     <label htmlFor="purpose" className="form-label">Purpose Of This Internship *</label>
                                     <div className="input-container">
@@ -229,8 +241,10 @@ const EnquiryForm = () => {
                                     </div>
                                     {errors.purpose && <span className="error-message">{errors.purpose}</span>}
                                 </div>
+                                </Col>
 
                                 {/* Hours */}
+                                <Col md={6}>
                                 <div className="form-field-group">
                                     <label htmlFor="hours" className="form-label">Hours of training required *</label>
                                     <div className="input-container">
@@ -243,8 +257,10 @@ const EnquiryForm = () => {
                                     </div>
                                     {errors.hours && <span className="error-message">{errors.hours}</span>}
                                 </div>
+                                </Col>
 
                                 {/* Previous Internship */}
+                                <Col md={12}>
                                 <div className="form-field-group">
                                     <label className="form-label">Whether you have done any internship before? *</label>
                                     <div className="radio-group">
@@ -260,6 +276,8 @@ const EnquiryForm = () => {
                                     </div>
                                     {errors.previousInternship && <span className="error-message">{errors.previousInternship}</span>}
                                 </div>
+                                </Col>
+                                </Row>
 
                                 <button type="submit" className={`submit-btns ${isSubmitting ? 'submitting' : ''}`} disabled={isSubmitting}>
                                     {isSubmitting ? (

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import logoImage from '../assets/Sunshine_logo.png';
 import { Link } from 'react-router-dom'
+import img1 from '../assets/j1.jpg';
+import img2 from '../assets/j2.jpg';
 
 const SunshineFooter = () => {
   const [email, setEmail] = useState('');
@@ -441,6 +443,31 @@ const SunshineFooter = () => {
             margin-bottom: 2rem !important;
           }
         }
+
+        .copyright-section {
+          border-top: 1px solid rgba(255, 255, 255, 0.2);
+          padding-top: 30px;
+          text-align: center;
+          margin-top: 40px;
+        }
+
+        .copyright-text {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.8);
+          margin: 0;
+        }
+
+        @media (max-width: 1024px) {
+          .copyright-text {
+            font-size: 12px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .copyright-text {
+            font-size: 11px;
+          }
+        }
       `}</style>
 
       <footer className="footer-section">
@@ -571,11 +598,18 @@ const SunshineFooter = () => {
               <div className="links-section">
                 <h5>Events</h5>
                 <div className="event-images">
-                  <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&h=200&fit=crop" alt="Event 1" className="event-img" />
-                  <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=300&h=200&fit=crop" alt="Event 2" className="event-img" />
+                  <img src={img1} alt="Event 1" className="event-img" />
+                  <img src={img2} alt="Event 2" className="event-img" />
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Copyright Section */}
+          <div className="copyright-section">
+            <p className="copyright-text">
+              &copy; 2024 Sunshine Counselling & Therapy Centre. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

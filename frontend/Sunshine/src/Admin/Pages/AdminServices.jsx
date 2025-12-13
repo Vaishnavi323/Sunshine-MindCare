@@ -580,18 +580,32 @@ const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) return alert("Please select a valid image");
-    if (file.size > 5 * 1024 * 1024) return alert("Max size 5MB allowed");
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => setImagePreview(reader.result);
-    reader.readAsDataURL(file);
+  if (!file.type.startsWith("image/")) {
+    alert("Please select a valid image");
+    return;
+  }
 
-    setFormData(prev => ({ ...prev, imageFile: file }));
-  };
+  if (file.size > 5 * 1024 * 1024) {
+    alert("Max size 5MB allowed");
+    return;
+  }
+
+  // Preview
+  const reader = new FileReader();
+  reader.onloadend = () => setImagePreview(reader.result);
+  reader.readAsDataURL(file);
+
+  // IMPORTANT: actual file ko save karo
+  setFormData((prev) => ({
+    ...prev,
+    imageFile: file,
+  }));
+};
+
 
   const handleSubmit = () => {
     if (!formData.name || !formData.description || !formData.duration) {
