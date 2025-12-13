@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
 import logoImage from '../assets/Sunshine_logo.png';
 import { Link } from 'react-router-dom'
 import img1 from '../assets/j1.jpg';
@@ -24,6 +25,44 @@ const SunshineFooter = () => {
           font-family: 'Montserrat', sans-serif;
         }
         
+        .appointments-btn {
+          background: linear-gradient(45deg, #ffb235a9, #ff8e53);
+          border: none;
+          padding: 15px 35px;
+          font-weight: 700;
+          border-radius: 25px;
+          color: white;
+          transition: all 0.4s ease;
+          white-space: nowrap;
+          position: relative;
+          overflow: hidden;
+          z-index: 1;
+          font-size: 1.1rem;
+          min-width: 140px;
+          margin-left: 40px;
+        }
+
+        .appointments-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+          transition: left 0.6s;
+          z-index: -1;
+        }
+
+        .appointments-btn:hover::before {
+          left: 100%;
+        }
+
+        .appointments-btn:hover {
+          transform: translateY(-5px) scale(1.05);
+          box-shadow: 0 15px 30px rgba(255, 107, 53, 0.4);
+        }
+
         .footer-section {
           background: linear-gradient(135deg, #346fdecb 0%, #2a5298b1 100%);
           color: white;
@@ -524,30 +563,20 @@ const SunshineFooter = () => {
 
           {/* Bottom Section with Links */}
           <div className="row">
-            <div className="col-lg-3 col-md-6 mb-4">
+            <div className="col-lg-3 col-md-6 mb-4 flex-column d-flex">
               <div className="logo-section">
                 <svg viewBox="0 0 300 120" className="logo">
                   {/* Sun Logo */}
                   <image href={logoImage} width="300" height="120" />
                 </svg>
 
-                <p className="subscribe-text">Subscribe Now</p>
-                <div className="email-form">
-                  <input
-                    type="email"
-                    className="email-input"
-                    placeholder="Your Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <button onClick={handleSubmit} className="submit-btn">
-                    <svg viewBox="0 0 24 24">
-                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                    </svg>
-                  </button>
-                </div>
+                <Link to={"/BookAppointment"}>
+                  <Button className="appointments-btn animate-btn">
+                    Book Appointment
+                  </Button>
+                </Link>
 
-                <div className="social-links">
+                <div className="social-links ml-20">
                   <a href="https://www.facebook.com/people/Sunshine-Counselling-and-Therapy-Centre/100064207141730/?mibextid=ZbWKwL%20" target="_blank" rel="noopener noreferrer" className="social-btn">
                     <svg viewBox="0 0 24 24">
                       <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" />
@@ -594,6 +623,7 @@ const SunshineFooter = () => {
               </div>
             </div>
 
+
             <div className="col-lg-3 col-md-6 mb-4">
               <div className="links-section">
                 <h5>Events</h5>
@@ -604,6 +634,8 @@ const SunshineFooter = () => {
               </div>
             </div>
           </div>
+
+          
 
           {/* Copyright Section */}
           <div className="copyright-section">
