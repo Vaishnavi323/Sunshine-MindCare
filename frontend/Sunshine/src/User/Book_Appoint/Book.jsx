@@ -549,7 +549,7 @@ const BookAppointment = () => {
                                         {formErrors.gender && <span className="error-message">{formErrors.gender}</span>}
                                     </div>
                                     <div className="form-group">
-                                        <label>Primary Concern *</label>
+                                        <label>Primary Concern</label>
                                         {formErrors.concerns && <span className="error-message">{formErrors.concerns}</span>}
                                         <div className="concerns-grid">
                                             {concernsList.map(c => (
