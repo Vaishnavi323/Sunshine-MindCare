@@ -92,24 +92,23 @@ const Services = () => {
 
   // Update service
   const updateServiceAPI = async (serviceId, serviceData) => {
-    const formData = new FormData();
-    formData.append("title", serviceData.name);
-    formData.append("description", serviceData.description);
-    if (serviceData.imageFile) {
-      formData.append("image", serviceData.imageFile);
-    }
-
-    const response = await fetch(`${API_BASE_URL}/service/update/${serviceId}`, {
-      method: 'POST',
+  const response = await fetch(
+    `${API_BASE_URL}/service/update/${serviceId}`,
+    {
+      method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-      body: formData,
-    });
+      body: JSON.stringify({
+        title: serviceData.name,
+        description: serviceData.description,
+      }),
+    }
+  );
 
-    return await response.json();
-  };
-
+  return await response.json();
+};
   // Delete service
   const deleteServiceAPI = async (serviceId) => {
     const response = await fetch(`${API_BASE_URL}/service/delete/${serviceId}`, {
