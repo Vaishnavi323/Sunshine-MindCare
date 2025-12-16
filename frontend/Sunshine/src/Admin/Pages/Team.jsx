@@ -567,22 +567,7 @@ const Team = () => {
 
           <div className="flex space-x-4">
             {/* Refresh Button */}
-            <button
-              onClick={fetchDoctors}
-              disabled={fetchLoading}
-              className="group relative bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-500 ease-out overflow-hidden hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <div className="flex items-center space-x-3 relative z-10">
-                {fetchLoading ? (
-                  <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
-                ) : (
-                  <FontAwesomeIcon icon={faRefresh} />
-                )}
-                <span className="text-lg">
-                  {fetchLoading ? "Refreshing..." : "Refresh"}
-                </span>
-              </div>
-            </button>
+            
 
             {/* Add Doctor Button */}
             <button
