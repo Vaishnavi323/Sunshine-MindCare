@@ -82,7 +82,7 @@ const Team = () => {
           email: doctor.email?.trim() || "",
           phone: doctor.phone?.trim() || "",
           specialization: doctor.specialization?.trim() || "General",
-          category: getCategoryFromExperience(doctor.experience),
+          category: doctor.category?.trim() || getCategoryFromExperience(doctor.experience),
           experience: doctor.experience?.trim() || "Not specified",
           qualification: doctor.qualification?.trim() || "Not specified",
           description: doctor.description?.trim() || "Experienced healthcare professional",
