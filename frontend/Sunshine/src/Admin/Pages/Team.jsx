@@ -88,10 +88,10 @@ const Team = () => {
           description: doctor.description?.trim() || "Experienced healthcare professional",
           address: "Sunshine Mindcare Center",
           joiningDate: formatDate(doctor.created_at),
-          status: "active",
+          // status: "active",
           image: getValidImageUrl(doctor.photo),
-          rating: 4.5,
-          patients: Math.floor(Math.random() * 1000) + 100
+          // rating: 4.5,
+          // patients: Math.floor(Math.random() * 1000) + 100
         }));
 
         setDoctors(transformedDoctors);
@@ -228,57 +228,64 @@ const Team = () => {
 
   // API call to add doctor with file upload
   const addDoctorToAPI = async (doctorData) => {
-    try {
-      const formData = new FormData();
+  try {
+    const formData = new FormData();
 
-      // Append text fields
-      formData.append('full_name', doctorData.name);
-      formData.append('email', doctorData.email);
-      formData.append('phone', doctorData.phone);
-      formData.append('specialization', doctorData.specialization);
-      formData.append('experience', doctorData.experience);
-      formData.append('qualification', doctorData.qualification);
-      formData.append('description', doctorData.description);
+    // Append text fields
+    formData.append('full_name', doctorData.name);
+    formData.append('email', doctorData.email);
+    formData.append('phone', doctorData.phone);
+    formData.append('specialization', doctorData.specialization);
+    formData.append('experience', doctorData.experience);
+    formData.append('qualification', doctorData.qualification);
+    formData.append('description', doctorData.description);
 
-      // Append image file if exists
-      if (doctorData.image && doctorData.image instanceof File) {
-        formData.append('photo', doctorData.image);
-      }
+    // Important: include category (and optional fields)
+    formData.append('category', doctorData.category || '');
+    if (doctorData.address) formData.append('address', doctorData.address);
+    if (doctorData.status) formData.append('status', doctorData.status);
 
-      console.log('Submitting doctor with FormData:', {
-        full_name: doctorData.name,
-        email: doctorData.email,
-        phone: doctorData.phone,
-        specialization: doctorData.specialization,
-        experience: doctorData.experience,
-        qualification: doctorData.qualification,
-        description: doctorData.description,
-        hasImage: !!doctorData.image
-      });
-
-      const response = await fetch(`${backendUrl}/doctor/add`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-          // Don't set Content-Type - let browser set it with boundary for FormData
-        },
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Server response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-
-    } catch (error) {
-      console.error('Error adding doctor:', error);
-      throw error;
+    // Append image file if exists
+    if (doctorData.image && doctorData.image instanceof File) {
+      formData.append('photo', doctorData.image);
     }
-  };
+
+    console.log('Submitting doctor with FormData:', {
+      full_name: doctorData.name,
+      email: doctorData.email,
+      phone: doctorData.phone,
+      specialization: doctorData.specialization,
+      experience: doctorData.experience,
+      qualification: doctorData.qualification,
+      description: doctorData.description,
+      category: doctorData.category,
+      address: doctorData.address,
+      status: doctorData.status,
+      hasImage: !!doctorData.image
+    });
+
+    const response = await fetch(`${backendUrl}/doctor/add`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}` // do NOT set Content-Type for FormData
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Server response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+
+  } catch (error) {
+    console.error('Error adding doctor:', error);
+    throw error;
+  }
+};
 
   // Get unique categories, statuses, and specializations
   const categories = ["all", "founder", "senior", "junior", "other"];
