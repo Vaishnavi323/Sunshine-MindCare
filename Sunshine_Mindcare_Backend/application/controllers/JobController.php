@@ -30,11 +30,33 @@ class JobController extends CI_Controller {
 		}
 	}
 
-    public function list() {
-        $this->api->request_method('GET');
-        $data = $this->joblib->getJobList();
-        $this->api->send_response(200, 'Job list fetched', $data);
+  public function list()
+{
+    $this->api->request_method('GET');
+    $response = $this->joblib->getJobList();
+
+    if (!empty($response)) {
+
+        $total = count($response); 
+
+        $this->api->send_response(
+            200,
+            'Job list fetched',
+            null,
+            ['total' => $total],   
+            $response
+        );
+
+    } else {
+
+        $this->api->send_response(
+            404,
+            'No jobs found',
+            'No jobs found'
+        );
     }
+}
+
 
     public function delete() {
         $this->api->request_method('POST');

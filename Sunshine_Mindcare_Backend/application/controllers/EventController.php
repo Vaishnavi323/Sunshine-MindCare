@@ -59,24 +59,59 @@ class EventController extends CI_Controller {
         }
     }
 
-	public function upcoming() {
+public function upcoming()
+{
     $this->api->request_method('GET');
     $response = $this->eventlib->listUpcomingEvents();
 
-    if ($response['success']) 
-        $this->api->send_response(200, "Upcoming events fetched", null, null, $response['data']);
-    else 
-        $this->api->send_response(404, $response['message'], $response['message']);
+    if ($response['success']) {
+
+        $total = count($response['data']); 
+
+        $this->api->send_response(
+            200,
+            "Upcoming events fetched",
+            null,
+            ['total' => $total],  
+            $response['data']
+        );
+
+    } else {
+
+        $this->api->send_response(
+            404,
+            $response['message'],
+            $response['message']
+        );
+    }
 }
 
-public function past() {
+
+public function past()
+{
     $this->api->request_method('GET');
     $response = $this->eventlib->listPastEvents();
 
-    if ($response['success']) 
-        $this->api->send_response(200, "Past events fetched", null, null, $response['data']);
-    else 
-        $this->api->send_response(404, $response['message'], $response['message']);
+    if ($response['success']) {
+
+        $total = count($response['data']); 
+
+        $this->api->send_response(
+            200,
+            "Past events fetched",
+            null,
+            ['total' => $total],   
+            $response['data']
+        );
+
+    } else {
+
+        $this->api->send_response(
+            404,
+            $response['message'],
+            $response['message']
+        );
+    }
 }
 
 }

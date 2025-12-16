@@ -115,11 +115,11 @@ export const SIDEBAR_MENU = [
     icon: faHeartbeat,
     path: "/admin/AdminTherapy",
   },
-  {
-    title: "Tests",
-    icon: faThermometer,
-    path: "/admin/AdminTest",
-  },
+  // {
+  //   title: "Tests",
+  //   icon: faThermometer,
+  //   path: "/admin/AdminTest",
+  // },
   {
     title: "Messages",
     icon: faMessage,

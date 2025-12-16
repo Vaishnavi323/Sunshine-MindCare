@@ -656,7 +656,7 @@ const Jobs = () => {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-2 mb-8 animate-scale-in">
+        {/* <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-2 mb-8 animate-scale-in">
           <div className="flex space-x-2">
             <button
               onClick={() => {
@@ -671,9 +671,9 @@ const Jobs = () => {
                   : "text-gray-600 hover:text-[#2a5298] hover:bg-gray-50"
                 }`}
             >
-              <FontAwesomeIcon icon={faBriefcase} className="mr-2" />
-              Job Openings ({jobs.length})
-            </button>
+              {/* <FontAwesomeIcon icon={faBriefcase} className="mr-2" />
+              Job Openings ({jobs.length}) */}
+            {/* </button>
             <button
               onClick={() => {
                 setActiveTab("applications");
@@ -686,12 +686,12 @@ const Jobs = () => {
                   ? "bg-[#2a5298] text-white shadow-md"
                   : "text-gray-600 hover:text-[#2a5298] hover:bg-gray-50"
                 }`}
-            >
-              <FontAwesomeIcon icon={faUsers} className="mr-2" />
-              Applications ({applications.length})
-            </button>
-          </div>
-        </div>
+            > */}
+              {/* <FontAwesomeIcon icon={faUsers} className="mr-2" />
+              Applications ({applications.length}) */}
+            {/* </button>
+          </div> */}
+        {/* // </div> */} 
 
         {/* Search and Filters */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 mb-8 animate-scale-in">
