@@ -120,7 +120,7 @@ const Blogss = () => {
   const handleFormSubmit = async (formData) => {
     try {
       if (editingBlog) {
-        await axios.put(
+        await axios.post(
           `${API_BASE_URL}/blogs/${editingBlog.id}`,
           formData,
           {
