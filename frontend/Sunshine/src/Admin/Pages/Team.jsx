@@ -128,7 +128,7 @@ const Team = () => {
       }
     );
     console.log(`Delete response:`, response.data);
-    // return response.data;
+    return response.data;
   } catch (error) {
     console.error(
       `Error deleting doctor:`,
@@ -964,7 +964,7 @@ const Team = () => {
                 Cancel
               </button>
               <button
-                onClick={() => deleteDoctorFromAPI(id)}
+                onClick={() => deleteDoctorFromAPI(deleteConfirm)}
                 disabled={deleteLoading}
                 className="flex-1 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 border border-red-600 disabled:opacity-50 flex items-center justify-center space-x-2"
               >
