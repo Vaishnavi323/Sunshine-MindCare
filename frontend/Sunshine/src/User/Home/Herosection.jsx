@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import banner from '../../assets/HeroBanner.jpg';
+import image2 from '../../assets/j2.jpg'; // Replace with actual image
+import image3 from '../../assets/Our_experts3.jpg'; // Replace with actual image
+import image4 from '../../assets/VM1.jpg'; // Replace with actual image
+// import image5 from '../../assets/HeroBanner.jpg'; // Replace with actual image
 
 const HeroSection = () => {
+    const [currentSlide, setCurrentSlide] = useState(0);
+    
+    // Hero images array - keep same content for all slides
+    const heroImages = [
+        banner,
+        image2,
+        image3,
+        image4,
+        
+    ];
+
+    // Auto slide functionality
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+        }, 5000); // Change slide every 5 seconds
+
+        return () => clearInterval(interval);
+    }, [heroImages.length]);
+
     return (
         <>
             <style>{`
@@ -21,9 +45,34 @@ const HeroSection = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          // background: linear-gradient(135deg, #3567c3ff 0%, #2a5298 100%);
           overflow: hidden;
           padding: 40px 20px;
+        }
+
+        /* Slider Background */
+        .slider-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .background-slide {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          opacity: 0;
+          transition: opacity 1.5s ease-in-out;
+        }
+
+        .background-slide.active {
+          opacity: 1;
         }
 
         /* Animated Background Elements */
@@ -311,18 +360,49 @@ const HeroSection = () => {
             width: 180px;
           }
         }
+
+        /* Simple dot indicators */
+        .slider-dots {
+          position: absolute;
+          bottom: 40px;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          z-index: 3;
+        }
+
+        .slider-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.3);
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+          background: #e67e22;
+          transform: scale(1.3);
+        }
       `}</style>
 
-            <section
-              className="hero-section"
-              style={{
-               backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${banner})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat'
-              }}
-            >
-                {/* Floating Background Elements */}
+            <section className="hero-section">
+                {/* Slider Background - Only change */}
+                <div className="slider-background">
+                    {heroImages.map((image, index) => (
+                        <div
+                            key={index}
+                            className={`background-slide ${index === currentSlide ? 'active' : ''}`}
+                            style={{
+                                backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${image})`
+                            }}
+                        />
+                    ))}
+                </div>
+
+                {/* Floating Background Elements - Kept exactly as is */}
                 <div className="floating-elements">
                     <div className="floating-element element-1"></div>
                     <div className="floating-element element-2"></div>
@@ -330,8 +410,7 @@ const HeroSection = () => {
                     <div className="floating-element element-4"></div>
                 </div>
 
-                
-                {/* Hero Content */}
+                {/* Hero Content - Kept exactly as is */}
                 <div className="hero-content mt-5 ">
                     <h1 className="hero-title">
                         Bringing Light to Your Journey
@@ -342,101 +421,20 @@ const HeroSection = () => {
                     </p>
                     
                 </div>
+
+                {/* Simple dot indicators */}
+                <div className="slider-dots">
+                    {heroImages.map((_, index) => (
+                        <div
+                            key={index}
+                            className={`slider-dot ${index === currentSlide ? 'active' : ''}`}
+                            onClick={() => setCurrentSlide(index)}
+                        />
+                    ))}
+                </div>
             </section>
         </>
     );
 };
 
 export default HeroSection;
-
-
-
-// import React from 'react';
-// import banner from '../../assets/HeroBanner.jpg';
-
-// const HeroSection = () => {
-//   return (
-//     <>
-//       <style>{`
-//         .hero-wrapper {
-//           width: 100%;
-//           background: #e8f3ff; 
-//           padding: 60px 40px;
-//         }
-
-//         .hero-container {
-//           display: flex;
-//           align-items: center;
-//           justify-content: center;
-//           gap: 60px;
-//           max-width: 1400px;
-//           margin: auto;
-//         }
-
-//         .hero-left img {
-//           width: 500px;
-//           height: auto;
-//           border-radius: 10px;
-//         }
-
-//         .hero-right {
-//           max-width: 600px;
-//         }
-
-//         .hero-title {
-//           font-size: 42px;
-//           font-weight: 800;
-//           color: #0c346d;
-//           line-height: 1.2;
-//         }
-
-//         .hero-subtitle {
-//           font-size: 18px;
-//           margin-top: 15px;
-//           color: #1a2b49;
-//         }
-
-//         .highlight {
-//           color: #006eff;
-//           font-weight: 800;
-//         }
-
-//         @media (max-width: 900px) {
-//           .hero-container {
-//             flex-direction: column;
-//             text-align: center;
-//           }
-
-//           .hero-left img {
-//             width: 100%;
-//           }
-//         }
-//       `}</style>
-
-//       <section className="hero-wrapper">
-//         <div className="hero-container">
-          
-//           {/* LEFT IMAGE */}
-//           <div className="hero-left">
-//             <img src={banner} alt="Hero Banner" />
-//           </div>
-
-//           {/* RIGHT CONTENT */}
-//           <div className="hero-right">
-//             <h1 className="hero-title">
-//               BRINGING LIGHT <br /> TO YOUR JOURNEY
-//             </h1>
-
-//             <p className="hero-subtitle">
-//               <span className="highlight">SUNSHINE MINDCARE</span> Discover healing and growth at 
-//               Sunshine Counseling. Our compassionate team is here for your mental well-being journey.
-//             </p>
-//           </div>
-
-//         </div>
-//       </section>
-//     </>
-//   );
-// };
-
-// export default HeroSection;

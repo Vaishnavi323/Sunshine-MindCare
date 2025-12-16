@@ -35,7 +35,7 @@ const TopBar = () => {
 
             <style jsx>{`
                 .topbar {
-                    background: linear-gradient(135deg, #35a1ffb1 0%, #ffba53ca 100%);
+                    background: linear-gradient(135deg, #ffba53ca 0%, #ffba53ca 100%);
                     padding: 12px 0;
                     position: relative;
                     top: 0;

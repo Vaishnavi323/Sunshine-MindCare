@@ -91,11 +91,13 @@ const OurStory = () => {
                   <h4>Book An Appointment</h4>
                   <p>Your journey to well-being starts here. Schedule a therapeutic session, and let our experienced team guide you towards a happier, healthier life.</p>
                 </div>
+
                 <Link to={"/BookAppointment"}>
                   <Button className="appointments-btn animate-btn">
                     Book <br/>Appointment
                   </Button>
                 </Link>
+                
               </div>
             </div>
           </Col>
