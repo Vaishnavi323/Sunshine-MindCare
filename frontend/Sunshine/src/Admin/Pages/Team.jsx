@@ -842,7 +842,7 @@ const Team = () => {
                         <span>Edit</span>
                       </button>
                       <button
-                        onClick={() => setDeleteConfirm(doctor.id)}
+                        onClick={() => deleteDoctorFromAPI(doctor.id)}
                         disabled={deleteLoading}
                         className="flex-1 bg-white text-red-600 py-2 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 flex items-center justify-center space-x-2 border border-red-300 disabled:opacity-50"
                       >
