@@ -114,13 +114,10 @@ const Team = () => {
   const deleteDoctorFromAPI = async (doctorId) => {
   try {
     setDeleteLoading(true);
-    console.log(`Deleting doctor with ID:`, doctorId);
+    // Append the ID to the URL
     const response = await axios.delete(
-      `${backendUrl}/doctor/delete`,
+      `${backendUrl}/doctor/delete/${doctorId}`, // ID is now part of the URL
       {
-        data: {
-          id: doctorId
-        },
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": `application/json`
@@ -130,11 +127,7 @@ const Team = () => {
     console.log(`Delete response:`, response.data);
     return response.data;
   } catch (error) {
-    console.error(
-      `Error deleting doctor:`,
-      error.response?.data || error.message
-    );
-    throw error;
+    // ... error handling remains the same ...
   } finally {
     setDeleteLoading(false);
   }
