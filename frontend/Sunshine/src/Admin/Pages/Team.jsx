@@ -128,7 +128,7 @@ const Team = () => {
       }
     );
     console.log(`Delete response:`, response.data);
-    return response.data;
+    // return response.data;
   } catch (error) {
     console.error(
       `Error deleting doctor:`,
