@@ -842,7 +842,7 @@ const Team = () => {
                         <span>Edit</span>
                       </button>
                       <button
-                        onClick={() => deleteDoctorFromAPI(doctor.id)}
+                        onClick={() => setDeleteConfirm(doctor.id)}
                         disabled={deleteLoading}
                         className="flex-1 bg-white text-red-600 py-2 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 flex items-center justify-center space-x-2 border border-red-300 disabled:opacity-50"
                       >
@@ -964,7 +964,7 @@ const Team = () => {
                 Cancel
               </button>
               <button
-                onClick={() => handleDelete(deleteConfirm)}
+                onClick={() => deleteDoctorFromAPI(id)}
                 disabled={deleteLoading}
                 className="flex-1 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 border border-red-600 disabled:opacity-50 flex items-center justify-center space-x-2"
               >
