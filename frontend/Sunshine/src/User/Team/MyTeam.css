@@ -46,14 +46,15 @@
 }
 .founder-image-container {
   position: relative;
-  flex: 0 0 400px;
   overflow: hidden;
+  flex: 0 0 450px;      
+min-height: 400px;
 }
 .founder-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center top;
   display: block;
 }
 .founder-badge {
@@ -159,13 +160,14 @@
 .image-container {
   position: relative;
   overflow: hidden;
-  height: 300px;
+  height: 350px;  /* Changed from 300px */
+width: 100%;    /* Added */
 }
 .member-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center top;
   display: block;
   transition: 0.5s;
 }
