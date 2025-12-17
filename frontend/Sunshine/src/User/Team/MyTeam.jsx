@@ -360,7 +360,7 @@ const TeamPage = () => {
                     <h2 className="founder-name">{founder.name}</h2>
                     <p className="founder-profession">{founder.profession}</p>
                     <p className="founder-specialization">{founder.specialization}</p>
-                    <p className="founder-bio">{founder.bio}</p>
+                    {/* <p className="founder-bio">{founder.bio}</p> */}
                   </div>
                 </div>
               </div>
@@ -440,7 +440,7 @@ const TeamPage = () => {
                   <h2 className="modal-name">{selectedMember.name}</h2>
                   <p className="modal-profession">{selectedMember.profession}</p>
                   <p className="modal-specialization">{selectedMember.specialization}</p>
-                  <p className="modal-bio">{selectedMember.bio}</p>
+                  {/* <p className="modal-bio">{selectedMember.bio}</p> */}
 
                   <div className="contact-info">
                     {selectedMember.email && (
