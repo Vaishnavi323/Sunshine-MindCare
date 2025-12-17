@@ -257,8 +257,13 @@ const Team = () => {
       status: doctorData.status,
       hasImage: !!doctorData.image
     });
-
+    
+if(!token){
+  alert("Token not found. Please login again.");
+  return ;
+}
     const response = await fetch(`${backendUrl}/doctor/add`, {
+
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}` // do NOT set Content-Type for FormData
