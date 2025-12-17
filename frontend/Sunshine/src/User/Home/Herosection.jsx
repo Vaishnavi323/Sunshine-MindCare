@@ -1009,9 +1009,7 @@ const HeroSection = () => {
                             <p className="hero-description">
                                 Discover healing and growth at <span className="company-name">SUNSHINE MINDCARE</span>. Our compassionate team is here for your mental well-being journey. We provide professional counseling services to help you find peace, clarity, and happiness.
                             </p>
-                            <button className="cta-button">
-                                Begin Your Healing Journey
-                            </button>
+                            
                         </div>
                     </div>
                 </div>
