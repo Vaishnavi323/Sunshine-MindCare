@@ -286,7 +286,7 @@ const CustomNavbar = () => {
                     
                     .nav-link-custom {
                         color: #000000ff !important;
-                        font-size: 0.95rem;
+                        font-size: 1.05rem;
                         font-weight: 500;
                         padding: 0.3rem 0.9rem !important;
                         border-radius: 4px;
@@ -311,7 +311,7 @@ const CustomNavbar = () => {
                         background: transparent !important;
                         border: none !important;
                         color: #ffffff !important;
-                        font-size: 0.95rem;
+                        font-size: 1.05rem;
                         font-weight: 500;
                         padding: 0.5rem 1rem !important;
                     }
