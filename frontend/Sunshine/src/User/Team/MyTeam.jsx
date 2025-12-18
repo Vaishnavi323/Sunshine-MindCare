@@ -137,7 +137,7 @@ const TeamPage = () => {
             {/* Senior Doctors */}
             {seniorDoctors.length > 0 && (
               <div className="team-section">
-                <h2 className="section-title">Senior Doctors</h2>
+                <h2 className="section-title">Our Experts</h2>
                 <div className="team-grids">
                   {seniorDoctors.map((member) => (
                     <div key={member.id} className="team-card" onClick={() => handleMemberClick(member)}>
