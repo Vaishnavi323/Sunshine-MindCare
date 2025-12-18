@@ -53,8 +53,8 @@ const TeamPage = () => {
           image: member.photo ? cleanImage : defaultImage,
           bio: member.description || "Dedicated to improving mental well-being.",
           bioShort:
-            (member.description && member.description.length > 120)
-              ? `${member.description.slice(0, 120).trim()}...`
+            (member.description && member.description.length > 70)
+              ? `${member.description.slice(0, 70).trim()}...`
               : (member.description || "Dedicated to improving mental well-being."),
           email: member.email?.trim(),
           phone: member.phone?.trim(),
