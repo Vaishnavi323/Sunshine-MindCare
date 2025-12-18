@@ -34,9 +34,9 @@ const Job = () => {
 
                 const data = await response.json();
 
-                if (data.data) {
+                if (data.status) {
                     // Transform API data to match your component structure
-                    const transformedJobs = data.error.map(job => ({
+                    const transformedJobs = data.data.map(job => ({
                         id: job.id,
                         title: (job.heading && job.heading.trim() !== '') ? job.heading : `Job Position ${job.id}`,
                         department: (job.department && job.department.trim() !== '') ? job.department : 'General',
