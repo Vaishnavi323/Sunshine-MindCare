@@ -417,7 +417,7 @@ const Tests = () => {
                 }
                 
                 // Check if data.data exists and is an array using optional chaining
-                const apiData = data?.data;
+                const apiData = data.error;
                 
                 if (!Array.isArray(apiData)) {
                     console.warn('API response does not contain valid data array:', data);
