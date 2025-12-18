@@ -376,7 +376,6 @@ const Tests = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [categories, setCategories] = useState(['All']);
-    const [apiResponse, setApiResponse] = useState(null); // To store the actual API response
 
     // Fetch subservices from API
     useEffect(() => {
@@ -385,8 +384,8 @@ const Tests = () => {
                 setLoading(true);
                 setError(null);
                 
-                // First try to get VITE_BACKEND_URL from environment
-                const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+                // Use optional chaining for environment variable
+                const VITE_BACKEND_URL = import.meta.env?.VITE_BACKEND_URL;
                 
                 if (!VITE_BACKEND_URL) {
                     throw new Error('Backend URL is not configured. Please check your environment variables.');
@@ -401,67 +400,82 @@ const Tests = () => {
                     },
                 });
                 
-                // Log the response status and headers
-                console.log('Response status:', response.status);
-                console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-                
-                const responseText = await response.text();
-                console.log('Raw response:', responseText);
+                // Log the response
+                console.log('Response status:', response?.status);
                 
                 let data;
                 try {
-                    data = JSON.parse(responseText);
+                    data = await response?.json();
                 } catch (parseError) {
                     console.error('Failed to parse JSON:', parseError);
-                    throw new Error(`Invalid JSON response: ${responseText.substring(0, 100)}...`);
+                    throw new Error('Invalid JSON response from server');
                 }
                 
-                // Store the raw API response
-                setApiResponse(data);
-                
-                if (!response.ok) {
-                    throw new Error(data.message || `HTTP error! Status: ${response.status}`);
+                // Use optional chaining for all data access
+                if (!data?.status) {
+                    throw new Error(data?.message || 'API returned non-success status');
                 }
                 
-                if (data && data.status) {
-                    // Check if data.data exists and is an array
-                    if (!data.data || !Array.isArray(data.data)) {
-                        console.warn('API response does not contain valid data array:', data);
-                        throw new Error('Invalid data format from API');
+                // Check if data.data exists and is an array using optional chaining
+                const apiData = data?.data;
+                
+                if (!Array.isArray(apiData)) {
+                    console.warn('API response does not contain valid data array:', data);
+                    throw new Error('Invalid data format from API: data.data is not an array');
+                }
+                
+                if (apiData?.length === 0) {
+                    console.log('API returned empty array');
+                    setMedicalTests([]);
+                    setCategories(['All']);
+                    setLoading(false);
+                    return;
+                }
+                
+                // Transform API data to match the expected format using optional chaining
+                const transformedTests = apiData?.map((subservice, index) => {
+                    // Use optional chaining for all properties
+                    const id = subservice?.id || index + 1;
+                    const title = subservice?.title || subservice?.name || 'Test Name Not Available';
+                    const description = subservice?.description || 'Description not available';
+                    const serviceId = subservice?.service_id;
+                    const price = subservice?.price;
+                    const duration = subservice?.duration;
+                    
+                    return {
+                        id,
+                        name: title,
+                        description,
+                        category: getCategoryFromServiceId(serviceId) || 'General',
+                        price,
+                        duration,
+                        originalData: subservice
+                    };
+                }) || [];
+                
+                console.log('Transformed tests:', transformedTests);
+                
+                setMedicalTests(transformedTests);
+                
+                // Extract unique categories using optional chaining
+                const categorySet = new Set(['All']);
+                transformedTests?.forEach(test => {
+                    if (test?.category) {
+                        categorySet.add(test.category);
                     }
-                    
-                    // Transform API data to match the expected format
-                    const transformedTests = data.data.map((subservice, index) => {
-                        // Log each subservice for debugging
-                        console.log(`Subservice ${index}:`, subservice);
-                        
-                        return {
-                            id: subservice.id || index + 1,
-                            name: subservice.title || subservice.name || 'Test Name Not Available',
-                            description: subservice.description || 'Description not available',
-                            category: getCategoryFromServiceId(subservice.service_id) || 'General',
-                            price: subservice.price,
-                            duration: subservice.duration,
-                            originalData: subservice // Keep original data
-                        };
-                    });
-                    
-                    console.log('Transformed tests:', transformedTests);
-                    
-                    setMedicalTests(transformedTests);
-                    
-                    // Extract unique categories from transformed tests
-                    const uniqueCategories = ['All', ...new Set(transformedTests.map(test => test.category).filter(Boolean))];
-                    console.log('Unique categories:', uniqueCategories);
-                    setCategories(uniqueCategories);
-                } else {
-                    throw new Error(data.message || 'API returned non-success status');
-                }
+                });
+                
+                const uniqueCategories = Array.from(categorySet);
+                console.log('Unique categories:', uniqueCategories);
+                setCategories(uniqueCategories);
+                
             } catch (err) {
                 console.error('Error fetching subservices:', err);
-                setError(err.message);
+                setError(err?.message || 'Unknown error occurred');
                 
-                // Don't use fallback data - keep empty and show error with API response
+                // Set empty arrays instead of fallback data
+                setMedicalTests([]);
+                setCategories(['All']);
             } finally {
                 setLoading(false);
             }
@@ -488,7 +502,7 @@ const Tests = () => {
             '13': 'Hepatology'
         };
         
-        return categoryMap[String(serviceId)] || 'General';
+        return serviceId ? categoryMap[String(serviceId)] : 'General';
     };
 
     const getCategoryIcon = (category) => {
@@ -511,12 +525,19 @@ const Tests = () => {
         return icons[category] || icons.General;
     };
 
-    const filteredTests = medicalTests.filter(test => {
-        const matchesSearch = test.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            test.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || test.category === selectedCategory;
+    const filteredTests = medicalTests?.filter(test => {
+        if (!test) return false;
+        
+        const name = test?.name?.toLowerCase() || '';
+        const description = test?.description?.toLowerCase() || '';
+        const category = test?.category || '';
+        
+        const matchesSearch = name.includes(searchTerm.toLowerCase()) ||
+            description.includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' || category === selectedCategory;
+        
         return matchesSearch && matchesCategory;
-    });
+    }) || [];
 
     if (loading) {
         return (
@@ -547,8 +568,8 @@ const Tests = () => {
                         Comprehensive range of diagnostic tests and medical screenings to help assess your health and detect potential issues early
                     </p>
                     
-                    {/* Debug Information */}
-                    {error && (
+                    {/* Status Messages */}
+                    {error ? (
                         <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg max-w-4xl mx-auto">
                             <div className="flex items-start">
                                 <div className="flex-shrink-0">
@@ -561,41 +582,36 @@ const Tests = () => {
                                         Error Loading Data
                                     </h3>
                                     <div className="mt-2 text-sm text-red-700">
-                                        <p className="mb-2">{error}</p>
-                                        {apiResponse && (
-                                            <div className="mt-3">
-                                                <p className="font-medium mb-1">API Response:</p>
-                                                <pre className="bg-gray-800 text-white p-3 rounded text-xs overflow-auto">
-                                                    {JSON.stringify(apiResponse, null, 2)}
-                                                </pre>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="mt-4">
-                                        <button
-                                            onClick={() => window.location.reload()}
-                                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
-                                        >
-                                            Retry Loading
-                                        </button>
+                                        <p>{error}</p>
+                                        <div className="mt-3">
+                                            <button
+                                                onClick={() => window.location.reload()}
+                                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
+                                            >
+                                                Retry Loading
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    )}
-                    
-                    {/* Success Message */}
-                    {!error && medicalTests.length > 0 && (
+                    ) : medicalTests?.length > 0 ? (
                         <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg max-w-lg mx-auto">
                             <p className="text-green-700 text-sm">
                                 <span className="font-semibold">✓</span> Loaded {medicalTests.length} tests from API
                             </p>
                         </div>
+                    ) : (
+                        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg max-w-lg mx-auto">
+                            <p className="text-yellow-700 text-sm">
+                                <span className="font-semibold">ℹ</span> No test data available from API
+                            </p>
+                        </div>
                     )}
                 </div>
 
-                {/* Search and Filter Section - Only show if we have data */}
-                {medicalTests.length > 0 && (
+                {/* Search and Filter Section */}
+                {medicalTests?.length > 0 && (
                     <div className="mb-10">
                         {/* Search Bar */}
                         <div className="relative max-w-xl mx-auto mb-6">
@@ -614,7 +630,7 @@ const Tests = () => {
                         {/* Category Filters */}
                         <div className="overflow-x-auto pb-2">
                             <div className="flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-2 min-w-max">
-                                {categories.map((category) => (
+                                {categories?.map((category) => (
                                     <button
                                         key={category}
                                         onClick={() => setSelectedCategory(category)}
@@ -632,76 +648,89 @@ const Tests = () => {
                     </div>
                 )}
 
-                {/* Tests Grid - Only show if we have data */}
-                {medicalTests.length > 0 && filteredTests.length > 0 ? (
+                {/* Tests Grid */}
+                {medicalTests?.length > 0 ? (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredTests.map((test) => (
-                                <div
-                                    key={test.id}
-                                    className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1"
-                                >
-                                    {/* Category Badge */}
-                                    <div className="px-6 pt-6 pb-2">
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <div className="text-lg">
-                                                {getCategoryIcon(test.category)}
-                                            </div>
-                                            <span className="px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 rounded-full">
-                                                {test.category}
-                                            </span>
-                                        </div>
-
-                                        {/* Test Name */}
-                                        <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600 transition-colors">
-                                            {test.name}
-                                        </h3>
-
-                                        {/* Test Description */}
-                                        <div className="mb-6">
-                                            <p className="text-gray-600 leading-relaxed">
-                                                {test.description}
-                                            </p>
-                                        </div>
-
-                                        {/* Additional Info from API */}
-                                        <div className="mt-4 pt-4 border-t border-gray-100">
-                                            <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                                                {test.price !== undefined && test.price !== null && (
-                                                    <div className="flex items-center gap-1">
-                                                        <span className="font-medium">Price:</span>
-                                                        <span className="font-semibold text-green-600">
-                                                            ${test.price}
-                                                        </span>
+                        {filteredTests?.length > 0 ? (
+                            <>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {filteredTests.map((test) => (
+                                        <div
+                                            key={test?.id}
+                                            className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1"
+                                        >
+                                            <div className="px-6 pt-6 pb-2">
+                                                {/* Category Badge */}
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <div className="text-lg">
+                                                        {getCategoryIcon(test?.category)}
                                                     </div>
-                                                )}
-                                                {test.duration && (
-                                                    <div className="flex items-center gap-1">
-                                                        <span className="font-medium">Duration:</span>
-                                                        <span>{test.duration}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            {test.originalData && (
-                                                <div className="mt-3 pt-3 border-t border-gray-100">
-                                                    <p className="text-xs text-gray-400">
-                                                        ID: {test.originalData.id || test.id}
+                                                    <span className="px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 rounded-full">
+                                                        {test?.category || 'General'}
+                                                    </span>
+                                                </div>
+
+                                                {/* Test Name */}
+                                                <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600 transition-colors">
+                                                    {test?.name || 'Unnamed Test'}
+                                                </h3>
+
+                                                {/* Test Description */}
+                                                <div className="mb-6">
+                                                    <p className="text-gray-600 leading-relaxed">
+                                                        {test?.description || 'No description available.'}
                                                     </p>
                                                 </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
 
-                        {/* Results Count */}
-                        <div className="mt-6 text-center text-gray-600">
-                            Showing {filteredTests.length} of {medicalTests.length} tests
-                        </div>
+                                                {/* Additional Info */}
+                                                <div className="mt-4 pt-4 border-t border-gray-100">
+                                                    <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                                                        {test?.price !== undefined && test?.price !== null && (
+                                                            <div className="flex items-center gap-1">
+                                                                <span className="font-medium">Price:</span>
+                                                                <span className="font-semibold text-green-600">
+                                                                    ${test.price}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {test?.duration && (
+                                                            <div className="flex items-center gap-1">
+                                                                <span className="font-medium">Duration:</span>
+                                                                <span>{test.duration}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="mt-3 pt-3 border-t border-gray-100">
+                                                        <p className="text-xs text-gray-400">
+                                                            ID: {test?.originalData?.id || test?.id || 'N/A'}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                
+                                {/* Results Count */}
+                                <div className="mt-6 text-center text-gray-600">
+                                    Showing {filteredTests.length} of {medicalTests.length} tests
+                                </div>
+                            </>
+                        ) : (
+                            <div className="text-center py-16">
+                                <div className="inline-block p-6 bg-white rounded-2xl shadow-lg mb-6">
+                                    <FaSearch className="h-16 w-16 text-gray-400" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                                    No matching tests found
+                                </h3>
+                                <p className="text-gray-500 max-w-md mx-auto">
+                                    Try adjusting your search or select a different category
+                                </p>
+                            </div>
+                        )}
                     </>
-                ) : medicalTests.length === 0 ? (
-                    // No data from API
+                ) : !error && (
                     <div className="text-center py-16">
                         <div className="inline-block p-6 bg-white rounded-2xl shadow-lg mb-6">
                             <FaFlask className="h-16 w-16 text-gray-400" />
@@ -710,90 +739,69 @@ const Tests = () => {
                             No tests available
                         </h3>
                         <p className="text-gray-500 max-w-md mx-auto mb-4">
-                            No test data was received from the API. Please check the error message above.
-                        </p>
-                        <button
-                            onClick={() => window.location.reload()}
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                ) : (
-                    // Search returned no results
-                    <div className="text-center py-16">
-                        <div className="inline-block p-6 bg-white rounded-2xl shadow-lg mb-6">
-                            <FaSearch className="h-16 w-16 text-gray-400" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                            No matching tests found
-                        </h3>
-                        <p className="text-gray-500 max-w-md mx-auto">
-                            Try adjusting your search or select a different category to find the test you're looking for
+                            The API did not return any test data.
                         </p>
                     </div>
                 )}
 
-                {/* Information Section - Only show if we have data */}
-                {medicalTests.length > 0 && (
-                    <div className="mt-16 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                        <div className="max-w-4xl mx-auto">
-                            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-                                Understanding Medical Tests
-                            </h3>
-                            <div className="grid md:grid-cols-2 gap-8">
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="bg-blue-100 p-2 rounded-lg">
-                                            <FaFlask className="h-5 w-5 text-blue-600" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-800 mb-1">Why Get Tested?</h4>
-                                            <p className="text-gray-600 text-sm">
-                                                Medical tests help detect diseases early, monitor ongoing conditions, assess treatment effectiveness, and provide peace of mind about your health status.
-                                            </p>
-                                        </div>
+                {/* Information Section */}
+                <div className="mt-16 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <div className="max-w-4xl mx-auto">
+                        <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+                            Understanding Medical Tests
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="space-y-4">
+                                <div className="flex items-start gap-3">
+                                    <div className="bg-blue-100 p-2 rounded-lg">
+                                        <FaFlask className="h-5 w-5 text-blue-600" />
                                     </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="bg-teal-100 p-2 rounded-lg">
-                                            <FaHeartbeat className="h-5 w-5 text-teal-600" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-800 mb-1">Test Preparation</h4>
-                                            <p className="text-gray-600 text-sm">
-                                                Most tests require specific preparation like fasting or medication adjustments. Always follow your healthcare provider's instructions for accurate results.
-                                            </p>
-                                        </div>
+                                    <div>
+                                        <h4 className="font-semibold text-gray-800 mb-1">Why Get Tested?</h4>
+                                        <p className="text-gray-600 text-sm">
+                                            Medical tests help detect diseases early, monitor ongoing conditions, assess treatment effectiveness, and provide peace of mind about your health status.
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="bg-purple-100 p-2 rounded-lg">
-                                            <FaBrain className="h-5 w-5 text-purple-600" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-800 mb-1">Understanding Results</h4>
-                                            <p className="text-gray-600 text-sm">
-                                                Test results should always be interpreted by qualified healthcare professionals who consider your complete medical history and symptoms.
-                                            </p>
-                                        </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="bg-teal-100 p-2 rounded-lg">
+                                        <FaHeartbeat className="h-5 w-5 text-teal-600" />
                                     </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="bg-orange-100 p-2 rounded-lg">
-                                            <FaDna className="h-5 w-5 text-orange-600" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-800 mb-1">Frequency & Timing</h4>
-                                            <p className="text-gray-600 text-sm">
-                                                The frequency of tests depends on your age, health status, family history, and specific risk factors. Regular screenings are key to preventive healthcare.
-                                            </p>
-                                        </div>
+                                    <div>
+                                        <h4 className="font-semibold text-gray-800 mb-1">Test Preparation</h4>
+                                        <p className="text-gray-600 text-sm">
+                                            Most tests require specific preparation like fasting or medication adjustments. Always follow your healthcare provider's instructions for accurate results.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex items-start gap-3">
+                                    <div className="bg-purple-100 p-2 rounded-lg">
+                                        <FaBrain className="h-5 w-5 text-purple-600" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-gray-800 mb-1">Understanding Results</h4>
+                                        <p className="text-gray-600 text-sm">
+                                            Test results should always be interpreted by qualified healthcare professionals who consider your complete medical history and symptoms.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="bg-orange-100 p-2 rounded-lg">
+                                        <FaDna className="h-5 w-5 text-orange-600" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-gray-800 mb-1">Frequency & Timing</h4>
+                                        <p className="text-gray-600 text-sm">
+                                            The frequency of tests depends on your age, health status, family history, and specific risk factors. Regular screenings are key to preventive healthcare.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );
