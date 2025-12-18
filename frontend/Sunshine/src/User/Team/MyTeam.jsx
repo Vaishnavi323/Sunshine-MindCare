@@ -155,7 +155,7 @@ const TeamPage = () => {
                       <div className="member-info">
                         <h3 className="member-name">{member.name}</h3>
                         <p className="member-profession">{member.profession}</p>
-                        <p className="member-specialization">{member.specialization}</p>
+                        {/* <p className="member-specialization">{member.specialization}</p> */}
                         <p className="member-bio">{member.bioShort}</p>
                       </div>
                     </div>
@@ -185,7 +185,7 @@ const TeamPage = () => {
                       <div className="member-info">
                         <h3 className="member-name">{member.name}</h3>
                         <p className="member-profession">{member.profession}</p>
-                        <p className="member-specialization">{member.specialization}</p>
+                        {/* <p className="member-specialization">{member.specialization}</p> */}
                         <p className="member-bio">{member.bioShort}</p>
                       </div>
                     </div>
