@@ -31,9 +31,9 @@ const CustomNavbar = () => {
                     <div className="d-flex align-items gap-3">
                         <Link to="/" className="d-flex align-items" style={{ textDecoration: 'none' }}>
                             <Navbar.Brand href="#" className="d-flex align-items" onClick={(e) => e.preventDefault()} style={{ backgroundColor: "transparent" }}     >
-                                <img src={logoImage} alt="Sunshine Logo" className="navbar-logo"
+                                <Link to={"/"}><img src={logoImage} alt="Sunshine Logo" className="navbar-logo"
                                     style={{ height: "70px", width: "155px", objectFit: "cover", display: "block", }}
-                                />
+                                /></Link>
                             </Navbar.Brand>
                         </Link>
                     </div>
@@ -281,66 +281,7 @@ const CustomNavbar = () => {
                     display: flex;
                 }
 
-                .search-container {
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                    width: 240px;
-                    min-width: 180px;
-                    max-width: 320px;
-                    {/* box-sizing: border-box; */}
-                }
-
-                .search-input {
-                    width: 100%;
-                    {/* background: rgba(255, 255, 255, 0.08); */}
-                    {/* border: 1px solid rgba(255, 255, 255, 0.22); */}
-                    border-radius: 28px;
-                    padding: 0rem 3rem 0rem 1rem;
-                    color: white;
-                    font-size: 0.92rem;
-                    transition: all 0.18s ease;
-                    {/* box-sizing: border-box; */}
-                }
-
-                .search-input::placeholder {
-                    color: rgba(255, 255, 255, 0.65);
-                }
-
-                .search-input:focus {
-                    outline: none;
-                    {/* background: rgba(255, 255, 255, 0.12); */}
-                    border-color: #ff6b35;
-                    box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.08);
-                }
-
-                .search-btn {
-                    position: absolute;
-                    right: 8px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    {/* background: rgba(255, 255, 255, 0.06); */}
-                    {/* border: 1px solid rgba(255,255,255,0.12); */}
-                    width: 36px;
-                    height: 36px;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 50%;
-                    color: rgba(255, 255, 255, 0.9);
-                    cursor: pointer;
-                    transition: all 0.18s ease;
-                    z-index: 3;
-                }
-
-                .search-btn i { font-size: 0.95rem; }
-
-                .search-btn:hover {
-                    {/* background: #ff6b35; */}
-                    color: #ff6b35;
-                    transform: translateY(-50%) scale(1.02);
-                    border-color: #ff6b35;
-                }
+                
 
                 /* Appointment Button */
                 .appointment-btn {

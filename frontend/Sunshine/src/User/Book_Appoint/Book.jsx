@@ -100,9 +100,9 @@ const BookAppointment = () => {
     const validateField = (name, value) => {
         const rules = validationRules[name];
         if (!rules) return '';
-        
+
         let error = '';
-        
+
         if (rules.required && (!value || value.trim() === '')) {
             error = 'This field is required';
         } else if (rules.pattern && !rules.pattern.test(value)) {
@@ -110,7 +110,7 @@ const BookAppointment = () => {
         } else if (rules.custom && !rules.custom(value)) {
             error = rules.message;
         }
-        
+
         return error;
     };
 
@@ -119,7 +119,7 @@ const BookAppointment = () => {
         const errors = {};
         let isValid = true;
 
-        switch(step) {
+        switch (step) {
             case 1:
                 const step1Fields = ['firstName', 'lastName', 'email', 'phone', 'age', 'gender', 'concerns'];
                 step1Fields.forEach(field => {
@@ -138,7 +138,7 @@ const BookAppointment = () => {
                     }
                 }
                 break;
-                
+
             case 2:
                 const serviceError = validateField('service_id', formData.service_id);
                 if (serviceError) {
@@ -146,7 +146,7 @@ const BookAppointment = () => {
                     isValid = false;
                 }
                 break;
-                
+
             case 3:
                 const dateError = validateField('appointmentDate', formData.appointmentDate);
                 const timeError = validateField('timeSlot', formData.timeSlot);
@@ -169,7 +169,7 @@ const BookAppointment = () => {
     const handleBlur = (e) => {
         const { name } = e.target;
         setTouchedFields(prev => ({ ...prev, [name]: true }));
-        
+
         const error = validateField(name, formData[name]);
         setFormErrors(prev => ({ ...prev, [name]: error }));
     };
@@ -177,7 +177,7 @@ const BookAppointment = () => {
     // Handle input change with validation
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        
+
         // Clean input based on field type
         let cleanedValue = value;
         if (name === 'firstName' || name === 'lastName') {
@@ -194,7 +194,7 @@ const BookAppointment = () => {
         }
 
         setFormData(prev => ({ ...prev, [name]: cleanedValue }));
-        
+
         // Validate on change if field has been touched
         if (touchedFields[name]) {
             const error = validateField(name, cleanedValue);
@@ -341,13 +341,13 @@ const BookAppointment = () => {
         }
 
         setIsSubmitting(true);
-        
+
         try {
             const result = await submitAppointmentToAPI();
 
             // API response mein "success: true" hai, "status" nahi
             if (result.success === true) {
-                
+
                 // SweetAlert show karo aur button click ka wait karo
                 const swalResult = await Swal.fire({
                     icon: 'success',
@@ -409,10 +409,18 @@ const BookAppointment = () => {
     return (
         <div className="appointment-page">
             <div className="appointment-background">
-                <div className="floating-heart">Heart</div>
-                <div className="floating-mind">Brain</div>
-                <div className="floating-calm">Calm</div>
-                <div className="floating-support">Support</div>
+                <div className="floating-icon floating-heart">
+                    <i className="fas fa-heart"></i>
+                </div>
+                <div className="floating-icon floating-mind">
+                    <i className="fas fa-brain"></i>
+                </div>
+                <div className="floating-icon floating-calm">
+                    <i className="fas fa-spa"></i>
+                </div>
+                <div className="floating-icon floating-support">
+                    <i className="fas fa-hands-helping"></i>
+                </div>
             </div>
 
             <Container>
@@ -446,27 +454,27 @@ const BookAppointment = () => {
                                     <div className="form-row">
                                         <div className="form-group">
                                             <label>First Name *</label>
-                                            <input 
-                                                type="text" 
-                                                name="firstName" 
-                                                value={formData.firstName} 
+                                            <input
+                                                type="text"
+                                                name="firstName"
+                                                value={formData.firstName}
                                                 onChange={handleInputChange}
                                                 onBlur={handleBlur}
                                                 className={`form-input ${formErrors.firstName ? 'error' : ''}`}
-                                                placeholder="First name" 
+                                                placeholder="First name"
                                             />
                                             {formErrors.firstName && <span className="error-message">{formErrors.firstName}</span>}
                                         </div>
                                         <div className="form-group">
                                             <label>Last Name *</label>
-                                            <input 
-                                                type="text" 
-                                                name="lastName" 
-                                                value={formData.lastName} 
+                                            <input
+                                                type="text"
+                                                name="lastName"
+                                                value={formData.lastName}
                                                 onChange={handleInputChange}
                                                 onBlur={handleBlur}
                                                 className={`form-input ${formErrors.lastName ? 'error' : ''}`}
-                                                placeholder="Last name" 
+                                                placeholder="Last name"
                                             />
                                             {formErrors.lastName && <span className="error-message">{formErrors.lastName}</span>}
                                         </div>
@@ -474,23 +482,23 @@ const BookAppointment = () => {
                                     <div className="form-row">
                                         <div className="form-group">
                                             <label>Email *</label>
-                                            <input 
-                                                type="email" 
-                                                name="email" 
-                                                value={formData.email} 
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={formData.email}
                                                 onChange={handleInputChange}
                                                 onBlur={handleBlur}
                                                 className={`form-input ${formErrors.email ? 'error' : ''}`}
-                                                placeholder="Email" 
+                                                placeholder="Email"
                                             />
                                             {formErrors.email && <span className="error-message">{formErrors.email}</span>}
                                         </div>
                                         <div className="form-group">
                                             <label>Phone *</label>
-                                            <input 
-                                                type="tel" 
-                                                name="phone" 
-                                                value={formData.phone} 
+                                            <input
+                                                type="tel"
+                                                name="phone"
+                                                value={formData.phone}
                                                 onChange={handleInputChange}
                                                 onBlur={handleBlur}
                                                 className={`form-input ${formErrors.phone ? 'error' : ''}`}
@@ -503,10 +511,10 @@ const BookAppointment = () => {
                                     <div className="form-row">
                                         <div className="form-group">
                                             <label>Alternate Phone</label>
-                                            <input 
-                                                type="tel" 
-                                                name="alternate_contact_no" 
-                                                value={formData.alternate_contact_no} 
+                                            <input
+                                                type="tel"
+                                                name="alternate_contact_no"
+                                                value={formData.alternate_contact_no}
                                                 onChange={handleInputChange}
                                                 onBlur={handleBlur}
                                                 className={`form-input ${formErrors.alternate_contact_no ? 'error' : ''}`}
@@ -517,15 +525,15 @@ const BookAppointment = () => {
                                         </div>
                                         <div className="form-group">
                                             <label>Age *</label>
-                                            <input 
-                                                type="number" 
-                                                name="age" 
-                                                value={formData.age} 
+                                            <input
+                                                type="number"
+                                                name="age"
+                                                value={formData.age}
                                                 onChange={handleInputChange}
                                                 onBlur={handleBlur}
                                                 className={`form-input ${formErrors.age ? 'error' : ''}`}
-                                                min="1" 
-                                                max="100" 
+                                                min="1"
+                                                max="100"
                                                 placeholder="1-100"
                                             />
                                             {formErrors.age && <span className="error-message">{formErrors.age}</span>}
@@ -533,9 +541,9 @@ const BookAppointment = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>Gender *</label>
-                                        <select 
-                                            name="gender" 
-                                            value={formData.gender} 
+                                        <select
+                                            name="gender"
+                                            value={formData.gender}
                                             onChange={handleInputChange}
                                             onBlur={handleBlur}
                                             className={`form-input ${formErrors.gender ? 'error' : ''}`}
@@ -577,7 +585,7 @@ const BookAppointment = () => {
                                 {formErrors.service_id && <span className="error-message">{formErrors.service_id}</span>}
 
                                 {loadingServices && <p>Loading services...</p>}
-                                {serviceError && <p style={{color: 'red'}}>{serviceError}</p>}
+                                {serviceError && <p style={{ color: 'red' }}>{serviceError}</p>}
 
                                 {!loadingServices && services.length === 0 && <p>No services available.</p>}
 
@@ -589,13 +597,13 @@ const BookAppointment = () => {
                                                 onClick={() => handleServiceSelect(service)}
                                             >
                                                 <h4 className="service-name">{service.title}</h4>
-                                                <p style={{fontSize: '0.9rem', color: '#666', margin: '8px 0'}}>
+                                                <p style={{ fontSize: '0.9rem', color: '#666', margin: '8px 0' }}>
                                                     {service.description?.substring(0, 120)}...
                                                 </p>
                                             </div>
 
                                             {formData.service_id === service.id && service.sub_services?.length > 0 && (
-                                                <div style={{marginLeft: '20px', marginTop: '10px'}}>
+                                                <div style={{ marginLeft: '20px', marginTop: '10px' }}>
                                                     {service.sub_services.map(sub => (
                                                         <div
                                                             key={sub.id}
@@ -629,11 +637,11 @@ const BookAppointment = () => {
                                     <div className="date-section">
                                         <h4>Date</h4>
                                         {formErrors.appointmentDate && <span className="error-message">{formErrors.appointmentDate}</span>}
-                                        <input 
-                                            type="date" 
-                                            min={getMinDate()} 
-                                            max={getMaxDate()} 
-                                            value={formData.appointmentDate} 
+                                        <input
+                                            type="date"
+                                            min={getMinDate()}
+                                            max={getMaxDate()}
+                                            value={formData.appointmentDate}
                                             onChange={(e) => handleDateSelect(e.target.value)}
                                             className={`date-input ${formErrors.appointmentDate ? 'error' : ''}`}
                                         />
