@@ -81,6 +81,100 @@ $photo = $this->doctorlib->uploadImage('photo', $upload_path);
     }
 }
 
+//update doctor details
+ public function update() {
+    $this->api->request_method('POST');
+
+    $input = $this->input->post();
+    $id = $input['id'] ?? null;
+
+    if (!$id) {
+        echo json_encode(['status' => false, 'message' => 'Doctor ID required']);
+        return;
+    }
+
+    $doctor = $this->DoctorModel->getDoctorById($id);
+    if (!$doctor) {
+        echo json_encode(['status' => false, 'message' => 'Doctor not found']);
+        return;
+    }
+
+    $upload_path = FCPATH . 'uploads/doctors/';
+    if (!is_dir($upload_path)) {
+        mkdir($upload_path, 0777, true);
+    }
+
+    $data = [
+        'full_name'       => $input['full_name'] ?? $doctor->full_name,
+        'email'           => $input['email'] ?? $doctor->email,
+        'phone'           => $input['phone'] ?? $doctor->phone,
+        'category'        => $input['category'] ?? $doctor->category,
+        'specialization'  => $input['specialization'] ?? $doctor->specialization,
+        'experience'      => $input['experience'] ?? $doctor->experience,
+        'qualification'   => $input['qualification'] ?? $doctor->qualification,
+        'description'     => $input['description'] ?? $doctor->description,
+       
+    ];
+
+    // 🔹 Optional photo update
+    if (!empty($_FILES['photo']['name'])) {
+
+        $photo = $this->doctorlib->uploadImage('photo', $upload_path);
+        if (!$photo['status']) {
+            echo json_encode(['status' => false, 'message' => $photo['error']]);
+            return;
+        }
+
+        if (!empty($doctor->photo)) {
+            $oldPath = FCPATH . str_replace(base_url(), '', $doctor->photo);
+            if (file_exists($oldPath)) unlink($oldPath);
+        }
+
+        $data['photo'] = $photo['file_path'];
+    }
+
+    $updated = $this->DoctorModel->updateDoctor($id, $data);
+
+    echo json_encode([
+        'status'  => (bool)$updated,
+        'message' => $updated ? 'Doctor updated successfully' : 'Update failed',
+        'data'    => $data
+    ]);
 }
+
+
+    /* DELETE DOCTOR  */
+ public function delete() {
+    $this->api->request_method('POST');
+
+    $id = $this->input->post('id');
+
+    if (!$id) {
+        echo json_encode(['status' => false, 'message' => 'Doctor ID required']);
+        return;
+    }
+
+    $doctor = $this->DoctorModel->getDoctorById($id);
+    if (!$doctor) {
+        echo json_encode(['status' => false, 'message' => 'Doctor not found']);
+        return;
+    }
+
+    // Delete photo
+    if (!empty($doctor->photo)) {
+        $path = FCPATH . str_replace(base_url(), '', $doctor->photo);
+        if (file_exists($path)) unlink($path);
+    }
+
+    $deleted = $this->DoctorModel->deleteDoctor($id);
+
+    echo json_encode([
+        'status'  => (bool)$deleted,
+        'message' => $deleted ? 'Doctor deleted successfully' : 'Delete failed'
+    ]);
+}
+
+}
+
 
 

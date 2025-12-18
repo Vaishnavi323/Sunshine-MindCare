@@ -16,4 +16,27 @@ class DoctorModel extends CI_Model {
         ->result_array();
 }
 
+
+ public function getDoctorById($id) {
+        return $this->db
+            ->where('id', $id)
+            ->get('doctors')
+            ->row();
+    }
+
+    /*  UPDATE  */
+    public function updateDoctor($id, $data) {
+        return $this->db
+            ->where('id', $id)
+            ->update('doctors', $data);
+    }
+
+    /* DELETE */
+    public function deleteDoctor($id) {
+        return $this->db
+            ->where('id', $id)
+            ->delete('doctors');
+    }
 }
+	
+

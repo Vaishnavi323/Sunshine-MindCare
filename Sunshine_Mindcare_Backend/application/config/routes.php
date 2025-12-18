@@ -107,3 +107,5 @@ $route['therapy/delete'] = 'TherapyController/delete';
 $route['test/add'] = 'TestController/add';
 $route['test/list']= 'TestController/list';
 $route['test/delete'] = 'TestController/delete';
+$route['doctor/update'] = 'DoctorController/update';
+$route['doctor/delete'] = 'DoctorController/delete';

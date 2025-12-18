@@ -2473,39 +2473,64 @@ const Team = () => {
   };
 
   // API call to delete doctor
-  const deleteDoctorFromAPI = async (doctorId) => {
-    try {
-      setDeleteLoading(true);
-      console.log('Deleting doctor with ID:', doctorId);
+const deleteDoctorFromAPI = async (doctorId) => {
+  try {
+    setDeleteLoading(true);
 
-      const response = await fetch(`${backendUrl}/doctor/delete`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          id: doctorId
-        })
-      });
+    const formData = new FormData();
+    formData.append("id", doctorId);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Server response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    const response = await fetch(`${backendUrl}/doctor/delete`, {
+      method: "POST", // ✅ POST
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData
+    });
 
-      const result = await response.json();
-      console.log('Delete response:', result);
-      return result;
+    const result = await response.json();
+    return result;
 
-    } catch (error) {
-      console.error('Error deleting doctor:', error);
-      throw error;
-    } finally {
-      setDeleteLoading(false);
+  } catch (error) {
+    console.error("Delete doctor error:", error);
+    throw error;
+  } finally {
+    setDeleteLoading(false);
+  }
+};
+const updateDoctorToAPI = async (doctorId, doctorData) => {
+  try {
+    const formData = new FormData();
+
+    formData.append("id", doctorId); // 🔑 important
+    formData.append("full_name", doctorData.name);
+    formData.append("email", doctorData.email);
+    formData.append("phone", doctorData.phone);
+    formData.append("specialization", doctorData.specialization);
+    formData.append("experience", doctorData.experience);
+    formData.append("qualification", doctorData.qualification);
+    formData.append("description", doctorData.description);
+
+    if (doctorData.image instanceof File) {
+      formData.append("photo", doctorData.image);
     }
-  };
+
+    const response = await fetch(`${backendUrl}/doctor/update`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData
+    });
+
+    const result = await response.json();
+    return result;
+
+  } catch (error) {
+    console.error("Update doctor error:", error);
+    throw error;
+  }
+};
 
   // Helper function to determine category from experience
   const getCategoryFromExperience = (experience) => {
@@ -2699,47 +2724,75 @@ const Team = () => {
     setShowForm(true);
   };
 
-  const handleFormSubmit = async (formData) => {
-    setLoading(true);
+const handleFormSubmit = async (formData) => {
+  setLoading(true);
 
-    try {
-      if (editingDoctor) {
-        // Update existing doctor (local only for now)
-        setDoctors(
-          doctors.map((doctor) =>
-            doctor.id === editingDoctor.id ? { ...doctor, ...formData } : doctor
-          )
-        );
-        showAlert("success", "Doctor updated successfully!");
-      } else {
-        // Add new doctor via API
-        const apiResult = await addDoctorToAPI(formData);
+  try {
+    if (editingDoctor) {
+      // 🔹 UPDATE DOCTOR (API + LOCAL STATE)
+      const apiResult = await updateDoctorToAPI(editingDoctor.id, formData);
 
-        if (apiResult.status) {
-          // Add to local state with data from API response
-          const newDoctor = {
-            id: doctors.length > 0 ? Math.max(...doctors.map((d) => d.id)) + 1 : 1,
-            ...formData,
-            joiningDate: new Date().toISOString().split('T')[0],
-            rating: 4.0,
-            patients: 0,
-            status: "active"
-          };
-          setDoctors([...doctors, newDoctor]);
-          showAlert("success", "Doctor added successfully!");
-        } else {
-          throw new Error(apiResult.message || 'Failed to add doctor');
-        }
+      if (!apiResult.status) {
+        throw new Error(apiResult.message || "Failed to update doctor");
       }
-      setShowForm(false);
-      setEditingDoctor(null);
-    } catch (error) {
-      console.error('Error submitting doctor:', error);
-      showAlert("error", error.message || 'Failed to submit doctor. Please try again.');
-    } finally {
-      setLoading(false);
+
+      setDoctors(
+        doctors.map((doctor) =>
+          doctor.id === editingDoctor.id
+            ? {
+                ...doctor,
+                ...formData,
+                image:
+                  formData.image instanceof File
+                    ? URL.createObjectURL(formData.image) // preview update
+                    : doctor.image,
+              }
+            : doctor
+        )
+      );
+
+      showAlert("success", "Doctor updated successfully!");
+    } else {
+      // 🔹 ADD DOCTOR (API)
+      const apiResult = await addDoctorToAPI(formData);
+
+      if (!apiResult.status) {
+        throw new Error(apiResult.message || "Failed to add doctor");
+      }
+
+      const newDoctor = {
+        id:
+          doctors.length > 0
+            ? Math.max(...doctors.map((d) => d.id)) + 1
+            : 1,
+        ...formData,
+        image:
+          formData.image instanceof File
+            ? URL.createObjectURL(formData.image)
+            : formData.image,
+        joiningDate: new Date().toISOString().split("T")[0],
+        rating: 4.0,
+        patients: 0,
+        status: "active",
+      };
+
+      setDoctors([...doctors, newDoctor]);
+      showAlert("success", "Doctor added successfully!");
     }
-  };
+
+    setShowForm(false);
+    setEditingDoctor(null);
+  } catch (error) {
+    console.error("Error submitting doctor:", error);
+    showAlert(
+      "error",
+      error.message || "Failed to submit doctor. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleFormCancel = () => {
     setShowForm(false);
