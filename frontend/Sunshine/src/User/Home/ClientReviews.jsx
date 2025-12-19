@@ -177,7 +177,7 @@ const ClientTestimonials = () => {
                 </Row>
 
                 <Row className="justify-content-center">
-                    <Col lg={10}>
+                    <Col lg={5}>
                         {error ? (
                             <div className="error-state text-center">
                                 <div className="error-icon">⚠️</div>
