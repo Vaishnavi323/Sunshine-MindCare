@@ -112,22 +112,28 @@ const ClientTestimonials = () => {
     useEffect(() => {
         if (isAutoPlaying && testimonials.length > 0) {
             const interval = setInterval(() => {
-                setCurrentSlide((prev) => (prev + 1) % testimonials.length);
+                // advance start index but stop at last possible start to avoid empty space
+                const maxStart = testimonials.length > 2 ? testimonials.length - 2 : 0;
+                setCurrentSlide((prev) => (prev >= maxStart ? 0 : prev + 1));
             }, 5000);
             return () => clearInterval(interval);
         }
     }, [isAutoPlaying, testimonials.length]);
 
     const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % testimonials.length);
+        const maxStart = testimonials.length > 2 ? testimonials.length - 2 : 0;
+        setCurrentSlide((prev) => (prev >= maxStart ? 0 : prev + 1));
     };
 
     const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+        const maxStart = testimonials.length > 2 ? testimonials.length - 2 : 0;
+        setCurrentSlide((prev) => (prev <= 0 ? maxStart : prev - 1));
     };
 
     const goToSlide = (index) => {
-        setCurrentSlide(index);
+        const maxStart = testimonials.length > 2 ? testimonials.length - 2 : 0;
+        const clamped = Math.min(Math.max(0, index), maxStart);
+        setCurrentSlide(clamped);
     };
 
     const renderStars = (rating) => {
@@ -203,48 +209,49 @@ const ClientTestimonials = () => {
                                 onMouseLeave={() => setIsAutoPlaying(true)}
                             >
                                 <div className="slider-container">
-                                    {testimonials.map((testimonial, index) => (
-                                        <div
-                                            key={testimonial.id}
-                                            className={`testimonial-slide ${index === currentSlide ? 'active' :
-                                                    index === (currentSlide - 1 + testimonials.length) % testimonials.length ? 'prev' :
-                                                        index === (currentSlide + 1) % testimonials.length ? 'next' : 'hidden'
-                                                }`}
-                                        >
-                                            <div className="testimonial-card">
-                                                <div className="quote-icon">"</div>
+                                    <div
+                                        className="slider-track"
+                                        style={{
+                                            transform: `translateX(-${currentSlide * 50}%)`,
+                                            width: `${testimonials.length * 50}%`
+                                        }}
+                                    >
+                                        {testimonials.map((testimonial) => (
+                                            <div key={testimonial.id} className="testimonial-slide">
+                                                <div className="testimonial-card">
+                                                    <div className="quote-icon">"</div>
 
-                                                <div className="testimonial-content">
-                                                    {/* Rating Stars */}
-                                                    <div className="testimonial-rating">
-                                                        {renderStars(testimonial.rating)}
-                                                    </div>
+                                                    <div className="testimonial-content">
+                                                        <div className="testimonial-rating">
+                                                            {renderStars(testimonial.rating)}
+                                                        </div>
 
-                                                    <p className="testimonial-text">{testimonial.text}</p>
+                                                        <p className="testimonial-text">{testimonial.text}</p>
 
-                                                    <div className="client-info">
-                                                        <div className="avatar">{testimonial.avatar}</div>
-                                                        <div className="client-details">
-                                                            <h4 className="client-name">{testimonial.name}</h4>
-                                                            <div className="client-meta">
-                                                                <span className="client-contributions">{testimonial.contributions}</span>
-                                                                {testimonial.verified && (
-                                                                    <span className="verified-badge">✓ Verified</span>
-                                                                )}
+                                                        <div className="client-info">
+                                                            <div className="avatar">{testimonial.avatar}</div>
+                                                            <div className="client-details">
+                                                                <h4 className="client-name">{testimonial.name}</h4>
+                                                                <div className="client-meta">
+                                                                    <span className="client-contributions">{testimonial.contributions}</span>
+                                                                    {testimonial.verified && (
+                                                                        <span className="verified-badge">✓ Verified</span>
+                                                                    )}
+                                                                </div>
+                                                                <span className="review-date">
+                                                                    {new Date(testimonial.date).toLocaleDateString('en-US', {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric'
+                                                                    })}
+                                                                </span>
                                                             </div>
-                                                            <span className="review-date">
-                                                                {new Date(testimonial.date).toLocaleDateString('en-US', {
-                                                                    year: 'numeric',
-                                                                    month: 'long',
-                                                                    day: 'numeric'
-                                                                })}
-                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
 
                                 {/* Navigation Arrows */}
@@ -259,11 +266,11 @@ const ClientTestimonials = () => {
 
                                         {/* Dots Indicator */}
                                         <div className="slider-dots">
-                                            {testimonials.map((_, index) => (
+                                            {Array.from({ length: Math.max(1, (testimonials.length > 2 ? testimonials.length - 2 : 0) + 1) }).map((_, idx) => (
                                                 <button
-                                                    key={index}
-                                                    className={`dot ${index === currentSlide ? 'active' : ''}`}
-                                                    onClick={() => goToSlide(index)}
+                                                    key={idx}
+                                                    className={`dot ${idx === currentSlide ? 'active' : ''}`}
+                                                    onClick={() => goToSlide(idx)}
                                                 />
                                             ))}
                                         </div>
@@ -416,7 +423,7 @@ const ClientTestimonials = () => {
                     to { width: 80px; }
                 }
 
-                /* Slider Styles */
+                /* Slider Styles - two cards visible */
                 .testimonial-slider {
                     position: relative;
                     padding: 40px 0;
@@ -428,38 +435,22 @@ const ClientTestimonials = () => {
                     overflow: hidden;
                 }
 
-                .testimonial-slide {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
+                .slider-track {
+                    display: flex;
+                    align-items: stretch;
                     height: 100%;
-                    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+                    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
                 }
 
-                .testimonial-slide.active {
-                    opacity: 1;
-                    transform: translateX(0) scale(1);
-                    z-index: 3;
-                    animation: slideIn 0.6s ease-out;
-                }
-
-                .testimonial-slide.prev {
-                    opacity: 0.3;
-                    transform: translateX(-100%) scale(0.8);
-                    z-index: 1;
-                }
-
-                .testimonial-slide.next {
-                    opacity: 0.3;
-                    transform: translateX(100%) scale(0.8);
-                    z-index: 1;
-                }
-
-                .testimonial-slide.hidden {
-                    opacity: 0;
-                    transform: translateX(100%) scale(0.8);
-                    z-index: 0;
+                .testimonial-slide {
+                    position: relative;
+                    width: 50%;
+                    height: 100%;
+                    box-sizing: border-box;
+                    padding: 0 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
 
                 /* Testimonial Card */
