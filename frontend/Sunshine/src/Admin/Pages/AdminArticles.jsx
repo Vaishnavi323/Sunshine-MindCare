@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost/Sunshine-MindCare/Sunshine_Mindcare_Backend';
+// Create axios instance with base URL from environment variable
+const api = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_URL,
+});
 
 const AdminArticles = () => {
     const [articles, setArticles] = useState([]);
@@ -19,14 +22,19 @@ const AdminArticles = () => {
     const fetchArticles = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_BASE_URL}/article/list`);
+            const response = await api.get('/article/list');
             if (response.data.status) {
+                console.log('API Response:', response.data); // Debug log
+                
+                // Check if data is in response.data.data or response.data
+                const articlesData = response.data.data || response.data;
+                
                 // Transform API response to match component structure
-                const formattedArticles = response.data.data.map(article => ({
+                const formattedArticles = articlesData.map(article => ({
                     id: article.id,
-                    image: `${API_BASE_URL}/${article.image.replace(/\\/g, '/')}`,
+                    image: `${import.meta.env.VITE_BACKEND_URL}/${article.image.replace(/\\/g, '/')}`,
                     title: article.title || `Article ${article.id}`,
-                    createdDate: article.created_at
+                    createdDate: article.created_at || article.createdDate
                 }));
                 setArticles(formattedArticles);
             }
@@ -39,32 +47,57 @@ const AdminArticles = () => {
     };
 
     const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-        });
+        if (!dateString) return 'N/A';
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return 'Invalid Date';
+            }
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+            });
+        } catch (error) {
+            console.error('Error formatting date:', error);
+            return 'N/A';
+        }
     };
 
     const handleAddArticle = async (formData) => {
         try {
             setUploading(true);
-            const response = await axios.post(`${API_BASE_URL}/article/add`, formData, {
+            console.log('Uploading article with formData:', formData); // Debug log
+            
+            const response = await api.post('/article/add', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+
+            console.log('Add article response:', response.data); // Debug log
 
             if (response.data.status) {
                 // Refresh articles list
                 await fetchArticles();
                 setShowAddModal(false);
                 alert('Article added successfully!');
+            } else {
+                alert(response.data.message || 'Failed to add article');
             }
         } catch (error) {
             console.error('Error adding article:', error);
-            alert('Failed to add article. Please try again.');
+            if (error.response) {
+                console.error('Response data:', error.response.data);
+                console.error('Response status:', error.response.status);
+                alert(`Error ${error.response.status}: ${error.response.data?.message || 'Failed to add article'}`);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+                alert('No response from server. Please check your connection.');
+            } else {
+                alert('Error: ' + error.message);
+            }
         } finally {
             setUploading(false);
         }
@@ -75,21 +108,31 @@ const AdminArticles = () => {
             const formData = new FormData();
             formData.append('id', id);
 
-            const response = await axios.post(`${API_BASE_URL}/article/delete`, formData, {
+            console.log('Deleting article ID:', id); // Debug log
+
+            const response = await api.post('/article/delete', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+
+            console.log('Delete response:', response.data); // Debug log
 
             if (response.data.status) {
                 // Remove from local state
                 setArticles(articles.filter(a => a.id !== id));
                 setDeleteConfirm(null);
                 alert('Article deleted successfully!');
+            } else {
+                alert(response.data.message || 'Failed to delete article');
             }
         } catch (error) {
             console.error('Error deleting article:', error);
-            alert('Failed to delete article. Please try again.');
+            if (error.response) {
+                alert(`Error ${error.response.status}: ${error.response.data?.message || 'Failed to delete article'}`);
+            } else {
+                alert('Failed to delete article. Please try again.');
+            }
         }
     };
 
@@ -155,6 +198,9 @@ const AdminArticles = () => {
                                                 src={article.image}
                                                 alt="Article"
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                onError={(e) => {
+                                                    e.target.src = 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop';
+                                                }}
                                             />
                                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
                                                 <span className="text-white text-4xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">🔍</span>
@@ -249,6 +295,9 @@ const AdminArticles = () => {
                             src={viewImage.image}
                             alt={viewImage.title || 'Article Full View'}
                             className="w-full h-auto rounded-xl shadow-2xl"
+                            onError={(e) => {
+                                e.target.src = 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop';
+                            }}
                         />
                         <div className="mt-4 text-center text-white">
                             <h3 className="text-lg font-semibold mb-1">{viewImage.title}</h3>
@@ -315,16 +364,15 @@ const AddArticleModal = ({ onAdd, onCancel, uploading }) => {
             alert('Please upload an image');
             return;
         }
-        if (!title.trim()) {
-            alert('Please enter a title for the article');
-            return;
-        }
 
         // Create FormData for API call
         const formData = new FormData();
         formData.append('image', imageFile);
-        // If your API accepts title, add it here
-        // formData.append('title', title.trim());
+        
+        // Add title if your API accepts it
+        if (title.trim()) {
+            formData.append('title', title.trim());
+        }
 
         onAdd(formData);
     };
@@ -345,7 +393,8 @@ const AddArticleModal = ({ onAdd, onCancel, uploading }) => {
                     <h2 className="text-xl font-bold">Add New Article</h2>
                     <button
                         onClick={onCancel}
-                        className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all text-lg"
+                        disabled={uploading}
+                        className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all text-lg disabled:opacity-50"
                     >
                         ✕
                     </button>
@@ -360,17 +409,18 @@ const AddArticleModal = ({ onAdd, onCancel, uploading }) => {
                             onChange={(e) => setTitle(e.target.value)} 
                             type="text" 
                             placeholder="Enter article title" 
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg" 
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1f1f35] focus:border-transparent"
+                            disabled={uploading}
                         />
                     </div>
                     
                     {/* Image Upload Area */}
                     <div
-                        onClick={() => !imagePreview && fileRef.current?.click()}
+                        onClick={() => !imagePreview && !uploading && fileRef.current?.click()}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
-                        className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ${isDragging
+                        className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${uploading ? 'cursor-not-allowed' : 'cursor-pointer'} ${isDragging
                                 ? 'border-[#174593] bg-blue-50'
                                 : imagePreview
                                     ? 'border-[#174593] bg-gray-50'
@@ -389,9 +439,10 @@ const AddArticleModal = ({ onAdd, onCancel, uploading }) => {
                                         type="button"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            fileRef.current?.click();
+                                            !uploading && fileRef.current?.click();
                                         }}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all"
+                                        disabled={uploading}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         Change Image
                                     </button>
@@ -399,9 +450,10 @@ const AddArticleModal = ({ onAdd, onCancel, uploading }) => {
                                         type="button"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleRemoveImage();
+                                            !uploading && handleRemoveImage();
                                         }}
-                                        className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all"
+                                        disabled={uploading}
+                                        className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         Remove
                                     </button>
@@ -423,6 +475,7 @@ const AddArticleModal = ({ onAdd, onCancel, uploading }) => {
                         accept="image/*"
                         onChange={handleImageChange}
                         className="hidden"
+                        disabled={uploading}
                     />
 
                     {/* Action Buttons */}
@@ -430,21 +483,21 @@ const AddArticleModal = ({ onAdd, onCancel, uploading }) => {
                         <button
                             onClick={onCancel}
                             disabled={uploading}
-                            className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-all disabled:opacity-50"
+                            className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSubmit}
                             disabled={!imagePreview || uploading}
-                            className={`flex-1 py-3 rounded-lg font-semibold transition-all ${imagePreview && !uploading
+                            className={`flex-1 py-3 rounded-lg font-semibold transition-all flex items-center justify-center ${imagePreview && !uploading
                                     ? 'bg-gradient-to-r from-[#1f1f35] to-[#174593] text-white hover:shadow-lg'
                                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                 }`}
                         >
                             {uploading ? (
                                 <>
-                                    <div className="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                                    <div className="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
                                     Uploading...
                                 </>
                             ) : 'Add Article'}
