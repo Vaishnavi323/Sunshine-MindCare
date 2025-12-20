@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from "../Auth/AuthContext";
 
 // Create axios instance with base URL from environment variable
 const api = axios.create({
@@ -14,6 +15,7 @@ const AdminArticles = () => {
     const [viewImage, setViewImage] = useState(null);
     const [uploading, setUploading] = useState(false);
 
+    const { token } = useAuth();
     // Fetch articles on component mount
     useEffect(() => {
         fetchArticles();
@@ -82,7 +84,8 @@ const AdminArticles = () => {
             
             const response = await api.post('/article/add', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
                 }
             });
 
@@ -122,7 +125,8 @@ const AdminArticles = () => {
 
             const response = await api.post('/article/delete', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
                 }
             });
 
