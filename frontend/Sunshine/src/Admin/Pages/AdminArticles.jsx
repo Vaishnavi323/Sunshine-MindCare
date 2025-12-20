@@ -25,17 +25,27 @@ const AdminArticles = () => {
             const response = await api.get('/article/list');
             if (response.data.status) {
                 console.log('API Response:', response.data); // Debug log
-                
-                // Check if data is in response.data.data or response.data
-                const articlesData = response.data.data || response.data;
-                
-                // Transform API response to match component structure
-                const formattedArticles = articlesData.map(article => ({
-                    id: article.id,
-                    image: `${import.meta.env.VITE_BACKEND_URL}/${article.image.replace(/\\/g, '/')}`,
-                    title: article.title || `Article ${article.id}`,
-                    createdDate: article.created_at || article.createdDate
-                }));
+                // The backend sometimes returns the list in `data` or (unexpectedly) in `error`.
+                const payload = response.data;
+                let articlesData = [];
+                if (Array.isArray(payload.data)) articlesData = payload.data;
+                else if (Array.isArray(payload.error)) articlesData = payload.error;
+                else if (Array.isArray(payload)) articlesData = payload;
+
+                // Safely transform API response to match component structure
+                const formattedArticles = articlesData.map(article => {
+                    const rawImage = article.image || '';
+                    const normalizedPath = rawImage.replace(/\\\\/g, '/').replace(/^\//, '');
+                    const imageUrl = normalizedPath ? `${import.meta.env.VITE_BACKEND_URL}/${normalizedPath}` : '';
+
+                    return {
+                        id: article.id,
+                        image: imageUrl,
+                        title: article.title || `Article ${article.id}`,
+                        createdDate: article.created_at || article.createdDate || ''
+                    };
+                });
+
                 setArticles(formattedArticles);
             }
         } catch (error) {
