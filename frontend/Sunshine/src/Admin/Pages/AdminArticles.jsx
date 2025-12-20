@@ -23,7 +23,7 @@ const AdminArticles = () => {
         try {
             setLoading(true);
             const response = await api.get('/article/list');
-            if (response.data.status) {
+            if (response.data.error) {
                 console.log('API Response:', response.data); // Debug log
                 
                 // Check if data is in response.data.data or response.data
@@ -78,7 +78,7 @@ const AdminArticles = () => {
 
             console.log('Add article response:', response.data); // Debug log
 
-            if (response.data.status) {
+            if (response.data.error) {
                 // Refresh articles list
                 await fetchArticles();
                 setShowAddModal(false);
@@ -118,7 +118,7 @@ const AdminArticles = () => {
 
             console.log('Delete response:', response.data); // Debug log
 
-            if (response.data.status) {
+            if (response.data.error) {
                 // Remove from local state
                 setArticles(articles.filter(a => a.id !== id));
                 setDeleteConfirm(null);
