@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://hpcisparesportal.in/Sunshine_Mindcare_Backend';
+const API_BASE_URL = 'http://localhost/Sunshine-MindCare/Sunshine_Mindcare_Backend';
 
 const AdminArticles = () => {
     const [articles, setArticles] = useState([]);
