@@ -105,60 +105,46 @@ const ServicesPage = () => {
     };
 
     // Helper function to get default subservices if API returns empty
-    const getDefaultSubservices = (id) => {
-        const defaultSubservices = {
-            1: [
-                { title: "Intelligence Quotient (IQ) Tests" },
-                { title: "Developmental Quotient (DQ) Test" },
-                { title: "Social Quotient (SQ) Test" },
-                { title: "Tests for emotional expression CAT (Children Apperception Test)" },
-                { title: "TAT (Thematic Apperception Test)" },
-                { title: "ROR (Rorschach Ink Blot Test)" },
-                { title: "Autism assessment" },
-                { title: "ADHD assessment" },
-                { title: "Career Guidance/Aptitude Test" },
-                { title: "Personality Test (MMPI/MCMI 4)" },
-                { title: "Millon Adolescent Clinical Inventory II (MACI-II): for identifying temperamental and behavioral issues in the Adolescents" },
-                { title: "Test for Obsessive Compulsive Disorders" },
-                { title: "HAM-A and BDI for Anxiety/ Depression" },
-                { title: "WRAT 5 India: for diagnosing learning difficulty" },
-                { title: "CBCL 1 % to 5 years and CBCL. 6 to 18 years (Child Behavioral Checklist): To identify behavioral and emotional challenges in children." }
-            ],
-            2: [
-                { title: "Cognitive Behavior Therapy" },
-                { title: "Behavior Therapy" },
-                { title: "Psychoanalysis" },
-                { title: "Humanistic Therapy" },
-                { title: "Grief Counselling" },
-                { title: "Marriage / Couple Therapy" },
-                { title: "Family Therapy" },
-                { title: "Supportive psychotherapy" },
-                { title: "Social Skill Training" },
-                { title: "Motivational Enhancement Therapy for De-addiction" },
-                { title: "Relaxation Therapy" },
-                { title: "Habit Reversal Training" },
-                { title: "Career Guidance Counselling" },
-                { title: "Remedial Therapy" },
-                { title: "REBT" }
-            ],
-            3: [
-                { title: "Family Counseling", description: "Improve family dynamics and resolve conflicts with professional guidance.", duration: "60 mins" },
-                { title: "Parenting Support", description: "Develop effective parenting strategies and improve family communication.", duration: "50 mins" }
-            ],
-            4: [
-                { title: "Anxiety Management", description: "Learn techniques to manage and reduce anxiety symptoms effectively.", duration: "50 mins" },
-                { title: "Stress Reduction", description: "Develop coping strategies to manage daily stress and improve resilience.", duration: "50 mins" }
-            ],
-            5: [],
-            6: []
-        };
-        return defaultSubservices[id] || [{
-            title: "Professional Counseling",
-            description: "Expert mental health support and guidance.",
-            duration: "50 mins",
-            price: "Contact for pricing"
-        }];
+    // Helper function to get default subservices if API returns empty
+const getDefaultSubservices = (id) => {
+    // Try to get from mock data first
+    const mockService = getMockServicesData().find(service => service.id === id);
+    if (mockService && mockService.subservices) {
+        return mockService.subservices.map(sub => ({
+            ...sub,
+            duration: sub.duration || '50 mins',
+            price: 'Contact for pricing'
+        }));
+    }
+    
+    // Fallback hardcoded defaults
+    const defaultSubservices = {
+        1: [
+            { 
+                title: "Intelligence Quotient (IQ) Tests",
+                description: "Comprehensive IQ assessment",
+                duration: "60 mins"
+            },
+            // ... rest of your default subservices
+        ],
+        2: [
+            { 
+                title: "Cognitive Behavior Therapy",
+                description: "Evidence-based CBT sessions",
+                duration: "50 mins"
+            },
+            // ... rest of your default subservices
+        ],
+        // ... rest of your defaults
     };
+    
+    return defaultSubservices[id] || [{
+        title: "Professional Counseling",
+        description: "Expert mental health support and guidance",
+        duration: "50 mins",
+        price: "Contact for pricing"
+    }];
+};
 
     // Fallback mock data
     const getMockServicesData = () => [
@@ -234,33 +220,73 @@ const ServicesPage = () => {
         }
     ];
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setVisibleServices(prev => ({
-                            ...prev,
-                            [entry.target.dataset.index]: true
-                        }));
-                    }
-                });
-            },
-            { 
-                threshold: 0.2,
-                rootMargin: '0px 0px -50px 0px'
-            }
-        );
+    // Fetch services from API
+useEffect(() => {
+    const fetchServices = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            // Fetch all services by calling the API multiple times (since it requires ID)
+            const serviceIds = [1, 2, 3, 4, 5, 6]; // Adjust based on your service IDs
+            const servicePromises = serviceIds.map(id => 
+                fetch(`${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+            );
 
-        servicesRef.current.forEach((card, index) => {
-            if (card) {
-                card.dataset.index = index;
-                observer.observe(card);
-            }
-        });
+            const serviceResults = await Promise.all(servicePromises);
+            
+            // Transform API data to match your component structure
+            const transformedServices = serviceResults.map((result, index) => {
+                // Check if API returned valid service data
+                if (result && (result.data || result.error)) {
+                    const service = result.data || result.error;
+                    return {
+                        id: service.id || serviceIds[index],
+                        title: service.title || `Service ${service.id || serviceIds[index]}`,
+                        image: getServiceImage(service.id || serviceIds[index]),
+                        description: service.description || 'No description available',
+                        color: getServiceColor(service.id || serviceIds[index]),
+                        subservices: service.sub_services && service.sub_services.length > 0 
+                            ? service.sub_services.map(sub => ({
+                                title: sub.title || 'Sub Service',
+                                description: sub.description || 'No description available',
+                                duration: sub.duration || '50 mins',
+                                price: sub.price || 'Contact for pricing'
+                            }))
+                            : getDefaultSubservices(service.id || serviceIds[index])
+                    };
+                }
+                // If API returned null or invalid data, use default
+                return {
+                    id: serviceIds[index],
+                    title: `Service ${serviceIds[index]}`,
+                    image: getServiceImage(serviceIds[index]),
+                    description: 'Service description will be available soon',
+                    color: getServiceColor(serviceIds[index]),
+                    subservices: getDefaultSubservices(serviceIds[index])
+                };
+            }).filter(service => service !== null);
 
-        return () => observer.disconnect();
-    }, [servicesData]);
+            setServicesData(transformedServices);
+            
+        } catch (error) {
+            console.error('Error fetching services:', error);
+            setError(error.message);
+            // Fallback to mock data if API fails
+            setServicesData(getMockServicesData());
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchServices();
+}, []);
 
     const setServiceRef = (index) => (el) => {
         servicesRef.current[index] = el;
