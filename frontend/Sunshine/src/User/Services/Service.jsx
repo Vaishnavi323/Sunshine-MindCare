@@ -17,6 +17,7 @@ const ServicesPage = () => {
     const [servicesData, setServicesData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [apiStatus, setApiStatus] = useState('checking');
     const servicesRef = useRef([]);
 
     // Fetch services from API
@@ -25,71 +26,122 @@ const ServicesPage = () => {
             try {
                 setLoading(true);
                 setError(null);
+                setApiStatus('fetching');
+                
+                console.log('Environment URL:', import.meta.env.VITE_BACKEND_URL);
+                
+                // Try single API call first to check if endpoint exists
+                const testUrl = `${import.meta.env.VITE_BACKEND_URL}/services`;
+                console.log('Testing API endpoint:', testUrl);
+                
+                try {
+                    const testResponse = await fetch(testUrl);
+                    console.log('Test response status:', testResponse.status);
+                    if (testResponse.ok) {
+                        const testData = await testResponse.json();
+                        console.log('Test API data:', testData);
+                        setApiStatus('available');
+                    }
+                } catch (testError) {
+                    console.log('Single endpoint test failed, trying individual endpoints');
+                    setApiStatus('individual');
+                }
                 
                 const serviceIds = [1, 2, 3, 4, 5, 6];
-                const servicePromises = serviceIds.map(id => 
-                    fetch(`${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                        .then(data => ({ id, data, error: null }))
-                        .catch(error => ({ 
+                const servicePromises = serviceIds.map(async (id) => {
+                    try {
+                        const url = `${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`;
+                        console.log(`Fetching service ${id} from:`, url);
+                        
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                        
+                        console.log(`Service ${id} response status:`, response.status);
+                        
+                        if (!response.ok) {
+                            console.warn(`Service ${id} failed with status:`, response.status);
+                            return { id, data: null, error: `HTTP ${response.status}` };
+                        }
+                        
+                        const data = await response.json();
+                        console.log(`Service ${id} data:`, data);
+                        return { id, data, error: null };
+                        
+                    } catch (fetchError) {
+                        console.error(`Error fetching service ${id}:`, fetchError);
+                        return { 
                             id, 
                             data: null, 
-                            error: error.message 
-                        }))
-                );
+                            error: fetchError.message || 'Network error' 
+                        };
+                    }
+                });
 
                 const results = await Promise.all(servicePromises);
+                console.log('All API results:', results);
                 
                 // Transform API responses
                 const transformedServices = results.map((result) => {
                     const { id, data, error } = result;
+                    
+                    console.log(`Processing service ${id}:`, { hasData: !!data, error });
                     
                     // If we got a successful API response
                     if (data && !error) {
                         // Extract service data from different possible response structures
                         let serviceData = null;
                         
-                        if (data.data) {
+                        // Try different possible response structures
+                        if (data.data && data.data.id) {
                             serviceData = data.data;
-                        } else if (data.error) {
+                        } else if (data.error && data.error.id) {
                             serviceData = data.error;
                         } else if (data.id) {
                             serviceData = data;
                         } else if (Array.isArray(data) && data.length > 0) {
                             serviceData = data[0];
+                        } else if (typeof data === 'object' && Object.keys(data).length > 0) {
+                            serviceData = data;
                         }
                         
+                        console.log(`Service ${id} extracted data:`, serviceData);
+                        
                         // If we have valid service data from API
-                        if (serviceData && serviceData.id) {
+                        if (serviceData && (serviceData.id || serviceData.title || serviceData.name)) {
                             const hasSubservices = (
-                                (serviceData.sub_services && serviceData.sub_services.length > 0) ||
-                                (serviceData.subServices && serviceData.subServices.length > 0)
+                                (serviceData.sub_services && Array.isArray(serviceData.sub_services) && serviceData.sub_services.length > 0) ||
+                                (serviceData.subServices && Array.isArray(serviceData.subServices) && serviceData.subServices.length > 0) ||
+                                (serviceData.subservices && Array.isArray(serviceData.subservices) && serviceData.subservices.length > 0)
                             );
                             
-                            return {
-                                id: serviceData.id,
-                                title: serviceData.title || serviceData.name || `Service ${serviceData.id}`,
-                                image: getServiceImage(serviceData.id),
-                                description: serviceData.description || serviceData.desc || 'Professional mental health service',
-                                color: getServiceColor(serviceData.id),
+                            const apiService = {
+                                id: serviceData.id || id,
+                                title: serviceData.title || serviceData.name || `Service ${id}`,
+                                image: getServiceImage(serviceData.id || id),
+                                description: serviceData.description || serviceData.desc || getMockServiceById(id).description,
+                                color: getServiceColor(serviceData.id || id),
                                 subservices: hasSubservices 
-                                    ? (serviceData.sub_services || serviceData.subServices).map(sub => ({
+                                    ? (serviceData.sub_services || serviceData.subServices || serviceData.subservices || []).map(sub => ({
                                         title: sub.title || sub.name || 'Sub Service',
                                         description: sub.description || sub.desc || 'Specialized treatment',
                                         duration: sub.duration || sub.time || '50 mins',
                                         price: sub.price || sub.cost || 'Contact for pricing'
                                     }))
-                                    : getDefaultSubservices(serviceData.id)
+                                    : getDefaultSubservices(id)
                             };
+                            
+                            console.log(`Service ${id} from API:`, apiService);
+                            return apiService;
                         }
                     }
                     
                     // If API failed or returned no valid data, use mock data for this specific service
+                    console.log(`Service ${id} using mock data`);
                     return getMockServiceById(id);
                 });
 
@@ -98,21 +150,28 @@ const ServicesPage = () => {
                     service !== null && service !== undefined
                 );
                 
+                console.log('Valid services after transformation:', validServices);
+                
                 // If we got services from API, use them
                 if (validServices.length > 0) {
                     setServicesData(validServices);
+                    setApiStatus('success');
                 } else {
                     // If no valid services from API, use all mock data
+                    console.log('No valid API data, using mock data');
                     setServicesData(getMockServicesData());
+                    setApiStatus('mock');
                 }
                 
             } catch (error) {
-                console.error('Error fetching services:', error);
+                console.error('Error in fetchServices:', error);
                 setError(error.message);
+                setApiStatus('error');
                 // Fallback to mock data if API fails
                 setServicesData(getMockServicesData());
             } finally {
                 setLoading(false);
+                console.log('Loading complete, apiStatus:', apiStatus);
             }
         };
 
@@ -122,7 +181,19 @@ const ServicesPage = () => {
     // Helper function to get mock service by ID
     const getMockServiceById = (id) => {
         const mockServices = getMockServicesData();
-        return mockServices.find(service => service.id === id) || {
+        const mockService = mockServices.find(service => service.id === id);
+        if (mockService) {
+            return {
+                ...mockService,
+                subservices: mockService.subservices.map(sub => ({
+                    ...sub,
+                    duration: sub.duration || '50 mins',
+                    price: 'Contact for pricing'
+                }))
+            };
+        }
+        
+        return {
             id,
             title: `Service ${id}`,
             image: getServiceImage(id),
@@ -595,6 +666,18 @@ const ServicesPage = () => {
         setSelectedService(null);
     };
 
+    const retryApiFetch = () => {
+        setLoading(true);
+        setError(null);
+        // Trigger a refetch by setting servicesData to empty
+        setServicesData([]);
+        setTimeout(() => {
+            // The useEffect will run again because servicesData changed
+            setServicesData(getMockServicesData());
+            setLoading(false);
+        }, 1000);
+    };
+
     if (loading) {
         return (
             <div className="service-page">
@@ -604,6 +687,7 @@ const ServicesPage = () => {
                             <div className="loading-state">
                                 <div className="loading-spinner"></div>
                                 <p>Loading services...</p>
+                                <small className="text-muted">API Status: {apiStatus}</small>
                             </div>
                         </Col>
                     </Row>
@@ -614,6 +698,15 @@ const ServicesPage = () => {
 
     return (
         <div className="service-page">
+            {/* Debug info - remove in production */}
+            {import.meta.env.DEV && (
+                <div className="debug-info">
+                    <div className="debug-badge">API Status: {apiStatus}</div>
+                    <div className="debug-badge">Services: {servicesData.length}</div>
+                    <div className="debug-badge">Using: {apiStatus === 'mock' ? 'Mock Data' : 'API Data'}</div>
+                </div>
+            )}
+
             {/* Animated Background */}
             <div className="services-background">
                 <div className="floating-therapy">💬</div>
@@ -673,6 +766,21 @@ const ServicesPage = () => {
                         </Col>
                     ))}
                 </Row>
+
+                {/* API Status Message */}
+                {apiStatus === 'mock' && (
+                    <Row className="justify-content-center mt-4">
+                        <Col lg={8} className="text-center">
+                            <div className="api-status-message">
+                                <p className="mb-0">
+                                    <small className="text-muted">
+                                        Showing demo data. API connection could not be established.
+                                    </small>
+                                </p>
+                            </div>
+                        </Col>
+                    </Row>
+                )}
             </Container>
 
             {/* Subservices Modal */}
@@ -735,6 +843,36 @@ const ServicesPage = () => {
                     padding: 80px 0;
                     position: relative;
                     overflow: hidden;
+                }
+
+                /* Debug Info - only in development */
+                .debug-info {
+                    position: fixed;
+                    top: 10px;
+                    right: 10px;
+                    z-index: 9999;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    opacity: 0.8;
+                }
+
+                .debug-badge {
+                    background: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 0.8rem;
+                    font-family: monospace;
+                }
+
+                /* API Status Message */
+                .api-status-message {
+                    background: rgba(255, 193, 7, 0.1);
+                    border: 1px solid rgba(255, 193, 7, 0.3);
+                    border-radius: 10px;
+                    padding: 15px;
+                    margin-top: 20px;
                 }
 
                 /* Animated Background */
@@ -1148,6 +1286,10 @@ const ServicesPage = () => {
                         align-items: flex-start;
                         flex-direction: row;
                         gap: 1rem;
+                    }
+                    
+                    .debug-info {
+                        display: none;
                     }
                 }
 
