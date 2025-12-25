@@ -17,7 +17,6 @@ const ServicesPage = () => {
     const [servicesData, setServicesData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [apiStatus, setApiStatus] = useState('checking');
     const servicesRef = useRef([]);
 
     // Fetch services from API
@@ -26,32 +25,11 @@ const ServicesPage = () => {
             try {
                 setLoading(true);
                 setError(null);
-                setApiStatus('fetching');
-                
-                console.log('Environment URL:', import.meta.env.VITE_BACKEND_URL);
-                
-                // Try single API call first to check if endpoint exists
-                const testUrl = `${import.meta.env.VITE_BACKEND_URL}/services`;
-                console.log('Testing API endpoint:', testUrl);
-                
-                try {
-                    const testResponse = await fetch(testUrl);
-                    console.log('Test response status:', testResponse.status);
-                    if (testResponse.ok) {
-                        const testData = await testResponse.json();
-                        console.log('Test API data:', testData);
-                        setApiStatus('available');
-                    }
-                } catch (testError) {
-                    console.log('Single endpoint test failed, trying individual endpoints');
-                    setApiStatus('individual');
-                }
                 
                 const serviceIds = [1, 2, 3, 4, 5, 6];
                 const servicePromises = serviceIds.map(async (id) => {
                     try {
                         const url = `${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`;
-                        console.log(`Fetching service ${id} from:`, url);
                         
                         const response = await fetch(url, {
                             method: 'GET',
@@ -61,15 +39,11 @@ const ServicesPage = () => {
                             },
                         });
                         
-                        console.log(`Service ${id} response status:`, response.status);
-                        
                         if (!response.ok) {
-                            console.warn(`Service ${id} failed with status:`, response.status);
-                            return { id, data: null, error: `HTTP ${response.status}` };
+                            throw new Error(`HTTP ${response.status} for service ${id}`);
                         }
                         
                         const data = await response.json();
-                        console.log(`Service ${id} data:`, data);
                         return { id, data, error: null };
                         
                     } catch (fetchError) {
@@ -83,13 +57,10 @@ const ServicesPage = () => {
                 });
 
                 const results = await Promise.all(servicePromises);
-                console.log('All API results:', results);
                 
                 // Transform API responses
                 const transformedServices = results.map((result) => {
                     const { id, data, error } = result;
-                    
-                    console.log(`Processing service ${id}:`, { hasData: !!data, error });
                     
                     // If we got a successful API response
                     if (data && !error) {
@@ -109,8 +80,6 @@ const ServicesPage = () => {
                             serviceData = data;
                         }
                         
-                        console.log(`Service ${id} extracted data:`, serviceData);
-                        
                         // If we have valid service data from API
                         if (serviceData && (serviceData.id || serviceData.title || serviceData.name)) {
                             const hasSubservices = (
@@ -119,89 +88,48 @@ const ServicesPage = () => {
                                 (serviceData.subservices && Array.isArray(serviceData.subservices) && serviceData.subservices.length > 0)
                             );
                             
-                            const apiService = {
+                            return {
                                 id: serviceData.id || id,
                                 title: serviceData.title || serviceData.name || `Service ${id}`,
                                 image: getServiceImage(serviceData.id || id),
-                                description: serviceData.description || serviceData.desc || getMockServiceById(id).description,
+                                description: serviceData.description || serviceData.desc || 'No description available',
                                 color: getServiceColor(serviceData.id || id),
                                 subservices: hasSubservices 
                                     ? (serviceData.sub_services || serviceData.subServices || serviceData.subservices || []).map(sub => ({
                                         title: sub.title || sub.name || 'Sub Service',
-                                        description: sub.description || sub.desc || 'Specialized treatment',
+                                        description: sub.description || sub.desc || 'No description available',
                                         duration: sub.duration || sub.time || '50 mins',
                                         price: sub.price || sub.cost || 'Contact for pricing'
                                     }))
-                                    : getDefaultSubservices(id)
+                                    : [] // Return empty array if no subservices
                             };
-                            
-                            console.log(`Service ${id} from API:`, apiService);
-                            return apiService;
                         }
                     }
                     
-                    // If API failed or returned no valid data, use mock data for this specific service
-                    console.log(`Service ${id} using mock data`);
-                    return getMockServiceById(id);
+                    // If API failed or returned no valid data, return null
+                    return null;
                 });
 
-                // Filter out any null/undefined values
+                // Filter out any null values (failed API calls)
                 const validServices = transformedServices.filter(service => 
-                    service !== null && service !== undefined
+                    service !== null
                 );
                 
-                console.log('Valid services after transformation:', validServices);
-                
-                // If we got services from API, use them
-                if (validServices.length > 0) {
-                    setServicesData(validServices);
-                    setApiStatus('success');
-                } else {
-                    // If no valid services from API, use all mock data
-                    console.log('No valid API data, using mock data');
-                    setServicesData(getMockServicesData());
-                    setApiStatus('mock');
-                }
+                // Set the services data
+                setServicesData(validServices);
                 
             } catch (error) {
                 console.error('Error in fetchServices:', error);
                 setError(error.message);
-                setApiStatus('error');
-                // Fallback to mock data if API fails
-                setServicesData(getMockServicesData());
+                // Don't set any data on error
+                setServicesData([]);
             } finally {
                 setLoading(false);
-                console.log('Loading complete, apiStatus:', apiStatus);
             }
         };
 
         fetchServices();
     }, []);
-
-    // Helper function to get mock service by ID
-    const getMockServiceById = (id) => {
-        const mockServices = getMockServicesData();
-        const mockService = mockServices.find(service => service.id === id);
-        if (mockService) {
-            return {
-                ...mockService,
-                subservices: mockService.subservices.map(sub => ({
-                    ...sub,
-                    duration: sub.duration || '50 mins',
-                    price: 'Contact for pricing'
-                }))
-            };
-        }
-        
-        return {
-            id,
-            title: `Service ${id}`,
-            image: getServiceImage(id),
-            description: 'Professional mental health service',
-            color: getServiceColor(id),
-            subservices: getDefaultSubservices(id)
-        };
-    };
 
     // Helper function to get service image based on ID
     const getServiceImage = (id) => {
@@ -228,401 +156,6 @@ const ServicesPage = () => {
         };
         return colorMap[id] || "#2a5298";
     };
-
-    // Helper function to get default subservices if API returns empty
-    const getDefaultSubservices = (id) => {
-        // Get from mock data if available
-        const mockService = getMockServicesData().find(service => service.id === id);
-        if (mockService && mockService.subservices) {
-            return mockService.subservices.map(sub => ({
-                title: sub.title || 'Sub Service',
-                description: sub.description || 'Specialized treatment',
-                duration: sub.duration || '50 mins',
-                price: 'Contact for pricing'
-            }));
-        }
-        
-        // Fallback to hardcoded defaults
-        const defaultSubservices = {
-            1: [
-                { 
-                    title: "Intelligence Quotient (IQ) Tests",
-                    description: "Comprehensive cognitive assessment",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Developmental Quotient (DQ) Test",
-                    description: "Assessment of developmental milestones",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Social Quotient (SQ) Test",
-                    description: "Evaluation of social skills and awareness",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "CAT (Children Apperception Test)",
-                    description: "Assessment of emotional expression in children",
-                    duration: "45 mins"
-                },
-                { 
-                    title: "TAT (Thematic Apperception Test)",
-                    description: "Projective psychological test",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "ROR (Rorschach Ink Blot Test)",
-                    description: "Personality and emotional functioning assessment",
-                    duration: "75 mins"
-                }
-            ],
-            2: [
-                { 
-                    title: "Cognitive Behavior Therapy",
-                    description: "Evidence-based therapy for thought pattern modification",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Behavior Therapy",
-                    description: "Focus on changing maladaptive behaviors",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Psychoanalysis",
-                    description: "In-depth exploration of unconscious processes",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Humanistic Therapy",
-                    description: "Person-centered therapeutic approach",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Grief Counselling",
-                    description: "Support for loss and bereavement",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Marriage / Couple Therapy",
-                    description: "Relationship enhancement and conflict resolution",
-                    duration: "60 mins"
-                }
-            ],
-            3: [
-                { 
-                    title: "Family Counseling",
-                    description: "Improve family dynamics and resolve conflicts with professional guidance",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Parenting Support",
-                    description: "Develop effective parenting strategies and improve family communication",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Sibling Conflict Resolution",
-                    description: "Address and resolve conflicts between siblings",
-                    duration: "50 mins"
-                }
-            ],
-            4: [
-                { 
-                    title: "Learning Disability Assessment",
-                    description: "Comprehensive evaluation for learning difficulties",
-                    duration: "90 mins"
-                },
-                { 
-                    title: "Remedial Education",
-                    description: "Personalized educational support and intervention",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Study Skills Training",
-                    description: "Develop effective study habits and techniques",
-                    duration: "50 mins"
-                }
-            ],
-            5: [
-                { 
-                    title: "Anxiety Management",
-                    description: "Learn techniques to manage and reduce anxiety symptoms effectively",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Stress Reduction",
-                    description: "Develop coping strategies to manage daily stress and improve resilience",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Panic Attack Therapy",
-                    description: "Specialized treatment for panic disorder",
-                    duration: "50 mins"
-                }
-            ],
-            6: [
-                { 
-                    title: "Trauma Processing",
-                    description: "Evidence-based therapy for trauma recovery",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "PTSD Treatment",
-                    description: "Specialized care for post-traumatic stress disorder",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "EMDR Therapy",
-                    description: "Eye Movement Desensitization and Reprocessing",
-                    duration: "75 mins"
-                }
-            ]
-        };
-        
-        return defaultSubservices[id] || [{
-            title: "Professional Counseling",
-            description: "Expert mental health support and guidance",
-            duration: "50 mins",
-            price: "Contact for pricing"
-        }];
-    };
-
-    // Fallback mock data
-    const getMockServicesData = () => [
-        {
-            id: 1,
-            title: "Assessments",
-            image: individualTherapyImg,
-            description: "Comprehensive psychological assessments and evaluations for accurate diagnosis and treatment planning.",
-            color: "#2a5298",
-            subservices: [
-                { 
-                    title: "Intelligence Quotient (IQ) Tests",
-                    description: "Comprehensive cognitive assessment",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Developmental Quotient (DQ) Test",
-                    description: "Assessment of developmental milestones",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Social Quotient (SQ) Test",
-                    description: "Evaluation of social skills and awareness",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "CAT (Children Apperception Test)",
-                    description: "Assessment of emotional expression in children",
-                    duration: "45 mins"
-                },
-                { 
-                    title: "TAT (Thematic Apperception Test)",
-                    description: "Projective psychological test",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "ROR (Rorschach Ink Blot Test)",
-                    description: "Personality and emotional functioning assessment",
-                    duration: "75 mins"
-                },
-                { 
-                    title: "Autism Assessment",
-                    description: "Comprehensive autism spectrum evaluation",
-                    duration: "90 mins"
-                },
-                { 
-                    title: "ADHD Assessment",
-                    description: "Evaluation for attention deficit hyperactivity disorder",
-                    duration: "75 mins"
-                },
-                { 
-                    title: "Career Guidance/Aptitude Test",
-                    description: "Assessment of career interests and aptitudes",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Personality Test (MMPI/MCMI 4)",
-                    description: "Comprehensive personality assessment",
-                    duration: "60 mins"
-                }
-            ]
-        },
-        {
-            id: 2,
-            title: "Therapy",
-            image: couplesCounselingImg,
-            description: "Evidence-based therapeutic interventions tailored to individual needs and goals for lasting change.",
-            color: "#ff9800",
-            subservices: [
-                { 
-                    title: "Cognitive Behavior Therapy",
-                    description: "Evidence-based therapy for thought pattern modification",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Behavior Therapy",
-                    description: "Focus on changing maladaptive behaviors",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Psychoanalysis",
-                    description: "In-depth exploration of unconscious processes",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Humanistic Therapy",
-                    description: "Person-centered therapeutic approach",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Grief Counselling",
-                    description: "Support for loss and bereavement",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Marriage / Couple Therapy",
-                    description: "Relationship enhancement and conflict resolution",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Family Therapy",
-                    description: "Systemic approach to family issues",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Supportive Psychotherapy",
-                    description: "Emotional support and validation",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Social Skill Training",
-                    description: "Development of interpersonal skills",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Motivational Enhancement Therapy",
-                    description: "For addiction recovery and behavioral change",
-                    duration: "50 mins"
-                }
-            ]
-        },
-        {
-            id: 3,
-            title: "Group & Support",
-            image: familyTherapyImg,
-            description: "Therapeutic group sessions and support networks for shared healing and mutual growth.",
-            color: "#4caf50",
-            subservices: [
-                { 
-                    title: "Family Counseling",
-                    description: "Improve family dynamics and resolve conflicts with professional guidance",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Parenting Support",
-                    description: "Develop effective parenting strategies and improve family communication",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Support Groups",
-                    description: "Peer support for various mental health challenges",
-                    duration: "90 mins"
-                },
-                { 
-                    title: "Anger Management Group",
-                    description: "Group therapy for anger and emotional regulation",
-                    duration: "75 mins"
-                }
-            ]
-        },
-        {
-            id: 4,
-            title: "Education & Training",
-            image: childTherapyImg,
-            description: "Specialized educational assessments, remedial training, and skill development programs.",
-            color: "#9c27b0",
-            subservices: [
-                { 
-                    title: "Learning Disability Assessment",
-                    description: "Comprehensive evaluation for learning difficulties",
-                    duration: "90 mins"
-                },
-                { 
-                    title: "Remedial Education",
-                    description: "Personalized educational support and intervention",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "Study Skills Training",
-                    description: "Develop effective study habits and techniques",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Workshops & Seminars",
-                    description: "Educational programs on mental health topics",
-                    duration: "120 mins"
-                }
-            ]
-        },
-        {
-            id: 5,
-            title: "Anxiety & Stress",
-            image: anxietyTreatmentImg,
-            description: "Specialized treatments for anxiety disorders, stress management, and emotional regulation.",
-            color: "#2196f3",
-            subservices: [
-                { 
-                    title: "Anxiety Management",
-                    description: "Learn techniques to manage and reduce anxiety symptoms effectively",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Stress Reduction",
-                    description: "Develop coping strategies to manage daily stress and improve resilience",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Panic Attack Therapy",
-                    description: "Specialized treatment for panic disorder",
-                    duration: "50 mins"
-                },
-                { 
-                    title: "Relaxation Therapy",
-                    description: "Techniques for deep relaxation and calm",
-                    duration: "50 mins"
-                }
-            ]
-        },
-        {
-            id: 6,
-            title: "Trauma Recovery",
-            image: traumaTherapyImg,
-            description: "Specialized evidence-based treatments for trauma, PTSD, and related disorders.",
-            color: "#ff5722",
-            subservices: [
-                { 
-                    title: "Trauma Processing",
-                    description: "Evidence-based therapy for trauma recovery",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "PTSD Treatment",
-                    description: "Specialized care for post-traumatic stress disorder",
-                    duration: "60 mins"
-                },
-                { 
-                    title: "EMDR Therapy",
-                    description: "Eye Movement Desensitization and Reprocessing",
-                    duration: "75 mins"
-                },
-                { 
-                    title: "Trauma-Focused CBT",
-                    description: "Cognitive behavioral therapy adapted for trauma",
-                    duration: "60 mins"
-                }
-            ]
-        }
-    ];
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -666,18 +199,6 @@ const ServicesPage = () => {
         setSelectedService(null);
     };
 
-    const retryApiFetch = () => {
-        setLoading(true);
-        setError(null);
-        // Trigger a refetch by setting servicesData to empty
-        setServicesData([]);
-        setTimeout(() => {
-            // The useEffect will run again because servicesData changed
-            setServicesData(getMockServicesData());
-            setLoading(false);
-        }, 1000);
-    };
-
     if (loading) {
         return (
             <div className="service-page">
@@ -686,8 +207,44 @@ const ServicesPage = () => {
                         <Col lg={8} className="text-center">
                             <div className="loading-state">
                                 <div className="loading-spinner"></div>
-                                <p>Loading services...</p>
-                                <small className="text-muted">API Status: {apiStatus}</small>
+                                <p>Loading services from server...</p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="service-page">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="error-state">
+                                <div className="error-icon">⚠️</div>
+                                <h3>Unable to Load Services</h3>
+                                <p>There was an error connecting to the server. Please try again later.</p>
+                                <p className="text-muted">Error: {error}</p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
+
+    if (servicesData.length === 0) {
+        return (
+            <div className="service-page">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="no-data-state">
+                                <div className="no-data-icon">📭</div>
+                                <h3>No Services Available</h3>
+                                <p>No services data found from the server.</p>
                             </div>
                         </Col>
                     </Row>
@@ -698,15 +255,6 @@ const ServicesPage = () => {
 
     return (
         <div className="service-page">
-            {/* Debug info - remove in production */}
-            {import.meta.env.DEV && (
-                <div className="debug-info">
-                    <div className="debug-badge">API Status: {apiStatus}</div>
-                    <div className="debug-badge">Services: {servicesData.length}</div>
-                    <div className="debug-badge">Using: {apiStatus === 'mock' ? 'Mock Data' : 'API Data'}</div>
-                </div>
-            )}
-
             {/* Animated Background */}
             <div className="services-background">
                 <div className="floating-therapy">💬</div>
@@ -766,21 +314,6 @@ const ServicesPage = () => {
                         </Col>
                     ))}
                 </Row>
-
-                {/* API Status Message */}
-                {apiStatus === 'mock' && (
-                    <Row className="justify-content-center mt-4">
-                        <Col lg={8} className="text-center">
-                            <div className="api-status-message">
-                                <p className="mb-0">
-                                    <small className="text-muted">
-                                        Showing demo data. API connection could not be established.
-                                    </small>
-                                </p>
-                            </div>
-                        </Col>
-                    </Row>
-                )}
             </Container>
 
             {/* Subservices Modal */}
@@ -811,25 +344,31 @@ const ServicesPage = () => {
                         <Modal.Body>
                             <div className="subservices-container">
                                 <h4 className="subservices-title">Available Treatments</h4>
-                                <div className="subservices-grid">
-                                    {selectedService.subservices.map((subservice, index) => (
-                                        <div 
-                                            key={index}
-                                            className="subservice-card"
-                                            style={{ animationDelay: `${index * 0.1}s` }}
-                                        >
-                                            <div className="subservice-content">
-                                                <div className="subservice-header">
-                                                    <h5 className="subservice-title">{subservice.title}</h5>
-                                                    <div className="subservice-meta">
-                                                        <span className="duration">{subservice.duration}</span>
+                                {selectedService.subservices.length > 0 ? (
+                                    <div className="subservices-grid">
+                                        {selectedService.subservices.map((subservice, index) => (
+                                            <div 
+                                                key={index}
+                                                className="subservice-card"
+                                                style={{ animationDelay: `${index * 0.1}s` }}
+                                            >
+                                                <div className="subservice-content">
+                                                    <div className="subservice-header">
+                                                        <h5 className="subservice-title">{subservice.title}</h5>
+                                                        <div className="subservice-meta">
+                                                            <span className="duration">{subservice.duration}</span>
+                                                        </div>
                                                     </div>
+                                                    <p className="subservice-description">{subservice.description}</p>
                                                 </div>
-                                                <p className="subservice-description">{subservice.description}</p>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="no-subservices-message">
+                                        <p>No specific treatments listed for this service.</p>
+                                    </div>
+                                )}
                             </div>
                         </Modal.Body>
                     </>
@@ -843,36 +382,6 @@ const ServicesPage = () => {
                     padding: 80px 0;
                     position: relative;
                     overflow: hidden;
-                }
-
-                /* Debug Info - only in development */
-                .debug-info {
-                    position: fixed;
-                    top: 10px;
-                    right: 10px;
-                    z-index: 9999;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
-                    opacity: 0.8;
-                }
-
-                .debug-badge {
-                    background: rgba(0, 0, 0, 0.7);
-                    color: white;
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                    font-size: 0.8rem;
-                    font-family: monospace;
-                }
-
-                /* API Status Message */
-                .api-status-message {
-                    background: rgba(255, 193, 7, 0.1);
-                    border: 1px solid rgba(255, 193, 7, 0.3);
-                    border-radius: 10px;
-                    padding: 15px;
-                    margin-top: 20px;
                 }
 
                 /* Animated Background */
@@ -1189,6 +698,13 @@ const ServicesPage = () => {
                     flex-grow: 1;
                 }
 
+                .no-subservices-message {
+                    text-align: center;
+                    padding: 2rem;
+                    color: #666;
+                    font-style: italic;
+                }
+
                 /* Loading State */
                 .loading-state {
                     text-align: center;
@@ -1204,6 +720,50 @@ const ServicesPage = () => {
                     border-radius: 50%;
                     animation: spin 1s linear infinite;
                     margin: 0 auto 1rem;
+                }
+
+                /* Error State */
+                .error-state {
+                    text-align: center;
+                    padding: 100px 20px;
+                    animation: fadeIn 0.6s ease-out;
+                }
+
+                .error-icon {
+                    font-size: 4rem;
+                    margin-bottom: 20px;
+                }
+
+                .error-state h3 {
+                    color: #dc3545;
+                    margin-bottom: 1rem;
+                }
+
+                .error-state p {
+                    color: #666;
+                    margin-bottom: 0.5rem;
+                }
+
+                /* No Data State */
+                .no-data-state {
+                    text-align: center;
+                    padding: 100px 20px;
+                    animation: fadeIn 0.6s ease-out;
+                }
+
+                .no-data-icon {
+                    font-size: 4rem;
+                    margin-bottom: 20px;
+                }
+
+                .no-data-state h3 {
+                    color: #666;
+                    margin-bottom: 1rem;
+                }
+
+                .no-data-state p {
+                    color: #888;
+                    margin-bottom: 0.5rem;
                 }
 
                 @keyframes spin {
@@ -1286,10 +846,6 @@ const ServicesPage = () => {
                         align-items: flex-start;
                         flex-direction: row;
                         gap: 1rem;
-                    }
-                    
-                    .debug-info {
-                        display: none;
                     }
                 }
 
