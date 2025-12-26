@@ -15,67 +15,6 @@ import {
   faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
 
-useEffect(() => {
-    fetchDoctors();
-  }, []);
-
-const fetchDoctors = async () => {
-    try {
-      setFetchLoading(true);
-      const response = await fetch(`${backendUrl}/doctor/list`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log('Fetched doctors:', result);
-
-      if (result.status && result.data) {
-        // Transform API data to match frontend structure
-        const transformedDoctors = result.data.map(doctor => ({
-          id: parseInt(doctor.id),
-          name: doctor.full_name?.trim() || "Unknown Doctor",
-          email: doctor.email?.trim() || "",
-          phone: doctor.phone?.trim() || "",
-          specialization: doctor.specialization?.trim() || "General",
-          category: doctor.category?.trim() || getCategoryFromExperience(doctor.experience),
-          experience: doctor.experience?.trim() || "Not specified",
-          qualification: doctor.qualification?.trim() || "Not specified",
-          description: doctor.description?.trim() || "Experienced healthcare professional",
-          address: "Sunshine Mindcare Center",
-          joiningDate: formatDate(doctor.created_at),
-          status: "active",
-          image: getValidImageUrl(doctor.photo),
-          rating: 4.5,
-          patients: Math.floor(Math.random() * 1000) + 100
-        }));
-
-        setDoctors(transformedDoctors);
-        showAlert("success", "Doctors loaded successfully!");
-      } else {
-        throw new Error(result.message || 'Failed to fetch doctors');
-      }
-    } catch (error) {
-      console.error('Error fetching doctors:', error);
-      showAlert("error", error.message || 'Failed to load doctors. Please try again.');
-
-      // Fallback to demo data if API fails
-      setDoctors(getDemoDoctors());
-    } finally {
-      setFetchLoading(false);
-    }
-  };
-
-const stats = {
-    total: doctors.length,
-  };
 // Inline CSS for custom animations and effects
 const dashboardStyles = {
   container: {
@@ -623,7 +562,7 @@ const Dashboard = () => {
   const mainStatsData = [
     {
       title: "Total Doctors",
-      value: stats.total,
+      value: 156,
       icon: faUserFriends,
       delay: 200,
     },
