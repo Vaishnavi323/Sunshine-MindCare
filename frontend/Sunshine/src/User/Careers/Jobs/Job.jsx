@@ -15,67 +15,61 @@ const Job = () => {
     const [error, setError] = useState(null);
 
     // Real API call
-    useEffect(() => {
-        const fetchJobs = async () => {
-            try {
-                setLoading(true);
-                setError(null);
+   useEffect(() => {
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/job/list`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/job/list`
+      );
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-                const data = await response.json();
+      const data = await response.json();
 
-                if (data.status) {
-                    // Transform API data to match your component structure
-                    const transformedJobs = data.error.map(job => ({
-                        id: job.id,
-                        title: (job.heading && job.heading.trim() !== '') ? job.heading : `Job Position ${job.id}`,
-                        department: (job.department && job.department.trim() !== '') ? job.department : 'General',
-                        type: job.type === 'fulltime' ? 'Full-time' :
-                            job.type === 'parttime' ? 'Part-time' :
-                                job.type === 'internship' ? 'Internship' :
-                                    job.type === 'contract' ? 'Contract' : 'Full-time',
-                        experience: (job.experience && job.experience.trim() !== '') ? job.experience : 'Not specified',
-                        location: (job.location && job.location.trim() !== '') ? job.location : 'Multiple Locations',
-                        salary: (job.salary_lpa && job.salary_lpa.trim() !== '') ? `₹${job.salary_lpa} LPA` : 'Competitive Salary',
-                        description: (job.description && job.description.trim() !== '') ? job.description : 'Join our team and contribute to mental healthcare excellence. We are looking for passionate professionals who want to make a difference.',
-                        requirements: (job.requirements && job.requirements.trim() !== '') ?
-                            job.requirements.split(',').map(req => req.trim()).filter(req => req) :
-                            ['Relevant degree or certification', 'Strong communication skills', 'Empathetic approach', 'Team player'],
-                        postedDate: job.created_at ? new Date(job.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-                        applyLink: "#apply",
-                        featured: job.id % 3 === 0 // Every 3rd job will be featured
-                    }));
+      if (data.data && data.data.length > 0) {
+        const transformedJobs = data.data.map(job => ({
+          id: job.id,
+          title: job.heading || `Job Position ${job.id}`,
+          department: job.department || 'General',
+          type:
+            job.type === 'fulltime' ? 'Full-time' :
+            job.type === 'parttime' ? 'Part-time' :
+            job.type === 'internship' ? 'Internship' :
+            job.type === 'contract' ? 'Contract' : 'Full-time',
+          experience: job.experience || 'Not specified',
+          location: job.location || 'Multiple Locations',
+          salary: job.salary_lpa ? `₹${job.salary_lpa}` : 'Competitive Salary',
+          description: job.description || 'Job description not available',
+          requirements: job.requirements
+            ? job.requirements.split(',').map(r => r.trim())
+            : ['Relevant skills required'],
+          postedDate: job.created_at
+            ? new Date(job.created_at).toISOString().split('T')[0]
+            : new Date().toISOString().split('T')[0],
+          featured: Number(job.id) % 3 === 0
+        }));
 
-                    // Filter out invalid jobs (optional - uncomment if needed)
-                    // const validJobs = transformedJobs.filter(job => job.title !== `Job Position ${job.id}`);
+        setJobs(transformedJobs);
+      } else {
+        throw new Error(data.message || 'No jobs found');
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+      setJobs(getMockJobsData());
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                    setJobs(transformedJobs);
-                } else {
-                    throw new Error(data.message || 'Failed to fetch jobs');
-                }
+  fetchJobs();
+}, []);
 
-            } catch (error) {
-                console.error('Error fetching jobs:', error);
-                setError(error.message);
-                // Fallback to mock data if API fails
-                setJobs(getMockJobsData());
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchJobs();
-    }, []);
 
     // Fallback mock data
     const getMockJobsData = () => [
@@ -161,13 +155,7 @@ const Job = () => {
     const jobTypes = [...new Set(jobs.map(job => job.type))];
     const experienceLevels = [...new Set(jobs.map(job => job.experience))];
 
-    const filteredJobs = jobs.filter(job => {
-        return (
-            (!filters.department || job.department === filters.department) &&
-            (!filters.type || job.type === filters.type) &&
-            (!filters.experience || job.experience === filters.experience)
-        );
-    });
+    const filteredJobs = jobs;
 
     const handleJobClick = (job) => {
         setSelectedJob(job);

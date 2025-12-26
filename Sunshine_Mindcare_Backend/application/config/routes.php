@@ -109,3 +109,4 @@ $route['test/list']= 'TestController/list';
 $route['test/delete'] = 'TestController/delete';
 $route['doctor/update'] = 'DoctorController/update';
 $route['doctor/delete'] = 'DoctorController/delete';
+$route['blog/update/(:num)'] = 'BlogController/update/$1'; 
