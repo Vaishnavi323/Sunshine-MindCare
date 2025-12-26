@@ -121,7 +121,7 @@ const Blogss = () => {
     try {
       if (editingBlog) {
         await axios.post(
-          `${API_BASE_URL}/blogs/${editingBlog.id}`,
+          `${API_BASE_URL}/blog/update/${editingBlog.id}`,
           formData,
           {
             headers: {

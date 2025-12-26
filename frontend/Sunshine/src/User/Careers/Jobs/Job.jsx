@@ -260,13 +260,7 @@ const Job = () => {
     const jobTypes = [...new Set(jobs.map(job => job.type))];
     const experienceLevels = [...new Set(jobs.map(job => job.experience))];
 
-    const filteredJobs = jobs.filter(job => {
-        return (
-            (!filters.department || job.department === filters.department) &&
-            (!filters.type || job.type === filters.type) &&
-            (!filters.experience || job.experience === filters.experience)
-        );
-    });
+    const filteredJobs = jobs;
 
     const handleJobClick = (job) => {
         setSelectedJob(job);
