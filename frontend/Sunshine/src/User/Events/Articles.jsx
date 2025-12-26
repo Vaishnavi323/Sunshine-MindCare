@@ -17,42 +17,85 @@ const PublishedArticles = () => {
                 setLoading(true);
                 setError(null);
                 
+                console.log('Fetching articles from:', `${import.meta.env.VITE_BACKEND_URL}/article/list`);
+                
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/article/list`, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                     },
                 });
 
+                console.log('Response status:', response.status);
+                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
+                console.log('API Response data:', data);
                 
                 if (data.status) {
-                    // Transform API data to match your component structure
-                    const transformedArticles = data.error.map(article => ({
-                        id: article.id,
-                        title: `Article ${article.id}`,
-                        newspaper: "Sunshine MindCare",
-                        date: article.created_at,
-                        image: article.image
-                            ? (article.image.startsWith('http') || article.image.startsWith('data:')
-                                ? article.image
-                                : `${import.meta.env.VITE_BACKEND_URL}/uploads/articles/${article.image}`)
-                            : placeholderImg,
-                        originalImage: article.image
-                    }));
+                    // Extract articles from response - checking different possible properties
+                    let articlesData = [];
                     
-                    setArticles(transformedArticles);
+                    if (Array.isArray(data.data)) {
+                        articlesData = data.data;
+                    } else if (Array.isArray(data.error)) {
+                        articlesData = data.error;
+                    } else if (Array.isArray(data)) {
+                        articlesData = data;
+                    }
+                    
+                    console.log('Articles data extracted:', articlesData);
+                    
+                    if (articlesData.length > 0) {
+                        // Transform API data to match your component structure
+                        const transformedArticles = articlesData.map(article => {
+                            // Handle image URL construction
+                            let imageUrl = placeholderImg;
+                            if (article.image) {
+                                // Clean up the image path
+                                let cleanImagePath = article.image.replace(/\\/g, '/');
+                                // Remove any double slashes
+                                cleanImagePath = cleanImagePath.replace(/\/\//g, '/');
+                                // Remove leading slash if present
+                                cleanImagePath = cleanImagePath.replace(/^\//, '');
+                                
+                                // Check if it's already a full URL
+                                if (article.image.startsWith('http') || article.image.startsWith('data:')) {
+                                    imageUrl = article.image;
+                                } else if (article.image.startsWith('uploads/')) {
+                                    imageUrl = `${import.meta.env.VITE_BACKEND_URL}/${cleanImagePath}`;
+                                } else {
+                                    imageUrl = `${import.meta.env.VITE_BACKEND_URL}/uploads/articles/${cleanImagePath}`;
+                                }
+                            }
+                            
+                            return {
+                                id: article.id || article.article_id || Date.now() + Math.random(),
+                                title: article.title || `Article ${article.id || ''}`,
+                                newspaper: article.newspaper || "Sunshine MindCare",
+                                date: article.created_at || article.createdDate || article.date || new Date().toISOString(),
+                                image: imageUrl,
+                                originalImage: article.image || ''
+                            };
+                        });
+                        
+                        console.log('Transformed articles:', transformedArticles);
+                        setArticles(transformedArticles);
+                    } else {
+                        console.log('No articles found in response');
+                        setArticles([]);
+                    }
                 } else {
-                    throw new Error(data.message || 'Failed to fetch articles');
+                    console.log('API returned false status:', data);
+                    setArticles([]);
                 }
                 
             } catch (error) {
                 console.error('Error fetching articles:', error);
-                setError(error.message);
+                setError(error.message || 'Failed to fetch articles');
                 // Fallback to empty array if API fails
                 setArticles([]);
             } finally {
@@ -65,8 +108,17 @@ const PublishedArticles = () => {
 
     // Format date
     const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return 'Unknown Date';
+            }
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString(undefined, options);
+        } catch (error) {
+            console.error('Error formatting date:', error);
+            return 'Unknown Date';
+        }
     };
 
     const handleArticleClick = (article) => {
@@ -77,6 +129,20 @@ const PublishedArticles = () => {
     const handleCloseModal = () => {
         setShowModal(false);
         setSelectedArticle(null);
+    };
+
+    // Function to handle image error
+    const handleImageError = (e, article) => {
+        console.log(`Image failed to load for article ${article.id}:`, article.image);
+        e.target.onerror = null; // Prevent infinite loop
+        e.target.src = placeholderImg;
+        // Try alternative URL pattern
+        if (article.originalImage) {
+            const cleanPath = article.originalImage.replace(/\\/g, '/').replace(/^\//, '');
+            const alternativeUrl = `${import.meta.env.VITE_BACKEND_URL}/${cleanPath}`;
+            console.log('Trying alternative URL:', alternativeUrl);
+            e.target.src = alternativeUrl;
+        }
     };
 
     if (loading) {
@@ -161,7 +227,6 @@ const PublishedArticles = () => {
                                                     backgroundRepeat: 'no-repeat'
                                                 }}
                                             >
-                                            <img src={article.image} onError={(e)=>{ e.target.onerror=null; e.target.src=placeholderImg }} alt={article.title} />
                                                 <div className="image-overlay">
                                                     <div className="image-overlay-text">
                                                         <div className="newspaper-name">{article.newspaper}</div>
@@ -221,25 +286,26 @@ const PublishedArticles = () => {
                 size="lg" 
                 centered
                 className="article-modal"
+                backdrop="static"
             >
                 {selectedArticle && (
                     <>
                         <Modal.Header closeButton>
-                            <Modal.Title>Article {selectedArticle.id}</Modal.Title>
+                            <Modal.Title>{selectedArticle.title}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div className="modal-content">
                                 <div className="modal-image">
-                                        <div 
+                                    <div 
                                         className="newspaper-image-modal"
                                         style={{ 
                                             backgroundImage: `url(${selectedArticle.image})`,
-                                            backgroundSize: 'cover',
+                                            backgroundSize: 'contain',
                                             backgroundPosition: 'center',
-                                            backgroundRepeat: 'no-repeat'
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundColor: '#f8f9fa'
                                         }}
                                     >
-                                    <img src={selectedArticle.image} onError={(e)=>{ e.target.onerror=null; e.target.src=placeholderImg }} alt={selectedArticle.title} />
                                         <div className="image-overlay-modal">
                                             <div className="image-overlay-text-modal">
                                                 <div className="newspaper-name">{selectedArticle.newspaper}</div>
@@ -248,17 +314,29 @@ const PublishedArticles = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className="modal-actions">
-                                    <button 
-                                        className="view-original-btn"
-                                        onClick={() => window.open(selectedArticle.image, '_blank')}
-                                    >
-                                        <i className="fas fa-external-link-alt"></i>
-                                        View Full Image
-                                    </button>
-                                </div> */}
+                                <div className="modal-actions mt-3">
+                                    {selectedArticle.image && selectedArticle.image !== placeholderImg && (
+                                        <button 
+                                            className="view-original-btn"
+                                            onClick={() => {
+                                                window.open(selectedArticle.image, '_blank', 'noopener,noreferrer');
+                                            }}
+                                        >
+                                            <i className="fas fa-external-link-alt"></i>
+                                            View Full Image
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </Modal.Body>
+                        <Modal.Footer>
+                            <button 
+                                className="btn btn-secondary"
+                                onClick={handleCloseModal}
+                            >
+                                Close
+                            </button>
+                        </Modal.Footer>
                     </>
                 )}
             </Modal>
@@ -375,6 +453,7 @@ const PublishedArticles = () => {
                     justify-content: flex-start;
                     position: relative;
                     padding: 20px;
+                    background-color: #f8f9fa;
                 }
 
                 .image-overlay {

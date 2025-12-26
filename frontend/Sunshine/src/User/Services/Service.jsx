@@ -26,50 +26,103 @@ const ServicesPage = () => {
                 setLoading(true);
                 setError(null);
                 
-                // Fetch all services by calling the API multiple times (since it requires ID)
-                const serviceIds = [1, 2, 3, 4, 5, 6]; // Adjust based on your service IDs
-                const servicePromises = serviceIds.map(id => 
-                    fetch(`${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.json();
-                        })
-                );
-
-                const serviceResults = await Promise.all(servicePromises);
-                
-                // Transform API data to match your component structure
-                const transformedServices = serviceResults.map((result, index) => {
-                    if (result.status && result.error) {
-                        const service = result.error;
-                        return {
-                            id: service.id,
-                            title: service.title || `Service ${service.id}`,
-                            image: getServiceImage(service.id),
-                            description: service.description || 'No description available',
-                            color: getServiceColor(service.id),
-                            subservices: service.sub_services && service.sub_services.length > 0 
-                                ? service.sub_services.map(sub => ({
-                                    title: sub.title || 'Sub Service',
-                                    description: sub.description || 'No description available',
-                                    duration: '50 mins',
-                                    price: 'Contact for pricing'
-                                }))
-                                : getDefaultSubservices(service.id)
+                const serviceIds = [1, 2, 3, 4, 5, 6];
+                const servicePromises = serviceIds.map(async (id) => {
+                    try {
+                        const url = `${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`;
+                        
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status} for service ${id}`);
+                        }
+                        
+                        const data = await response.json();
+                        return { id, data, error: null };
+                        
+                    } catch (fetchError) {
+                        console.error(`Error fetching service ${id}:`, fetchError);
+                        return { 
+                            id, 
+                            data: null, 
+                            error: fetchError.message || 'Network error' 
                         };
                     }
-                    return null;
-                }).filter(service => service !== null);
+                });
 
-                setServicesData(transformedServices);
+                const results = await Promise.all(servicePromises);
+                
+                // Transform API responses
+                const transformedServices = results.map((result) => {
+                    const { id, data, error } = result;
+                    
+                    // If we got a successful API response
+                    if (data && !error) {
+                        // Extract service data from different possible response structures
+                        let serviceData = null;
+                        
+                        // Try different possible response structures
+                        if (data.data && data.data.id) {
+                            serviceData = data.data;
+                        } else if (data.error && data.error.id) {
+                            serviceData = data.error;
+                        } else if (data.id) {
+                            serviceData = data;
+                        } else if (Array.isArray(data) && data.length > 0) {
+                            serviceData = data[0];
+                        } else if (typeof data === 'object' && Object.keys(data).length > 0) {
+                            serviceData = data;
+                        }
+                        
+                        // If we have valid service data from API
+                        if (serviceData && (serviceData.id || serviceData.title || serviceData.name)) {
+                            const hasSubservices = (
+                                (serviceData.sub_services && Array.isArray(serviceData.sub_services) && serviceData.sub_services.length > 0) ||
+                                (serviceData.subServices && Array.isArray(serviceData.subServices) && serviceData.subServices.length > 0) ||
+                                (serviceData.subservices && Array.isArray(serviceData.subservices) && serviceData.subservices.length > 0)
+                            );
+                            
+                            return {
+                                id: serviceData.id || id,
+                                title: serviceData.title || serviceData.name || `Service ${id}`,
+                                image: getServiceImage(serviceData.id || id),
+                                description: serviceData.description || serviceData.desc || 'No description available',
+                                color: getServiceColor(serviceData.id || id),
+                                subservices: hasSubservices 
+                                    ? (serviceData.sub_services || serviceData.subServices || serviceData.subservices || []).map(sub => ({
+                                        title: sub.title || sub.name || 'Sub Service',
+                                        description: sub.description || sub.desc || 'No description available',
+                                        duration: sub.duration || sub.time || '50 mins',
+                                        price: sub.price || sub.cost || 'Contact for pricing'
+                                    }))
+                                    : [] // Return empty array if no subservices
+                            };
+                        }
+                    }
+                    
+                    // If API failed or returned no valid data, return null
+                    return null;
+                });
+
+                // Filter out any null values (failed API calls)
+                const validServices = transformedServices.filter(service => 
+                    service !== null
+                );
+                
+                // Set the services data
+                setServicesData(validServices);
                 
             } catch (error) {
-                console.error('Error fetching services:', error);
+                console.error('Error in fetchServices:', error);
                 setError(error.message);
-                // Fallback to mock data if API fails
-                setServicesData(getMockServicesData());
+                // Don't set any data on error
+                setServicesData([]);
             } finally {
                 setLoading(false);
             }
@@ -103,136 +156,6 @@ const ServicesPage = () => {
         };
         return colorMap[id] || "#2a5298";
     };
-
-    // Helper function to get default subservices if API returns empty
-    const getDefaultSubservices = (id) => {
-        const defaultSubservices = {
-            1: [
-                { title: "Intelligence Quotient (IQ) Tests" },
-                { title: "Developmental Quotient (DQ) Test" },
-                { title: "Social Quotient (SQ) Test" },
-                { title: "Tests for emotional expression CAT (Children Apperception Test)" },
-                { title: "TAT (Thematic Apperception Test)" },
-                { title: "ROR (Rorschach Ink Blot Test)" },
-                { title: "Autism assessment" },
-                { title: "ADHD assessment" },
-                { title: "Career Guidance/Aptitude Test" },
-                { title: "Personality Test (MMPI/MCMI 4)" },
-                { title: "Millon Adolescent Clinical Inventory II (MACI-II): for identifying temperamental and behavioral issues in the Adolescents" },
-                { title: "Test for Obsessive Compulsive Disorders" },
-                { title: "HAM-A and BDI for Anxiety/ Depression" },
-                { title: "WRAT 5 India: for diagnosing learning difficulty" },
-                { title: "CBCL 1 % to 5 years and CBCL. 6 to 18 years (Child Behavioral Checklist): To identify behavioral and emotional challenges in children." }
-            ],
-            2: [
-                { title: "Cognitive Behavior Therapy" },
-                { title: "Behavior Therapy" },
-                { title: "Psychoanalysis" },
-                { title: "Humanistic Therapy" },
-                { title: "Grief Counselling" },
-                { title: "Marriage / Couple Therapy" },
-                { title: "Family Therapy" },
-                { title: "Supportive psychotherapy" },
-                { title: "Social Skill Training" },
-                { title: "Motivational Enhancement Therapy for De-addiction" },
-                { title: "Relaxation Therapy" },
-                { title: "Habit Reversal Training" },
-                { title: "Career Guidance Counselling" },
-                { title: "Remedial Therapy" },
-                { title: "REBT" }
-            ],
-            3: [
-                { title: "Family Counseling", description: "Improve family dynamics and resolve conflicts with professional guidance.", duration: "60 mins" },
-                { title: "Parenting Support", description: "Develop effective parenting strategies and improve family communication.", duration: "50 mins" }
-            ],
-            4: [
-                { title: "Anxiety Management", description: "Learn techniques to manage and reduce anxiety symptoms effectively.", duration: "50 mins" },
-                { title: "Stress Reduction", description: "Develop coping strategies to manage daily stress and improve resilience.", duration: "50 mins" }
-            ],
-            5: [],
-            6: []
-        };
-        return defaultSubservices[id] || [{
-            title: "Professional Counseling",
-            description: "Expert mental health support and guidance.",
-            duration: "50 mins",
-            price: "Contact for pricing"
-        }];
-    };
-
-    // Fallback mock data
-    const getMockServicesData = () => [
-        {
-            id: 1,
-            title: "Assesments",
-            image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
-            description: "One-on-one counseling sessions tailored to your unique needs and goals.",
-            color: "#2a5298",
-            subservices: [
-                { title: "Intelligence Quotient (IQ) Tests" },
-                { title: "Developmental Quotient (DQ) Test" },
-                { title: "Social Quotient (SQ) Test" },
-                { title: "Tests for emotional expression CAT (Children Apperception Test)" },
-                { title: "TAT (Thematic Apperception Test)" },
-                { title: "ROR (Rorschach Ink Blot Test)" },
-                { title: "Autism assessment" },
-                { title: "ADHD assessment" },
-                { title: "Career Guidance/Aptitude Test" },
-                { title: "Personality Test (MMPI/MCMI 4)" },
-                { title: "Millon Adolescent Clinical Inventory II (MACI-II): for identifying temperamental and behavioral issues in the Adolescents" },
-                { title: "Test for Obsessive Compulsive Disorders" },
-                { title: "HAM-A and BDI for Anxiety/ Depression" },
-                { title: "WRAT 5 India: for diagnosing learning difficulty" },
-                { title: "CBCL 1 % to 5 years and CBCL. 6 to 18 years (Child Behavioral Checklist): To identify behavioral and emotional challenges in children." }
-            ]
-        },
-        {
-            id: 2,
-            title: "Therapy",
-            image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&h=600&fit=crop',
-            description: "Strengthen your relationship and improve communication patterns with professional guidance.",
-            color: "#ff9800",
-            subservices: [
-                { title: "Cognitive Behavior Therapy" },
-                { title: "Behavior Therapy" },
-                { title: "Psychoanalysis" },
-                { title: "Humanistic Therapy" },
-                { title: "Grief Counselling" },
-                { title: "Marriage / Couple Therapy" },
-                { title: "Family Therapy" },
-                { title: "Supportive psychotherapy" },
-                { title: "Social Skill Training" },
-                { title: "Motivational Enhancement Therapy for De-addiction" },
-                { title: "Relaxation Therapy" },
-                { title: "Habit Reversal Training" },
-                { title: "Career Guidance Counselling" },
-                { title: "Remedial Therapy" },
-                { title: "REBT" }
-            ]
-        },
-        {
-            id: 3,
-            title: "Group & Support",
-            image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=600&fit=crop',
-            description: "Improve family relationships and resolve conflicts in a supportive environment.",
-            color: "#4caf50",
-            subservices: [
-                { title: "Family Counseling", description: "Improve family dynamics and resolve conflicts with professional guidance.", duration: "60 mins" },
-                { title: "Parenting Support", description: "Develop effective parenting strategies and improve family communication.", duration: "50 mins" }
-            ]
-        },
-        {
-            id: 4,
-            title: "Education & Training",
-            image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=600&fit=crop',
-            description: "Evidence-based treatments for anxiety disorders and stress management.",
-            color: "#9c27b0",
-            subservices: [
-                { title: "Anxiety Management", description: "Learn techniques to manage and reduce anxiety symptoms effectively.", duration: "50 mins" },
-                { title: "Stress Reduction", description: "Develop coping strategies to manage daily stress and improve resilience.", duration: "50 mins" }
-            ]
-        }
-    ];
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -276,12 +199,6 @@ const ServicesPage = () => {
         setSelectedService(null);
     };
 
-    const handleBookAppointment = (subservice) => {
-        // Navigate to booking page or open booking modal
-        console.log('Booking:', subservice);
-        alert(`Booking appointment for: ${subservice.title}`);
-    };
-
     if (loading) {
         return (
             <div className="service-page">
@@ -290,7 +207,7 @@ const ServicesPage = () => {
                         <Col lg={8} className="text-center">
                             <div className="loading-state">
                                 <div className="loading-spinner"></div>
-                                <p>Loading services...</p>
+                                <p>Loading services from server...</p>
                             </div>
                         </Col>
                     </Row>
@@ -299,7 +216,42 @@ const ServicesPage = () => {
         );
     }
 
-    // Removed error state check - show default data instead of error
+    if (error) {
+        return (
+            <div className="service-page">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="error-state">
+                                <div className="error-icon">⚠️</div>
+                                <h3>Unable to Load Services</h3>
+                                <p>There was an error connecting to the server. Please try again later.</p>
+                                <p className="text-muted">Error: {error}</p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
+
+    if (servicesData.length === 0) {
+        return (
+            <div className="service-page">
+                <Container>
+                    <Row className="justify-content-center">
+                        <Col lg={8} className="text-center">
+                            <div className="no-data-state">
+                                <div className="no-data-icon">📭</div>
+                                <h3>No Services Available</h3>
+                                <p>No services data found from the server.</p>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
 
     return (
         <div className="service-page">
@@ -392,31 +344,31 @@ const ServicesPage = () => {
                         <Modal.Body>
                             <div className="subservices-container">
                                 <h4 className="subservices-title">Available Treatments</h4>
-                                <div className="subservices-grid">
-                                    {selectedService.subservices.map((subservice, index) => (
-                                        <div 
-                                            key={index}
-                                            className="subservice-card"
-                                            style={{ animationDelay: `${index * 0.1}s` }}
-                                        >
-                                            <div className="subservice-content">
-                                                <div className="subservice-header">
-                                                    <h5 className="subservice-title">{subservice.title}</h5>
-                                                    <div className="subservice-meta">
-                                                        <span className="duration">{subservice.duration}</span>
+                                {selectedService.subservices.length > 0 ? (
+                                    <div className="subservices-grid">
+                                        {selectedService.subservices.map((subservice, index) => (
+                                            <div 
+                                                key={index}
+                                                className="subservice-card"
+                                                style={{ animationDelay: `${index * 0.1}s` }}
+                                            >
+                                                <div className="subservice-content">
+                                                    <div className="subservice-header">
+                                                        <h5 className="subservice-title">{subservice.title}</h5>
+                                                        <div className="subservice-meta">
+                                                            <span className="duration">{subservice.duration}</span>
+                                                        </div>
                                                     </div>
+                                                    <p className="subservice-description">{subservice.description}</p>
                                                 </div>
-                                                <p className="subservice-description">{subservice.description}</p>
-                                                {/* <button 
-                                                    className="book-subservice-btn"
-                                                    onClick={() => handleBookAppointment(subservice)}
-                                                >
-                                                    Book Session
-                                                </button> */}
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="no-subservices-message">
+                                        <p>No specific treatments listed for this service.</p>
+                                    </div>
+                                )}
                             </div>
                         </Modal.Body>
                     </>
@@ -746,20 +698,11 @@ const ServicesPage = () => {
                     flex-grow: 1;
                 }
 
-                .book-subservice-btn {
-                    background: linear-gradient(45deg, #ff9800, #ffb74d);
-                    border: none;
-                    padding: 10px 20px;
-                    border-radius: 25px;
-                    color: white;
-                    font-weight: 600;
-                    transition: all 0.3s ease;
-                    width: 100%;
-                }
-
-                .book-subservice-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+                .no-subservices-message {
+                    text-align: center;
+                    padding: 2rem;
+                    color: #666;
+                    font-style: italic;
                 }
 
                 /* Loading State */
@@ -777,11 +720,6 @@ const ServicesPage = () => {
                     border-radius: 50%;
                     animation: spin 1s linear infinite;
                     margin: 0 auto 1rem;
-                }
-
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
                 }
 
                 /* Error State */
@@ -803,22 +741,34 @@ const ServicesPage = () => {
 
                 .error-state p {
                     color: #666;
-                    margin-bottom: 2rem;
+                    margin-bottom: 0.5rem;
                 }
 
-                .retry-btn {
-                    background: linear-gradient(45deg, #dc3545, #e35d6a);
-                    border: none;
-                    padding: 12px 30px;
-                    font-weight: 600;
-                    border-radius: 25px;
-                    color: white;
-                    transition: all 0.3s ease;
+                /* No Data State */
+                .no-data-state {
+                    text-align: center;
+                    padding: 100px 20px;
+                    animation: fadeIn 0.6s ease-out;
                 }
 
-                .retry-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+                .no-data-icon {
+                    font-size: 4rem;
+                    margin-bottom: 20px;
+                }
+
+                .no-data-state h3 {
+                    color: #666;
+                    margin-bottom: 1rem;
+                }
+
+                .no-data-state p {
+                    color: #888;
+                    margin-bottom: 0.5rem;
+                }
+
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
                 }
 
                 /* Animations */

@@ -82,7 +82,7 @@ const Team = () => {
           email: doctor.email?.trim() || "",
           phone: doctor.phone?.trim() || "",
           specialization: doctor.specialization?.trim() || "General",
-          category: getCategoryFromExperience(doctor.experience),
+          category: doctor.category?.trim() || getCategoryFromExperience(doctor.experience),
           experience: doctor.experience?.trim() || "Not specified",
           qualification: doctor.qualification?.trim() || "Not specified",
           description: doctor.description?.trim() || "Experienced healthcare professional",
@@ -148,6 +148,7 @@ const updateDoctorToAPI = async (doctorId, doctorData) => {
     formData.append("experience", doctorData.experience);
     formData.append("qualification", doctorData.qualification);
     formData.append("description", doctorData.description);
+    formData.append("category", doctorData.category);
 
     if (doctorData.image instanceof File) {
       formData.append("photo", doctorData.image);
@@ -269,7 +270,7 @@ const updateDoctorToAPI = async (doctorId, doctorData) => {
       formData.append('experience', doctorData.experience);
       formData.append('qualification', doctorData.qualification);
       formData.append('description', doctorData.description);
-
+      formData.append('category', doctorData.category);
       // Append image file if exists
       if (doctorData.image && doctorData.image instanceof File) {
         formData.append('photo', doctorData.image);
@@ -283,6 +284,7 @@ const updateDoctorToAPI = async (doctorId, doctorData) => {
         experience: doctorData.experience,
         qualification: doctorData.qualification,
         description: doctorData.description,
+        category: doctorData.category,
         hasImage: !!doctorData.image
       });
 

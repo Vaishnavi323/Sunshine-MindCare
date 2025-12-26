@@ -121,15 +121,15 @@ const Reviews = () => {
   // API function to approve feedback
   const approveFeedbackAPI = async (id) => {
     try {
-      setApproveLoading(true);
+      // mark which review is being approved so UI can show spinner per-item
+      setApproveLoading(id);
 
       const formData = new FormData();
       formData.append('id', id);
 
       const response = await axios.post(`${API_BASE_URL}/feedback/approve`, formData, { headers: { Authorization: `Bearer ${token}` } });
-      if (response.data.status) {
-        window.alert("Review approved successfully!");
-      }
+      // return API response data for caller to update local state
+      return response.data;
     } catch (error) {
       console.error('Error approving feedback:', error);
       throw error;
@@ -658,7 +658,7 @@ const Reviews = () => {
                       {/* Approve Button - Only show for pending reviews */}
                       {review.status === "pending" && (
                         <button
-                          onClick={() => approveFeedbackAPI(review.id)}
+                          onClick={() => handleApprove(review.id)}
                           disabled={approveLoading === review.id}
                           className="flex-1 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition-all duration-300 flex items-center justify-center space-x-2 border border-green-500 disabled:opacity-50"
                         >
