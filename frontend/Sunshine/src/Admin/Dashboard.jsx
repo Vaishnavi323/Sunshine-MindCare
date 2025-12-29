@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
 import {
   faHandHoldingHeart,
   faUserFriends,
@@ -386,6 +388,18 @@ const StatsCard = ({ title, value, icon, delay = 0 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
+  fetch(`${BASE_URL}/doctor/list`)
+    .then(res => res.json())
+    .then(result => {
+      if (result.status === true) {
+        setTotalDoctors(result.total);
+      }
+    })
+    .catch(err => console.error("Doctor API error:", err));
+}, []);
+
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       let start = 0;
       const end =
@@ -757,71 +771,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Data and Information Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            {/* Recent Events */}
-            {/* <div
-              style={{
-                ...dashboardStyles.dataCard,
-                animation: "slideInFromLeft 0.8s ease-out 0.4s both",
-              }}
-            >
-              <h3 className="text-xl font-semibold text-[#2a5298] mb-4 flex items-center">
-                <FontAwesomeIcon
-                  icon={faCalendarAlt}
-                  className="mr-3 text-[#667eea] animate-text-wave"
-                />
-                Recent Events
-              </h3>
-              <div className="space-y-4">
-                {recentEvents.map((event, index) => (
-                  <DataItem key={index} {...event} delay={index * 100} />
-                ))}
-              </div>
-            </div> */}
-
-            {/* Senior Doctors */}
-            {/* <div
-              style={{
-                ...dashboardStyles.dataCard,
-                animation: "fadeInUp 0.8s ease-out 0.5s both",
-              }}
-            >
-              <h3 className="text-xl font-semibold text-[#2a5298] mb-4 flex items-center">
-                <FontAwesomeIcon
-                  icon={faUserMd}
-                  className="mr-3 text-[#3b82f6] animate-text-wave"
-                />
-                Senior Doctors
-              </h3>
-              <div className="space-y-4">
-                {seniorDoctors.map((doctor, index) => (
-                  <DataItem key={index} {...doctor} delay={index * 100} />
-                ))}
-              </div>
-            </div> */}
-
-            {/* Pending Appointments */}
-            {/* <div
-              style={{
-                ...dashboardStyles.dataCard,
-                animation: "slideInFromRight 0.8s ease-out 0.6s both",
-              }}
-            >
-              <h3 className="text-xl font-semibold text-[#2a5298] mb-4 flex items-center">
-                <FontAwesomeIcon
-                  icon={faStethoscope}
-                  className="mr-3 text-[#f59e0b] animate-text-wave"
-                />
-                Pending Appointments
-              </h3>
-              <div className="space-y-4">
-                {pendingAppointments.map((appointment, index) => (
-                  <DataItem key={index} {...appointment} delay={index * 100} />
-                ))}
-              </div>
-            </div> */}
-          </div>
+          
+          
         </div>
       </div>
     </>
