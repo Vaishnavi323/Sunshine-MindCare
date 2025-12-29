@@ -576,7 +576,7 @@ const Dashboard = () => {
   const mainStatsData = [
     {
       title: "Total Doctors",
-      value: 156,
+      value: result.total,
       icon: faUserFriends,
       delay: 200,
     },
