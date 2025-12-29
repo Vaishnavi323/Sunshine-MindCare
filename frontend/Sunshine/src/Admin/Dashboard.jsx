@@ -388,15 +388,15 @@ const StatsCard = ({ title, value, icon, delay = 0 }) => {
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
-  fetch(`${BASE_URL}/doctor/list`)
-    .then(res => res.json())
-    .then(result => {
-      if (result.status === true) {
-        setTotalDoctors(result.total);
-      }
-    })
-    .catch(err => console.error("Doctor API error:", err));
-}, []);
+    fetch(`${BASE_URL}/doctor/list`)
+      .then(res => res.json())
+      .then(result => {
+        if (result.status === true) {
+          setTotalDoctors(result.total);
+        }
+      })
+      .catch(err => console.error("Doctor API error:", err));
+  }, []);
 
 
   useEffect(() => {
@@ -487,18 +487,16 @@ const StatsCard = ({ title, value, icon, delay = 0 }) => {
             }}
           >
             <h3
-              className={`text-3xl font-bold mb-2 transition-all duration-500 ${
-                isHovered ? "text-white transform scale-105" : "text-[#2a5298]"
-              }`}
+              className={`text-3xl font-bold mb-2 transition-all duration-500 ${isHovered ? "text-white transform scale-105" : "text-[#2a5298]"
+                }`}
             >
               {hasAnimated ? formatValue(animatedValue) : "0"}
             </h3>
             <p
-              className={`text-sm font-semibold transition-all duration-500 ${
-                isHovered
+              className={`text-sm font-semibold transition-all duration-500 ${isHovered
                   ? "text-gray-200 transform translateX(2px)"
                   : "text-[#7883ae]"
-              }`}
+                }`}
             >
               {title}
             </p>
@@ -544,9 +542,8 @@ const DataItem = ({ icon, title, value, time, color, delay = 0 }) => {
       </div>
       <div className="flex-1">
         <p
-          className={`text-sm font-semibold transition-colors duration-400 ${
-            isHovered ? "text-[#667eea]" : "text-[#2a5298]"
-          }`}
+          className={`text-sm font-semibold transition-colors duration-400 ${isHovered ? "text-[#667eea]" : "text-[#2a5298]"
+            }`}
         >
           {title}
         </p>
@@ -576,7 +573,7 @@ const Dashboard = () => {
   const mainStatsData = [
     {
       title: "Total Doctors",
-      value: total,
+      value: totalDoctors,
       icon: faUserFriends,
       delay: 200,
     },
@@ -696,7 +693,7 @@ const Dashboard = () => {
                 💙
               </div>
               <h1 className="text-4xl font-bold text-[#2a5298] mb-4 animate-text-wave">
-                Sunshine Mindcare 
+                Sunshine Mindcare
               </h1>
               <p className="text-xl text-[#7883ae]">
                 Loading your dashboard...
@@ -771,8 +768,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          
-          
+
+
         </div>
       </div>
     </>
