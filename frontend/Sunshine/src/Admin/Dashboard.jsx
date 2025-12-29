@@ -387,16 +387,7 @@ const StatsCard = ({ title, value, icon, delay = 0 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  useEffect(() => {
-    fetch(`${BASE_URL}/doctor/list`)
-      .then(res => res.json())
-      .then(result => {
-        if (result.status === true) {
-          setTotalDoctors(result.total);
-        }
-      })
-      .catch(err => console.error("Doctor API error:", err));
-  }, []);
+  
 
 
   useEffect(() => {
@@ -561,6 +552,17 @@ const DataItem = ({ icon, title, value, time, color, delay = 0 }) => {
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    fetch(`${BASE_URL}/doctor/list`)
+      .then(res => res.json())
+      .then(result => {
+        if (result.status === true) {
+          setTotalDoctors(result.total);
+        }
+      })
+      .catch(err => console.error("Doctor API error:", err));
+  }, []);
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
