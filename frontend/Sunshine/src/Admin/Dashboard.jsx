@@ -551,6 +551,7 @@ const DataItem = ({ icon, title, value, time, color, delay = 0 }) => {
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [totalDoctors, setTotalDoctors] = useState(0);
 
   useEffect(() => {
     fetch(`${BASE_URL}/doctor/list`)
@@ -562,7 +563,7 @@ const Dashboard = () => {
       })
       .catch(err => console.error("Doctor API error:", err));
   }, []);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
