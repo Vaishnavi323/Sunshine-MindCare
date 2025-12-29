@@ -581,7 +581,7 @@ const Dashboard = () => {
       delay: 200,
     },
     {
-      title: "Upcoming Events",
+      title: "Total Events",
       value: 12,
       icon: faCalendarAlt,
       delay: 300,
