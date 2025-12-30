@@ -909,7 +909,7 @@ const ServicesPage = () => {
             .then(res => res.json())
             .then(result => {
                 if (result.status) {
-                    const formatted = result.data.map(service => ({
+                    const formatted = result.error.map(service => ({
                         id: service.id,
                         title: service.title,
                         description: service.description,
