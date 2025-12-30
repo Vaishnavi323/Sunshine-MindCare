@@ -15,48 +15,48 @@ const MentalHealthSection = () => {
 
     // Fetch services from API
     useEffect(() => {
-        const fetchRecentServices = async () => {
-            try {
-                setLoading(true);
-                setError(null);
+    const fetchRecentServices = async () => {
+        try {
+            setLoading(true);
+            setError(null);
 
-                const response = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/service/list`
-                );
-                const result = await response.json();
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/service/list`
+            );
+            const result = await response.json();
 
-                if (result.status && Array.isArray(result.error)) {
-                    const services = result.error.slice(0, 4).map(service => ({
-                        id: service.id,
-                        title: service.title,
-                        description: service.description,
-                        image: service.image || 'https://via.placeholder.com/600',
-                        subservices: service.sub_services?.map(sub => ({
-                            title: sub.title,
-                            description: sub.description || '',
-                            duration: sub.duration || 'N/A'
-                        })) || []
-                    }));
+            if (result.status && Array.isArray(result.error)) {
+                const services = result.error.slice(0, 4).map(service => ({
+                    id: service.id,
+                    title: service.title,
+                    description: service.description,
+                    image: service.image || 'https://via.placeholder.com/600',
+                    subservices: service.sub_services?.map(sub => ({
+                        title: sub.title,
+                        description: sub.description || '',
+                        duration: sub.duration || 'N/A'
+                    })) || []
+                }));
 
-                    setRecentServices(services);
-                } else {
-                    throw new Error('Invalid API response');
-                }
-
-            } catch (err) {
-                console.error(err);
-                setError(err.message);
-                setRecentServices(getMockRecentServices().slice(0, 4));
-            } finally {
-                setLoading(false);
+                setRecentServices(services);
+            } else {
+                throw new Error('Invalid API response');
             }
-        };
 
-        fetchRecentServices();
-    }, []);
+        } catch (err) {
+            console.error(err);
+            setError(err.message);
+            setRecentServices(getMockRecentServices().slice(0, 4));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchRecentServices();
+}, []);
 
 
-
+    
     // Fallback mock data - Maximum 4 services
     const getMockRecentServices = () => [
         {
@@ -149,20 +149,20 @@ const MentalHealthSection = () => {
                     title: "Motivational Enhancement Therapy for De-addiction",
                 },
                 {
-                    title: "Relaxation Therapy",
+                    title:"Relaxation Therapy",
                 },
                 {
-                    title: "Habit Reversal Training",
+                    title:"Habit Reversal Training",
                 },
                 {
-                    title: "Career Guidance Counselling",
+                    title:"Career Guidance Counselling",
                 },
                 {
-                    title: "Remedial Therapy",
+                    title:"Remedial Therapy",
                 },
                 {
-                    title: "REBT",
-                }
+                    title:"REBT",
+                }   
             ]
         },
         {
@@ -718,43 +718,28 @@ const MentalHealthSection = () => {
                 <div className="cards-container">
                     <div className="info-card">
                         <img
-                            src={service.image}
-                            alt={service.title}
-                            className="service-image"
-                            loading="lazy"
-                            onError={(e) => {
-                                e.target.src = "https://via.placeholder.com/600";
-                            }}
+                            src={w1}
+                            alt="Mental Health Illustration"
+                            className="card-image"
                         />
-
                         <h3 className="card-title">What Is Mental Health?</h3>
                     </div>
 
                     <div className="info-card">
                         <img
-                            src={service.image}
-                            alt={service.title}
-                            className="service-image"
-                            loading="lazy"
-                            onError={(e) => {
-                                e.target.src = "https://via.placeholder.com/600";
-                            }}
+                            src={w2}
+                            alt="Mental Health Signs"
+                            className="card-image"
                         />
-
                         <h3 className="card-title">What Are The Signs?</h3>
                     </div>
 
                     <div className="info-card">
                         <img
-                            src={service.image}
-                            alt={service.title}
-                            className="service-image"
-                            loading="lazy"
-                            onError={(e) => {
-                                e.target.src = "https://via.placeholder.com/600";
-                            }}
+                            src={w3}
+                            alt="Mental Health Care"
+                            className="card-image"
                         />
-
                         <h3 className="card-title">How To Look After Your Mental Health?</h3>
                     </div>
                 </div>
@@ -770,7 +755,7 @@ const MentalHealthSection = () => {
 
                     <div className="services-grid">
                         {recentServices.slice(0, 4).map((service) => (
-                            <div
+                            <div 
                                 key={service.id}
                                 className={`flip-card ${flippedCards[service.id] ? 'flipped' : ''}`}
                                 onMouseEnter={() => handleCardHover(service.id, true)}
@@ -787,7 +772,7 @@ const MentalHealthSection = () => {
                                         />
                                         <h3 className="service-title-front">{service.title}</h3>
                                         <p className="service-description-front">{service.description}</p>
-
+                                        
                                     </div>
 
                                     {/* Back of Card */}
@@ -812,10 +797,10 @@ const MentalHealthSection = () => {
             </div>
 
             {/* Subservices Modal */}
-            <Modal
-                show={showModal}
-                onHide={handleCloseModal}
-                size="lg"
+            <Modal 
+                show={showModal} 
+                onHide={handleCloseModal} 
+                size="lg" 
                 centered
                 className="service-modal"
             >
@@ -823,8 +808,8 @@ const MentalHealthSection = () => {
                     <>
                         <Modal.Header closeButton className="modal-header-content">
                             <div className="modal-image-container">
-                                <img
-                                    src={selectedService.image}
+                                <img 
+                                    src={selectedService.image} 
                                     alt={selectedService.title}
                                     className="modal-service-image"
                                 />
@@ -839,16 +824,16 @@ const MentalHealthSection = () => {
                                 <h4 className="subservices-title">Available Treatments</h4>
                                 <div className="subservices-grid">
                                     {selectedService.subservices.map((subservice, index) => (
-                                        <div
+                                        <div 
                                             key={index}
                                             className="subservice-card-modal"
                                         >
                                             <div className="subservice-content">
                                                 <div className="subservice-header-modal">
                                                     <h5 className="subservice-title-modal">{subservice.title}</h5>
-
+                                                    
                                                 </div>
-
+                                                
                                             </div>
                                         </div>
                                     ))}
