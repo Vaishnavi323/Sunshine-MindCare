@@ -921,7 +921,7 @@ const ServicesPage = () => {
       // Fetch each service individually
       for (const id of serviceIds) {
         try {
-          const apiUrl = `${API_BASE_URL}/service/list?id=${id}`;
+          const apiUrl = `${API_BASE_URL}/service/list`;
           apiLogs.push(`Fetching: ${apiUrl}`);
           
           const response = await axios.get(apiUrl, { timeout: 10000 });
