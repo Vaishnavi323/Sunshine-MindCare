@@ -905,33 +905,34 @@ const ServicesPage = () => {
        FETCH SERVICES FROM API
     ========================= */
     useEffect(() => {
-        fetch(`${BASE_URL}/service/list`)
-            .then(res => res.json())
-            .then(result => {
-                if (result.status) {
-                    const formatted = result.error.map(service => ({
-                        id: service.id,
-                        title: service.title,
-                        description: service.description,
-                        image: service.image
-                            ? `${BASE_URL}/${service.image}`
-                            : 'https://via.placeholder.com/500',
-                        color: '#1e3c72',
-                        subservices: service.sub_services || []
-                    }));
+    fetch(`${BASE_URL}/service/list`)
+        .then(res => res.json())
+        .then(result => {
+            if (result.status) {
+                const formatted = result.error.map(service => ({
+                    id: service.id,
+                    title: service.title,
+                    description: service.description,
+                    image: service.image || 'https://via.placeholder.com/500',
+                    color: '#1e3c72',
+                    subservices: service.sub_services.map(sub => ({
+                        name: sub.title,
+                        description: sub.description,
+                        duration: sub.duration || 'N/A'
+                    }))
+                }));
 
-                    setServices(formatted);
-                } else {
-                    setError('Failed to fetch services');
-                }
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setError('Server error');
-                setLoading(false);
-            });
-    }, []);
+                setServices(formatted);
+            }
+            setLoading(false);
+        })
+        .catch(err => {
+            console.error(err);
+            setError('Server error');
+            setLoading(false);
+        });
+}, []);
+
 
     const handleCardClick = (id) => {
         setFlippedCard(flippedCard === id ? null : id);
