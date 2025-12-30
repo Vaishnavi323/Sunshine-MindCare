@@ -18,33 +18,33 @@ const ServicesPage = () => {
        FETCH SERVICES FROM API
     ========================= */
     useEffect(() => {
-        fetch(`${BASE_URL}/service/list`)
-            .then(res => res.json())
-            .then(result => {
-                if (result.status) {
-                    const formatted = result.error.map(service => ({
-                        id: service.id,
-                        title: service.title,
-                        description: service.description,
-                        image: service.image || 'https://via.placeholder.com/500',
-                        color: '#1e3c72',
-                        subservices: service.sub_services.map(sub => ({
-                            name: sub.title,
-                            description: sub.description,
-                            duration: sub.duration || 'N/A'
-                        }))
-                    }));
+    fetch(`${BASE_URL}/service/list`)
+        .then(res => res.json())
+        .then(result => {
+            if (result.status) {
+                const formatted = result.error.map(service => ({
+                    id: service.id,
+                    title: service.title,
+                    description: service.description,
+                    image: service.image || 'https://via.placeholder.com/500',
+                    color: '#1e3c72',
+                    subservices: service.sub_services.map(sub => ({
+                        name: sub.title,
+                        description: sub.description,
+                        duration: sub.duration || 'N/A'
+                    }))
+                }));
 
-                    setServices(formatted);
-                }
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setError('Server error');
-                setLoading(false);
-            });
-    }, []);
+                setServices(formatted);
+            }
+            setLoading(false);
+        })
+        .catch(err => {
+            console.error(err);
+            setError('Server error');
+            setLoading(false);
+        });
+}, []);
 
 
     const handleCardClick = (id) => {
@@ -90,16 +90,10 @@ const ServicesPage = () => {
                                     {/* FRONT */}
                                     <div className="card-front">
                                         <div className="card h-100 shadow-sm">
-                                            <img
-                                                src={service.image}
-                                                alt={service.title}
+                                            <div
                                                 className="card-img-top service-image"
-                                                loading="lazy"
-                                                onError={(e) => {
-                                                    e.target.src = "https://via.placeholder.com/500";
-                                                }}
+                                                style={{ backgroundImage: `url(${service.image})` }}
                                             />
-
                                             <div className="card-body text-center">
                                                 <h4>{service.title}</h4>
                                                 <p>{service.description}</p>
