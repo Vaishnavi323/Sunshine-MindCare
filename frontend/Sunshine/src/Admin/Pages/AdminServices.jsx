@@ -91,40 +91,23 @@ const Services = () => {
   };
 
   // Update service
-  // Update service with image support
-const updateServiceAPI = async (serviceId, serviceData) => {
-  try {
-    const formData = new FormData();
-    formData.append("title", serviceData.name);
-    formData.append("description", serviceData.description);
-    
-    // Only append image if a new file is selected
-    if (serviceData.imageFile) {
-      console.log("New image file detected for update");
-      formData.append("image", serviceData.imageFile);
-    } else if (serviceData.image && !serviceData.image.startsWith('data:')) {
-      // If image is a URL (not a data URL), we might not need to send it
-      // or we can send it as is depending on your backend
-      console.log("Using existing image URL:", serviceData.image);
+  const updateServiceAPI = async (serviceId, serviceData) => {
+  const response = await fetch(
+    `${API_BASE_URL}/service/update/${serviceId}`,
+    {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: serviceData.name,
+        description: serviceData.description,
+      }),
     }
+  );
 
-    const response = await fetch(
-      `${API_BASE_URL}/service/update/${serviceId}`,
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          // Do NOT set Content-Type for FormData, browser will set it with boundary
-        },
-        body: formData,
-      }
-    );
-
-    return await response.json();
-  } catch (error) {
-    console.error("Update service error:", error);
-    throw error;
-  }
+  return await response.json();
 };
   // Delete service
   const deleteServiceAPI = async (serviceId) => {
@@ -204,36 +187,29 @@ const updateServiceAPI = async (serviceId, serviceData) => {
 
   // Handlers
   const handleServiceSubmit = async (data) => {
-  setLoading(true);
-  try {
-    let response;
-    if (editingService) {
-      response = await updateServiceAPI(editingService.id, data);
-    } else {
-      response = await addServiceAPI(data);
-    }
+    setLoading(true);
+    try {
+      let response;
+      if (editingService) {
+        response = await updateServiceAPI(editingService.id, data);
+      } else {
+        response = await addServiceAPI(data);
+      }
 
-    if (response.status) {
-      await fetchServices(); // Refresh full list
-      setAlert({ 
-        type: "success", 
-        message: `Service ${editingService ? 'updated' : 'added'} successfully!` 
-      });
-    } else {
-      throw new Error(response.message || 'Operation failed');
+      if (response.status) {
+        await fetchServices(); // Refresh full list
+        setAlert({ type: "success", message: `Service ${editingService ? 'updated' : 'added'} successfully!` });
+      } else {
+        throw new Error(response.message || 'Operation failed');
+      }
+    } catch (error) {
+      setAlert({ type: "error", message: error.message || "Operation failed." });
+    } finally {
+      setLoading(false);
+      setShowServiceForm(false);
+      setEditingService(null);
     }
-  } catch (error) {
-    console.error("Submit error:", error);
-    setAlert({ 
-      type: "error", 
-      message: error.message || "Operation failed." 
-    });
-  } finally {
-    setLoading(false);
-    setShowServiceForm(false);
-    setEditingService(null);
-  }
-};
+  };
 
   const handleSubserviceSubmit = async (data) => {
     setLoading(true);
@@ -590,7 +566,6 @@ const updateServiceAPI = async (serviceId, serviceData) => {
 };
 
 // ServiceForm Component (unchanged CSS)
-// ServiceForm Component - Fixed Version
 const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
   const [formData, setFormData] = useState({
     name: service?.name || "",
@@ -598,105 +573,46 @@ const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
     image: service?.image || "",
     category: service?.category || "Medical",
     duration: service?.duration || "",
-    imageFile: null,
   });
   const [imagePreview, setImagePreview] = useState(service?.image || "");
   const fileRef = useRef(null);
 
-  // Initialize form when service prop changes
-  useEffect(() => {
-    if (service) {
-      setFormData({
-        name: service.name || "",
-        description: service.description || "",
-        image: service.image || "",
-        category: service.category || "Medical",
-        duration: service.duration || "",
-        imageFile: null,
-      });
-      setImagePreview(service.image || "");
-    }
-  }, [service]);
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
+const handleImageChange = (e) => {
+  const MAX_SIZE = 20 * 1024 * 1024;
+  const file = e.target.files[0];
+  if (!file) return;
 
-  const handleImageChange = (e) => {
-    const MAX_SIZE = 20 * 1024 * 1024; // 20MB
-    const file = e.target.files[0];
-    
-    if (!file) return;
-    
-    if (!file.type.startsWith("image/")) {
-      alert("Please select a valid image file (JPG, PNG, etc.)");
-      return;
-    }
-    
-    if (file.size > MAX_SIZE) {
-      alert("Image size should be less than 20MB");
-      return;
-    }
-    
-    // Create preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const result = reader.result;
-      setImagePreview(result);
-      setFormData(prev => ({
-        ...prev,
-        imageFile: file,
-        image: result
-      }));
-    };
-    reader.readAsDataURL(file);
-  };
+  if (!file.type.startsWith("image/")) {
+    alert("Please select a valid image");
+    return;
+  }
 
-  const handleRemoveImage = (e) => {
-    e.stopPropagation();
-    setImagePreview("");
-    setFormData(prev => ({
-      ...prev,
-      imageFile: null,
-      image: ""
-    }));
-    if (fileRef.current) {
-      fileRef.current.value = "";
-    }
-  };
+  if (file.size > 20 * 1024 * 1024) {
+    alert("Max size 20MB allowed");
+    return;
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!formData.name.trim()) {
-      alert("Please enter service name");
+  // Preview
+  const reader = new FileReader();
+  reader.onloadend = () => setImagePreview(reader.result);
+  reader.readAsDataURL(file);
+
+  // IMPORTANT: actual file ko save karo
+  setFormData((prev) => ({
+    ...prev,
+    imageFile: file,
+  }));
+};
+
+
+  const handleSubmit = () => {
+    if (!formData.name || !formData.description || !formData.duration) {
+      alert('Please fill all required fields');
       return;
     }
-    
-    if (!formData.description.trim()) {
-      alert("Please enter service description");
-      return;
-    }
-    
-    if (!formData.duration.trim()) {
-      alert("Please enter service duration");
-      return;
-    }
-    
-    // Prepare data for submission
-    const submitData = {
-      name: formData.name.trim(),
-      description: formData.description.trim(),
-      category: formData.category,
-      duration: formData.duration.trim(),
-      imageFile: formData.imageFile,
-      image: formData.image
-    };
-    
-    onSubmit(submitData);
+    onSubmit({ ...formData, image: imagePreview });
   };
 
   const categories = ["Medical", "Therapy", "Pediatric", "Emergency", "Educational"];
@@ -706,192 +622,57 @@ const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
         <div className="bg-gradient-to-r from-[#1f1f35] to-[#174593] p-5 text-white flex justify-between items-center">
           <h2 className="text-xl font-bold">{service ? 'Edit Service' : 'Add Service'}</h2>
-          <button 
-            onClick={onCancel} 
-            disabled={loading} 
-            className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 text-lg disabled:opacity-50 transition-colors"
-          >
-            ✕
-          </button>
+          <button onClick={onCancel} disabled={loading} className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 text-lg disabled:opacity-50">✕</button>
         </div>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="p-6 overflow-y-auto max-h-[70vh] space-y-5">
-            {/* Image Upload Section */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Service Image
-              </label>
-              <div 
-                onClick={() => !loading && fileRef.current?.click()}
-                className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition-all ${
-                  imagePreview 
-                    ? 'border-[#174593] bg-gray-50' 
-                    : 'border-gray-300 hover:border-[#174593] hover:bg-gray-50'
-                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                {imagePreview ? (
-                  <div className="space-y-3">
-                    <div className="relative">
-                      <img 
-                        src={imagePreview} 
-                        alt="Preview" 
-                        className="h-48 w-full object-cover rounded-lg mx-auto"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=300&fit=crop";
-                        }}
-                      />
-                    </div>
-                    <div className="flex gap-2 justify-center">
-                      <button 
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          fileRef.current?.click();
-                        }}
-                        disabled={loading}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
-                      >
-                        Change Image
-                      </button>
-                      <button 
-                        type="button"
-                        onClick={handleRemoveImage}
-                        disabled={loading}
-                        className="px-4 py-2 bg-red-100 text-red-700 border border-red-300 rounded-lg text-sm font-medium hover:bg-red-200 disabled:opacity-50 transition-colors"
-                      >
-                        Remove
-                      </button>
-                    </div>
+        <div className="p-6 overflow-y-auto max-h-[70vh] space-y-4">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Service Image</label>
+            <div onClick={() => fileRef.current?.click()} className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${imagePreview ? 'border-[#174593]' : 'border-gray-300 hover:border-[#174593]'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              {imagePreview ? (
+                <div>
+                  <img src={imagePreview} alt="Preview" className="max-h-48 mx-auto rounded-lg mb-3" />
+                  <div className="flex gap-2 justify-center">
+                    <button type="button" onClick={(e) => { e.stopPropagation(); fileRef.current?.click(); }} disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50">Change</button>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); setImagePreview(""); setFormData(prev => ({ ...prev, imageFile: null })); }} disabled={loading} className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 disabled:opacity-50">Remove</button>
                   </div>
-                ) : (
-                  <div className="py-8">
-                    <div className="text-5xl mb-3 text-gray-400">📷</div>
-                    <p className="text-gray-600 font-medium mb-1">
-                      Click to upload image
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      PNG, JPG, JPEG up to 20MB
-                    </p>
-                    {service?.image && !formData.imageFile && (
-                      <div className="mt-3 text-xs text-blue-600 bg-blue-50 p-2 rounded">
-                        <i className="bi bi-info-circle mr-1"></i>
-                        Current image will be kept
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                disabled={loading}
-              />
+                </div>
+              ) : (
+                <div>
+                  <p className="text-4xl mb-2">📷</p>
+                  <p className="text-gray-600 font-medium">Click to upload image</p>
+                  <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
+                </div>
+              )}
             </div>
-
-            {/* Service Name */}
+            <input ref={fileRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" disabled={loading} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Service Name *</label>
+            <input type="text" name="name" value={formData.name} onChange={handleChange} disabled={loading} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#174593] disabled:opacity-50" placeholder="Enter service name" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+            <textarea name="description" value={formData.description} onChange={handleChange} rows="3" disabled={loading} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#174593] disabled:opacity-50" placeholder="Describe the service" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Service Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                disabled={loading}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#174593] focus:border-transparent disabled:opacity-50 transition-all"
-                placeholder="Enter service name"
-                required
-              />
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Category *</label>
+              <select name="category" value={formData.category} onChange={handleChange} disabled={loading} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#174593] disabled:opacity-50">
+                {categories.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
             </div>
-
-            {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Description <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows="3"
-                disabled={loading}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#174593] focus:border-transparent disabled:opacity-50 transition-all resize-none"
-                placeholder="Describe the service in detail"
-                required
-              />
-            </div>
-
-            {/* Category and Duration */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Category <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  disabled={loading}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#174593] focus:border-transparent disabled:opacity-50 transition-all bg-white"
-                  required
-                >
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Duration <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="duration"
-                  value={formData.duration}
-                  onChange={handleChange}
-                  disabled={loading}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#174593] focus:border-transparent disabled:opacity-50 transition-all"
-                  placeholder="e.g., 45-60 mins"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-6 border-t">
-              <button
-                type="button"
-                onClick={onCancel}
-                disabled={loading}
-                className="flex-1 py-3.5 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 disabled:opacity-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 py-3.5 bg-gradient-to-r from-[#1f1f35] to-[#174593] text-white rounded-lg font-semibold hover:shadow-lg disabled:opacity-50 transition-all flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                    {service ? 'Updating...' : 'Creating...'}
-                  </>
-                ) : (
-                  service ? 'Update Service' : 'Create Service'
-                )}
-              </button>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Duration *</label>
+              <input type="text" name="duration" value={formData.duration} onChange={handleChange} disabled={loading} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#174593] disabled:opacity-50" placeholder="e.g., 45-60 mins" />
             </div>
           </div>
-        </form>
+          <div className="flex gap-3 pt-4">
+            <button type="button" onClick={onCancel} disabled={loading} className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 disabled:opacity-50">Cancel</button>
+            <button type="button" onClick={handleSubmit} disabled={loading} className="flex-1 py-3 bg-gradient-to-r from-[#1f1f35] to-[#174593] text-white rounded-lg font-semibold hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2">
+              {loading ? <><span className="animate-spin">⟳</span>{service ? 'Updating...' : 'Creating...'}</> : (service ? 'Update' : 'Create')}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
