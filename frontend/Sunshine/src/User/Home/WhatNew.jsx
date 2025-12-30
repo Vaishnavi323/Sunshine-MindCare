@@ -19,50 +19,33 @@ const MentalHealthSection = () => {
             try {
                 setLoading(true);
                 setError(null);
-                
-                // Fetch all services - maximum 4
-                const serviceIds = [1, 2, 3, 4]; // Limit to 4 IDs
-                const servicePromises = serviceIds.map(id => 
-                    fetch(`${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.json();
-                        })
+
+                const response = await fetch(
+                    `${import.meta.env.VITE_BACKEND_URL}/service/list`
                 );
+                const result = await response.json();
 
-                const serviceResults = await Promise.all(servicePromises);
-                
-                // Transform API data
-                const transformedServices = serviceResults.map((result, index) => {
-                    if (result.status && result.error) {
-                        const service = result.error;
-                        return {
-                            id: service.id,
-                            title: service.title || `Service ${service.id}`,
-                            image: getServiceImage(service.id),
-                            description: service.description || 'No description available',
-                            subservices: service.sub_services && service.sub_services.length > 0 
-                                ? service.sub_services.map(sub => ({
-                                    title: sub.title || 'Sub Service',
-                                    description: sub.description || 'No description available',
-                                    duration: '50 mins'
-                                }))
-                                : getDefaultSubservices(service.id)
-                        };
-                    }
-                    return null;
-                }).filter(service => service !== null);
+                if (result.status && Array.isArray(result.error)) {
+                    const services = result.error.slice(0, 4).map(service => ({
+                        id: service.id,
+                        title: service.title,
+                        description: service.description,
+                        image: service.image || 'https://via.placeholder.com/600',
+                        subservices: service.sub_services?.map(sub => ({
+                            title: sub.title,
+                            description: sub.description || '',
+                            duration: sub.duration || 'N/A'
+                        })) || []
+                    }));
 
-                // Limit to maximum 4 services
-                const recent = transformedServices.slice(0, 4);
-                setRecentServices(recent);
-                
-            } catch (error) {
-                console.error('Error fetching services:', error);
-                setError(error.message);
-                // Fallback to mock data if API fails - maximum 4 cards
+                    setRecentServices(services);
+                } else {
+                    throw new Error('Invalid API response');
+                }
+
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
                 setRecentServices(getMockRecentServices().slice(0, 4));
             } finally {
                 setLoading(false);
@@ -72,77 +55,7 @@ const MentalHealthSection = () => {
         fetchRecentServices();
     }, []);
 
-    // Helper function to get service image
-    const getServiceImage = (id) => {
-        const imageMap = {
-            1: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
-            2: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&h=600&fit=crop',
-            3: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=600&fit=crop',
-            4: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=600&fit=crop',
-            5: 'https://images.unsplash.com/photo-1573496799652-408c2ac9fe98?w=600&h=600&fit=crop',
-            6: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&h=600&fit=crop'
-        };
-        return imageMap[id] || 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop';
-    };
 
-    // Helper function to get default subservices
-    const getDefaultSubservices = (id) => {
-        const defaultSubservices = {
-            1: [
-                {
-                    title: "Individual Counseling",
-                    description: "Personalized one-on-one therapy sessions tailored to your specific needs and goals.",
-                    duration: "50 mins"
-                },
-                {
-                    title: "Cognitive Behavioral Therapy",
-                    description: "Evidence-based approach to identify and change negative thought patterns.",
-                    duration: "50 mins"
-                }
-            ],
-            2: [
-                {
-                    title: "Couples Therapy",
-                    description: "Professional guidance to strengthen relationships and improve communication.",
-                    duration: "60 mins"
-                },
-                {
-                    title: "Relationship Counseling",
-                    description: "Work through relationship challenges with expert support and guidance.",
-                    duration: "60 mins"
-                }
-            ],
-            3: [
-                {
-                    title: "Family Counseling",
-                    description: "Improve family dynamics and resolve conflicts with professional guidance.",
-                    duration: "60 mins"
-                },
-                {
-                    title: "Parenting Support",
-                    description: "Develop effective parenting strategies and improve family communication.",
-                    duration: "50 mins"
-                }
-            ],
-            4: [
-                {
-                    title: "Anxiety Management",
-                    description: "Learn techniques to manage and reduce anxiety symptoms effectively.",
-                    duration: "50 mins"
-                },
-                {
-                    title: "Stress Reduction",
-                    description: "Develop coping strategies to manage daily stress and improve resilience.",
-                    duration: "50 mins"
-                }
-            ]
-        };
-        return defaultSubservices[id] || [{
-            title: "Professional Counseling",
-            description: "Expert mental health support and guidance.",
-            duration: "50 mins"
-        }];
-    };
 
     // Fallback mock data - Maximum 4 services
     const getMockRecentServices = () => [
@@ -236,20 +149,20 @@ const MentalHealthSection = () => {
                     title: "Motivational Enhancement Therapy for De-addiction",
                 },
                 {
-                    title:"Relaxation Therapy",
+                    title: "Relaxation Therapy",
                 },
                 {
-                    title:"Habit Reversal Training",
+                    title: "Habit Reversal Training",
                 },
                 {
-                    title:"Career Guidance Counselling",
+                    title: "Career Guidance Counselling",
                 },
                 {
-                    title:"Remedial Therapy",
+                    title: "Remedial Therapy",
                 },
                 {
-                    title:"REBT",
-                }   
+                    title: "REBT",
+                }
             ]
         },
         {
@@ -805,28 +718,43 @@ const MentalHealthSection = () => {
                 <div className="cards-container">
                     <div className="info-card">
                         <img
-                            src={w1}
-                            alt="Mental Health Illustration"
-                            className="card-image"
+                            src={service.image}
+                            alt={service.title}
+                            className="service-image"
+                            loading="lazy"
+                            onError={(e) => {
+                                e.target.src = "https://via.placeholder.com/600";
+                            }}
                         />
+
                         <h3 className="card-title">What Is Mental Health?</h3>
                     </div>
 
                     <div className="info-card">
                         <img
-                            src={w2}
-                            alt="Mental Health Signs"
-                            className="card-image"
+                            src={service.image}
+                            alt={service.title}
+                            className="service-image"
+                            loading="lazy"
+                            onError={(e) => {
+                                e.target.src = "https://via.placeholder.com/600";
+                            }}
                         />
+
                         <h3 className="card-title">What Are The Signs?</h3>
                     </div>
 
                     <div className="info-card">
                         <img
-                            src={w3}
-                            alt="Mental Health Care"
-                            className="card-image"
+                            src={service.image}
+                            alt={service.title}
+                            className="service-image"
+                            loading="lazy"
+                            onError={(e) => {
+                                e.target.src = "https://via.placeholder.com/600";
+                            }}
                         />
+
                         <h3 className="card-title">How To Look After Your Mental Health?</h3>
                     </div>
                 </div>
@@ -842,7 +770,7 @@ const MentalHealthSection = () => {
 
                     <div className="services-grid">
                         {recentServices.slice(0, 4).map((service) => (
-                            <div 
+                            <div
                                 key={service.id}
                                 className={`flip-card ${flippedCards[service.id] ? 'flipped' : ''}`}
                                 onMouseEnter={() => handleCardHover(service.id, true)}
@@ -859,7 +787,7 @@ const MentalHealthSection = () => {
                                         />
                                         <h3 className="service-title-front">{service.title}</h3>
                                         <p className="service-description-front">{service.description}</p>
-                                        
+
                                     </div>
 
                                     {/* Back of Card */}
@@ -884,10 +812,10 @@ const MentalHealthSection = () => {
             </div>
 
             {/* Subservices Modal */}
-            <Modal 
-                show={showModal} 
-                onHide={handleCloseModal} 
-                size="lg" 
+            <Modal
+                show={showModal}
+                onHide={handleCloseModal}
+                size="lg"
                 centered
                 className="service-modal"
             >
@@ -895,8 +823,8 @@ const MentalHealthSection = () => {
                     <>
                         <Modal.Header closeButton className="modal-header-content">
                             <div className="modal-image-container">
-                                <img 
-                                    src={selectedService.image} 
+                                <img
+                                    src={selectedService.image}
                                     alt={selectedService.title}
                                     className="modal-service-image"
                                 />
@@ -911,16 +839,16 @@ const MentalHealthSection = () => {
                                 <h4 className="subservices-title">Available Treatments</h4>
                                 <div className="subservices-grid">
                                     {selectedService.subservices.map((subservice, index) => (
-                                        <div 
+                                        <div
                                             key={index}
                                             className="subservice-card-modal"
                                         >
                                             <div className="subservice-content">
                                                 <div className="subservice-header-modal">
                                                     <h5 className="subservice-title-modal">{subservice.title}</h5>
-                                                    
+
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     ))}
