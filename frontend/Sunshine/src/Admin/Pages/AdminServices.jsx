@@ -580,6 +580,7 @@ const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
 const handleImageChange = (e) => {
+  const MAX_SIZE = 20 * 1024 * 1024;
   const file = e.target.files[0];
   if (!file) return;
 
@@ -588,10 +589,10 @@ const handleImageChange = (e) => {
     return;
   }
 
-  if (file.size > 5 * 1024 * 1024) {
-    alert("Max size 5MB allowed");
-    return;
-  }
+  if (file.size > MAX_SIZE) {
+  alert("Max size 20MB allowed");
+  return;
+}
 
   // Preview
   const reader = new FileReader();
