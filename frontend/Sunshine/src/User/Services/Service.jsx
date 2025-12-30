@@ -25,12 +25,12 @@
 //             try {
 //                 setLoading(true);
 //                 setError(null);
-                
+
 //                 const serviceIds = [1, 2, 3, 4, 5, 6];
 //                 const servicePromises = serviceIds.map(async (id) => {
 //                     try {
 //                         const url = `${import.meta.env.VITE_BACKEND_URL}/service/list?id=${id}`;
-                        
+
 //                         const response = await fetch(url, {
 //                             method: 'GET',
 //                             headers: {
@@ -38,14 +38,14 @@
 //                                 'Content-Type': 'application/json',
 //                             },
 //                         });
-                        
+
 //                         if (!response.ok) {
 //                             throw new Error(`HTTP ${response.status} for service ${id}`);
 //                         }
-                        
+
 //                         const data = await response.json();
 //                         return { id, data, error: null };
-                        
+
 //                     } catch (fetchError) {
 //                         console.error(`Error fetching service ${id}:`, fetchError);
 //                         return { 
@@ -57,16 +57,16 @@
 //                 });
 
 //                 const results = await Promise.all(servicePromises);
-                
+
 //                 // Transform API responses
 //                 const transformedServices = results.map((result) => {
 //                     const { id, data, error } = result;
-                    
+
 //                     // If we got a successful API response
 //                     if (data && !error) {
 //                         // Extract service data from different possible response structures
 //                         let serviceData = null;
-                        
+
 //                         // Try different possible response structures
 //                         if (data.data && data.data.id) {
 //                             serviceData = data.data;
@@ -79,7 +79,7 @@
 //                         } else if (typeof data === 'object' && Object.keys(data).length > 0) {
 //                             serviceData = data;
 //                         }
-                        
+
 //                         // If we have valid service data from API
 //                         if (serviceData && (serviceData.id || serviceData.title || serviceData.name)) {
 //                             const hasSubservices = (
@@ -87,7 +87,7 @@
 //                                 (serviceData.subServices && Array.isArray(serviceData.subServices) && serviceData.subServices.length > 0) ||
 //                                 (serviceData.subservices && Array.isArray(serviceData.subservices) && serviceData.subservices.length > 0)
 //                             );
-                            
+
 //                             return {
 //                                 id: serviceData.id || id,
 //                                 title: serviceData.title || serviceData.name || `Service ${id}`,
@@ -105,7 +105,7 @@
 //                             };
 //                         }
 //                     }
-                    
+
 //                     // If API failed or returned no valid data, return null
 //                     return null;
 //                 });
@@ -114,10 +114,10 @@
 //                 const validServices = transformedServices.filter(service => 
 //                     service !== null
 //                 );
-                
+
 //                 // Set the services data
 //                 setServicesData(validServices);
-                
+
 //             } catch (error) {
 //                 console.error('Error in fetchServices:', error);
 //                 setError(error.message);
@@ -874,7 +874,7 @@
 //                         animation: none !important;
 //                         transition: none !important;
 //                     }
-                    
+
 //                     .service-cards {
 //                         opacity: 1;
 //                         transform: none;
@@ -892,367 +892,468 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ServicesPage = () => {
-  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost/Sunshine-MindCare/Sunshine_Mindcare_Backend';
+  // API Configuration
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
   
+  // State Management
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [flippedCards, setFlippedCards] = useState({});
-  const [loadingSubservices, setLoadingSubservices] = useState({});
+  const [activeServiceId, setActiveServiceId] = useState(null);
+  const [apiCalls, setApiCalls] = useState([]);
 
-  // Sample services for testing (remove when API is ready)
-  const sampleServices = [
-    {
-      id: 1,
-      title: "General Medicine",
-      description: "Comprehensive medical care for adults and children, including diagnosis and treatment of various health conditions.",
-      image: null,
-    },
-    {
-      id: 2,
-      title: "Cardiology",
-      description: "Specialized care for heart-related conditions including diagnosis, treatment, and preventive cardiology.",
-      image: null,
-    },
-    {
-      id: 3,
-      title: "Pediatrics",
-      description: "Healthcare for infants, children, and adolescents, including regular check-ups and specialized care.",
-      image: null,
-    },
-    {
-      id: 4,
-      title: "Dermatology",
-      description: "Treatment of skin, hair, and nail conditions with advanced diagnostic and therapeutic options.",
-      image: null,
-    },
-    {
-      id: 5,
-      title: "Orthopedics",
-      description: "Care for musculoskeletal system including bones, joints, ligaments, tendons, and muscles.",
-      image: null,
-    },
-    {
-      id: 6,
-      title: "Mental Health",
-      description: "Comprehensive psychological services including counseling, therapy, and psychiatric care.",
-      image: null,
-    },
-  ];
+  // ==================== API INTEGRATION ====================
 
-  // Fetch services - using sample data for now
-  const fetchServices = async () => {
+  // Fetch ALL Services by calling /service/list for each ID
+  const fetchAllServices = async () => {
     try {
       setLoading(true);
-      // Uncomment this when your API is ready
-      /*
-      const response = await axios.get(`${API_BASE_URL}/services`);
-      if (response.data.status) {
-        setServices(response.data.data || []);
-      } else {
-        throw new Error(response.data.message || 'Failed to fetch services');
-      }
-      */
+      setError(null);
       
-      // Using sample data for now
-      setServices(sampleServices);
+      console.log('Fetching services from API:', API_BASE_URL);
+      
+      // Define service IDs to fetch (you can modify this array)
+      const serviceIds = [1, 2, 3, 4, 5, 6];
+      const apiLogs = [];
+      const fetchedServices = [];
+      
+      // Fetch each service individually
+      for (const id of serviceIds) {
+        try {
+          const apiUrl = `${API_BASE_URL}/service/list?id=${id}`;
+          apiLogs.push(`Fetching: ${apiUrl}`);
+          
+          const response = await axios.get(apiUrl, { timeout: 10000 });
+          
+          if (response.data.status && response.data.error) {
+            const serviceData = response.data.error;
+            
+            // Ensure sub_services is always an array
+            const serviceWithSubservices = {
+              id: serviceData.id,
+              title: serviceData.title,
+              description: serviceData.description,
+              image: serviceData.image,
+              created_at: serviceData.created_at,
+              sub_services: Array.isArray(serviceData.sub_services) 
+                ? serviceData.sub_services 
+                : []
+            };
+            
+            fetchedServices.push(serviceWithSubservices);
+            apiLogs.push(`✓ Service ${id}: ${serviceData.title} (${serviceData.sub_services?.length || 0} subservices)`);
+          } else {
+            apiLogs.push(`✗ Service ${id}: ${response.data.message || 'No data'}`);
+          }
+        } catch (err) {
+          apiLogs.push(`✗ Service ${id} Error: ${err.message}`);
+          console.error(`Error fetching service ${id}:`, err);
+        }
+      }
+      
+      setApiCalls(apiLogs);
+      
+      if (fetchedServices.length > 0) {
+        setServices(fetchedServices);
+        console.log('Fetched services:', fetchedServices);
+      } else {
+        // Fallback to sample data
+        setServices(getSampleServicesWithSubservices());
+        setError('No services found from API, using sample data');
+      }
       
     } catch (err) {
+      console.error('Error in fetchAllServices:', err);
       setError(err.message);
-      console.error('Error fetching services:', err);
+      // Fallback to sample data
+      setServices(getSampleServicesWithSubservices());
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch subservices for a specific service
-  const fetchSubservices = async (serviceId) => {
-    try {
-      setLoadingSubservices(prev => ({ ...prev, [serviceId]: true }));
-      
-      const response = await axios.get(`${API_BASE_URL}/service/list?id=${serviceId}`);
-      
-      if (response.data.status) {
-        return response.data.error.sub_services || []; // Based on your API response structure
-      } else {
-        throw new Error(response.data.message || 'Failed to fetch subservices');
-      }
-    } catch (err) {
-      console.error('Error fetching subservices:', err);
-      throw err;
-    } finally {
-      setLoadingSubservices(prev => ({ ...prev, [serviceId]: false }));
-    }
-  };
-
-  // Handle card click
-  const handleCardClick = async (serviceId, title) => {
-    // If card is already flipped, just flip it back
+  // Handle card click - No API call needed as subservices are already loaded
+  const handleCardClick = (serviceId) => {
+    // If card is already flipped, flip it back
     if (flippedCards[serviceId]) {
       setFlippedCards(prev => ({ ...prev, [serviceId]: false }));
-      return;
-    }
-
-    // If we haven't fetched subservices yet, fetch them
-    if (!flippedCards[serviceId] && !flippedCards[`${serviceId}_data`]) {
-      try {
-        const subServices = await fetchSubservices(serviceId);
-        setFlippedCards(prev => ({ 
-          ...prev, 
-          [serviceId]: true,
-          [`${serviceId}_data`]: subServices
-        }));
-      } catch (error) {
-        // If API fails, use sample subservices for demonstration
-        const sampleSubservices = getSampleSubservices(serviceId, title);
-        setFlippedCards(prev => ({ 
-          ...prev, 
-          [serviceId]: true,
-          [`${serviceId}_data`]: sampleSubservices
-        }));
-      }
+      setActiveServiceId(null);
     } else {
-      // If we already have the data, just flip the card
-      setFlippedCards(prev => ({ ...prev, [serviceId]: true }));
+      // Flip this card and unflip others
+      const newFlippedState = {};
+      newFlippedState[serviceId] = true;
+      setFlippedCards(newFlippedState);
+      setActiveServiceId(serviceId);
     }
   };
 
-  // Get sample subservices for demonstration
-  const getSampleSubservices = (serviceId, title) => {
-    const subservicesMap = {
-      1: [
-        { id: 101, title: "General Check-up", description: "Complete physical examination and health assessment" },
-        { id: 102, title: "Chronic Disease Management", description: "Management of diabetes, hypertension, etc." },
-        { id: 103, title: "Vaccinations", description: "Immunization for all age groups" },
-        { id: 104, title: "Health Screening", description: "Preventive health screenings and tests" }
-      ],
-      2: [
-        { id: 201, title: "Echocardiography", description: "Ultrasound imaging of the heart" },
-        { id: 202, title: "Stress Test", description: "Cardiac stress testing" },
-        { id: 203, title: "Angioplasty", description: "Coronary artery procedure" },
-        { id: 204, title: "Pacemaker Implantation", description: "Cardiac rhythm management" }
-      ],
-      3: [
-        { id: 301, title: "Newborn Care", description: "Comprehensive care for newborns" },
-        { id: 302, title: "Childhood Vaccinations", description: "Immunization schedule for children" },
-        { id: 303, title: "Growth Monitoring", description: "Regular growth and development checks" },
-        { id: 304, title: "Pediatric Nutrition", description: "Dietary guidance for children" }
-      ],
-      4: [
-        { id: 401, title: "Acne Treatment", description: "Treatment for all types of acne" },
-        { id: 402, title: "Skin Biopsy", description: "Diagnostic skin procedures" },
-        { id: 403, title: "Laser Therapy", description: "Advanced laser treatments" },
-        { id: 404, title: "Cosmetic Dermatology", description: "Aesthetic skin treatments" }
-      ],
-      5: [
-        { id: 501, title: "Joint Replacement", description: "Hip and knee replacement surgery" },
-        { id: 502, title: "Arthroscopy", description: "Minimally invasive joint surgery" },
-        { id: 503, title: "Fracture Care", description: "Treatment for bone fractures" },
-        { id: 504, title: "Sports Injury Management", description: "Treatment for athletic injuries" }
-      ],
-      6: [
-        { id: 601, title: "Individual Therapy", description: "One-on-one counseling sessions" },
-        { id: 602, title: "Group Therapy", description: "Therapeutic sessions in groups" },
-        { id: 603, title: "Cognitive Behavioral Therapy", description: "CBT for various conditions" },
-        { id: 604, title: "Psychiatric Evaluation", description: "Comprehensive mental health assessment" }
-      ]
-    };
-
-    return subservicesMap[serviceId] || [
-      { id: 1, title: "Consultation", description: "Initial consultation and assessment" },
-      { id: 2, title: "Follow-up", description: "Regular follow-up appointments" },
-      { id: 3, title: "Diagnostic Tests", description: "Relevant diagnostic procedures" },
-      { id: 4, title: "Treatment Planning", description: "Personalized treatment plans" }
-    ];
-  };
-
-  // Handle back button click
   const handleBackClick = (serviceId, e) => {
     e.stopPropagation();
     setFlippedCards(prev => ({ ...prev, [serviceId]: false }));
+    setActiveServiceId(null);
   };
 
+  // ==================== SAMPLE DATA ====================
+
+  const getSampleServicesWithSubservices = () => [
+    {
+      id: "1",
+      title: "General Medicine",
+      description: "Comprehensive medical care for adults and children, including diagnosis and treatment of various health conditions.",
+      image: null,
+      created_at: "2025-11-17 09:55:07",
+      sub_services: [
+        {
+          id: "1",
+          service_id: "1",
+          title: "General Check-up",
+          description: "Complete physical examination and health assessment",
+          price: "₹500",
+          duration: "30 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        },
+        {
+          id: "2",
+          service_id: "1",
+          title: "Chronic Disease Management",
+          description: "Management of diabetes, hypertension, and other chronic conditions",
+          price: "₹800",
+          duration: "45 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        },
+        {
+          id: "3",
+          service_id: "1",
+          title: "Vaccinations",
+          description: "Immunization for all age groups including travel vaccines",
+          price: "₹300-1500",
+          duration: "15-30 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        }
+      ]
+    },
+    {
+      id: "2",
+      title: "Cardiology",
+      description: "Specialized care for heart-related conditions including diagnosis, treatment, and preventive cardiology.",
+      image: null,
+      created_at: "2025-11-17 09:55:07",
+      sub_services: [
+        {
+          id: "4",
+          service_id: "2",
+          title: "ECG Test",
+          description: "Electrocardiogram to check heart's electrical activity",
+          price: "₹800",
+          duration: "20 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        },
+        {
+          id: "5",
+          service_id: "2",
+          title: "Echocardiography",
+          description: "Ultrasound imaging of the heart",
+          price: "₹2500",
+          duration: "45 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        },
+        {
+          id: "6",
+          service_id: "2",
+          title: "Stress Test",
+          description: "Cardiac stress testing on treadmill",
+          price: "₹1500",
+          duration: "60 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        }
+      ]
+    },
+    {
+      id: "3",
+      title: "Pediatrics",
+      description: "Healthcare for infants, children, and adolescents, including regular check-ups and specialized care.",
+      image: null,
+      created_at: "2025-11-17 09:55:07",
+      sub_services: [
+        {
+          id: "7",
+          service_id: "3",
+          title: "Newborn Care",
+          description: "Comprehensive care for newborns including vaccination",
+          price: "₹600",
+          duration: "40 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        },
+        {
+          id: "8",
+          service_id: "3",
+          title: "Childhood Vaccinations",
+          description: "Complete immunization schedule for children",
+          price: "₹400",
+          duration: "20 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        },
+        {
+          id: "9",
+          service_id: "3",
+          title: "Growth Monitoring",
+          description: "Regular growth and development checks",
+          price: "₹500",
+          duration: "30 mins",
+          image: null,
+          status: "1",
+          created_at: "2025-11-17 10:23:02"
+        }
+      ]
+    }
+  ];
+
+  // ==================== USE EFFECT ====================
+
   useEffect(() => {
-    fetchServices();
+    fetchAllServices();
   }, []);
 
-  // Custom styles
+  // ==================== STYLES ====================
+
   const styles = {
     pageBackground: {
       background: 'linear-gradient(135deg, #2a5298, #1e3c72)',
       minHeight: '100vh'
     },
     cardFront: {
-      background: 'linear-gradient(135deg, #2a5298, #1e3c72)',
-      height: '100%'
+      background: 'linear-gradient(135deg, #2a5298, #1e3c72)'
     },
     cardBack: {
-      background: 'linear-gradient(135deg, #1e3c72, #2a5298)',
-      height: '100%'
-    },
-    flipContainer: {
-      perspective: '1000px',
-      height: '300px'
-    },
-    flipper: {
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-      transition: 'transform 0.8s',
-      transformStyle: 'preserve-3d'
-    },
-    flipped: {
-      transform: 'rotateY(180deg)'
-    },
-    front: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      backfaceVisibility: 'hidden',
-      WebkitBackfaceVisibility: 'hidden'
-    },
-    back: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      backfaceVisibility: 'hidden',
-      WebkitBackfaceVisibility: 'hidden',
-      transform: 'rotateY(180deg)'
+      background: 'linear-gradient(135deg, #1e3c72, #2a5298)'
     }
   };
 
+  // ==================== RENDER LOADING ====================
+
   if (loading) {
     return (
-      <div style={styles.pageBackground} className="d-flex align-items-center justify-content-center">
+      <div style={styles.pageBackground} className="d-flex align-items-center justify-content-center min-vh-100">
         <div className="text-center text-white">
-          <div className="spinner-border" role="status">
+          <div className="spinner-border spinner-border-lg mb-3" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
-          <h4 className="mt-3">Loading services...</h4>
+          <h4>Loading Healthcare Services</h4>
+          <p className="mt-2">Fetching data from API...</p>
+          <div className="mt-3">
+            <small className="text-white-50">API: {API_BASE_URL}/service/list?id=[1,2,3...]</small>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div style={styles.pageBackground} className="d-flex align-items-center justify-content-center">
-        <div className="text-center text-white">
-          <div className="alert alert-danger" role="alert">
-            <h4>Error Loading Services</h4>
-            <p>{error}</p>
-            <button className="btn btn-light mt-2" onClick={fetchServices}>
-              Try Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // ==================== MAIN RENDER ====================
 
   return (
     <div style={styles.pageBackground} className="py-5">
       <div className="container">
-        {/* Page Header */}
+        {/* Header */}
         <div className="text-center mb-5">
-          <h1 className="text-white mb-3" style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>
-            Our Healthcare Services
+          <h1 className="text-white mb-3 display-4 fw-bold">
+            <i className="bi bi-heart-pulse me-3"></i>
+            Sunshine MindCare Services
           </h1>
-          <p className="text-white lead" style={{ opacity: 0.9, maxWidth: '800px', margin: '0 auto' }}>
-            Explore our comprehensive healthcare services. Click on any service card to view its subservices.
+          <p className="text-white lead fs-5" style={{ opacity: 0.9 }}>
+            Click on any service card to view available subservices
           </p>
+          
+          {/* API Status */}
+          <div className="row justify-content-center mt-4">
+            <div className="col-md-8">
+              <div className="alert alert-light shadow-sm">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <i className="bi bi-database me-2"></i>
+                    <strong>API Status:</strong> 
+                    <span className="ms-2">
+                      {error ? 'Using sample data' : `Loaded ${services.length} services`}
+                    </span>
+                  </div>
+                  <button 
+                    className="btn btn-primary btn-sm"
+                    onClick={fetchAllServices}
+                  >
+                    <i className="bi bi-arrow-clockwise me-1"></i>
+                    Refresh
+                  </button>
+                </div>
+                {error && (
+                  <div className="mt-2 text-danger small">
+                    <i className="bi bi-exclamation-triangle me-1"></i>
+                    {error}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Services Grid */}
         <div className="row g-4">
           {services.map((service) => (
             <div key={service.id} className="col-md-6 col-lg-4">
+              {/* Flip Card Container */}
               <div 
-                style={styles.flipContainer}
-                className="cursor-pointer"
-                onClick={() => handleCardClick(service.id, service.title)}
+                className="flip-card"
+                onClick={() => handleCardClick(service.id)}
               >
                 <div 
-                  style={{
-                    ...styles.flipper,
-                    ...(flippedCards[service.id] ? styles.flipped : {})
-                  }}
+                  className={`flip-card-inner ${flippedCards[service.id] ? 'flipped' : ''}`}
+                  style={{ height: '380px' }}
                 >
                   {/* Front of Card */}
-                  <div style={{ ...styles.front, ...styles.cardFront }} className="rounded shadow-lg">
-                    <div className="h-100 p-4 d-flex flex-column justify-content-between text-white">
+                  <div className="flip-card-front rounded-4 shadow-lg border-0">
+                    <div 
+                      className="h-100 p-4 d-flex flex-column justify-content-between text-white rounded-4"
+                      style={styles.cardFront}
+                    >
                       <div>
-                        <h3 className="h4 fw-bold mb-3">{service.title}</h3>
-                        <p className="mb-0" style={{ opacity: 0.9, fontSize: '0.9rem' }}>
+                        {/* Service Icon */}
+                        <div className="mb-4">
+                          <div className="bg-white/20 rounded-circle d-inline-flex align-items-center justify-content-center p-3">
+                            <i className="bi bi-heart-pulse fs-2"></i>
+                          </div>
+                        </div>
+                        
+                        {/* Service Title */}
+                        <h3 className="fw-bold mb-3">{service.title}</h3>
+                        
+                        {/* Service Description */}
+                        <p className="mb-0 opacity-90" style={{ fontSize: '0.95rem' }}>
                           {service.description}
                         </p>
                       </div>
                       
-                      <div className="d-flex align-items-center justify-content-between mt-4">
-                        <span className="fw-medium" style={{ fontSize: '0.9rem' }}>
-                          Click to view subservices
-                        </span>
-                        <div 
-                          className="rounded-circle d-flex align-items-center justify-content-center"
-                          style={{ width: '32px', height: '32px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
-                        >
-                          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
+                      {/* Subservices Count & CTA */}
+                      <div className="mt-4 pt-3 border-top border-white/20">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div>
+                            <div className="badge bg-white/20 rounded-pill px-3 py-2">
+                              <i className="bi bi-layers me-2"></i>
+                              {service.sub_services.length} Subservices
+                            </div>
+                          </div>
+                          <div className="arrow-icon">
+                            <i className="bi bi-chevron-right fs-4"></i>
+                          </div>
+                        </div>
+                        <div className="mt-2">
+                          <small className="opacity-75">
+                            <i className="bi bi-mouse me-1"></i>
+                            Click to view details
+                          </small>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Back of Card - Subservices */}
-                  <div style={{ ...styles.back, ...styles.cardBack }} className="rounded shadow-lg">
-                    <div className="h-100 p-4 d-flex flex-column text-white">
-                      <div className="d-flex align-items-center justify-content-between mb-3">
-                        <h4 className="h5 fw-bold mb-0">Subservices</h4>
+                  <div className="flip-card-back rounded-4 shadow-lg border-0">
+                    <div 
+                      className="h-100 p-4 d-flex flex-column text-white rounded-4"
+                      style={styles.cardBack}
+                    >
+                      {/* Back Header */}
+                      <div className="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                          <h4 className="fw-bold mb-1">Subservices</h4>
+                          <small className="opacity-75">
+                            <i className="bi bi-heart me-1"></i>
+                            {service.title}
+                          </small>
+                        </div>
                         <button 
+                          className="btn btn-light btn-sm rounded-circle"
+                          style={{ width: '36px', height: '36px' }}
                           onClick={(e) => handleBackClick(service.id, e)}
-                          className="btn btn-sm p-0 rounded-circle d-flex align-items-center justify-content-center"
-                          style={{ width: '32px', height: '32px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
                         >
-                          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
+                          <i className="bi bi-x-lg"></i>
                         </button>
                       </div>
-                      
-                      {loadingSubservices[service.id] ? (
-                        <div className="h-100 d-flex align-items-center justify-content-center">
-                          <div className="spinner-border spinner-border-sm" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                          </div>
-                          <span className="ms-2">Loading subservices...</span>
-                        </div>
-                      ) : flippedCards[`${service.id}_data`] && flippedCards[`${service.id}_data`].length > 0 ? (
-                        <div className="flex-grow-1 overflow-auto pe-2">
-                          <ul className="list-unstyled mb-0">
-                            {flippedCards[`${service.id}_data`].map((subService, index) => (
-                              <li 
-                                key={subService.id || index}
-                                className="mb-3 p-3 rounded"
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-                              >
-                                <h5 className="h6 fw-semibold mb-1">{subService.title}</h5>
-                                {subService.description && (
-                                  <p className="mb-0 small" style={{ opacity: 0.8 }}>
-                                    {subService.description}
-                                  </p>
-                                )}
-                              </li>
+
+                      {/* Subservices List */}
+                      <div className="flex-grow-1 overflow-auto">
+                        {service.sub_services.length > 0 ? (
+                          <div className="row g-3">
+                            {service.sub_services.map((subService, index) => (
+                              <div key={subService.id || index} className="col-12">
+                                <div className="subservice-card p-3 rounded-3">
+                                  <div className="d-flex justify-content-between align-items-start">
+                                    <div className="flex-grow-1">
+                                      <div className="d-flex align-items-center mb-2">
+                                        <div className="bg-white/10 rounded-circle d-flex align-items-center justify-content-center me-2"
+                                             style={{ width: '24px', height: '24px' }}>
+                                          <i className="bi bi-check-lg small"></i>
+                                        </div>
+                                        <h6 className="fw-semibold mb-0">{subService.title}</h6>
+                                      </div>
+                                      <p className="small mb-2 opacity-75">{subService.description}</p>
+                                      
+                                      {/* Price and Duration */}
+                                      <div className="d-flex gap-3 mt-2">
+                                        {subService.price && (
+                                          <span className="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25">
+                                            <i className="bi bi-currency-rupee me-1"></i>
+                                            {subService.price}
+                                          </span>
+                                        )}
+                                        {subService.duration && (
+                                          <span className="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25">
+                                            <i className="bi bi-clock me-1"></i>
+                                            {subService.duration}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             ))}
-                          </ul>
+                          </div>
+                        ) : (
+                          <div className="h-100 d-flex flex-column align-items-center justify-content-center">
+                            <i className="bi bi-inboxes fs-1 opacity-50 mb-3"></i>
+                            <p className="text-center opacity-75">No subservices available</p>
+                            <small className="opacity-50">Check back later for updates</small>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Footer */}
+                      <div className="mt-3 pt-3 border-top border-white/20">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <small className="opacity-75">
+                            Total: {service.sub_services.length} subservices
+                          </small>
+                          <small className="opacity-50">
+                            <i className="bi bi-info-circle me-1"></i>
+                            Click outside to return
+                          </small>
                         </div>
-                      ) : (
-                        <div className="h-100 d-flex align-items-center justify-content-center">
-                          <p className="mb-0" style={{ opacity: 0.7 }}>
-                            No subservices available
-                          </p>
-                        </div>
-                      )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1261,27 +1362,121 @@ const ServicesPage = () => {
           ))}
         </div>
 
-        {services.length === 0 && (
+        {/* Empty State */}
+        {services.length === 0 && !loading && (
           <div className="text-center py-5">
-            <p className="text-white lead">No services available at the moment.</p>
+            <div className="alert alert-light shadow-lg max-w-600 mx-auto">
+              <i className="bi bi-clipboard-x fs-1 text-muted mb-3"></i>
+              <h4>No Services Found</h4>
+              <p>No healthcare services are currently available.</p>
+              <button className="btn btn-primary mt-2" onClick={fetchAllServices}>
+                <i className="bi bi-arrow-clockwise me-2"></i>
+                Try Again
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Instructions */}
-        <div className="mt-5 text-center text-white" style={{ opacity: 0.8 }}>
-          <p className="small">
-            <em>Click on any service card to view its subservices. Click the back button or card again to return.</em>
+        {/* API Debug Panel (Collapsible) */}
+        {apiCalls.length > 0 && (
+          <div className="mt-5">
+            <div className="accordion" id="apiDebugAccordion">
+              <div className="accordion-item">
+                <h2 className="accordion-header">
+                  <button 
+                    className="accordion-button collapsed bg-light" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#apiDebug"
+                  >
+                    <i className="bi bi-terminal me-2"></i>
+                    API Call Logs ({apiCalls.length} calls)
+                  </button>
+                </h2>
+                <div id="apiDebug" className="accordion-collapse collapse">
+                  <div className="accordion-body bg-dark text-light">
+                    <pre className="mb-0 small" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                      {apiCalls.map((log, index) => (
+                        <div key={index} className="font-monospace">
+                          [{index + 1}] {log}
+                        </div>
+                      ))}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="mt-5 pt-5 text-center">
+          <p className="text-white opacity-75 mb-2">
+            <i className="bi bi-lightning-charge-fill me-2"></i>
+            Powered by Sunshine MindCare Healthcare System
           </p>
+          <small className="text-white opacity-50">
+            Data fetched from: {API_BASE_URL}/service/list | 
+            Real-time updates | 
+            v1.0.0
+          </small>
         </div>
       </div>
 
-      {/* Custom CSS for scrollbar and cursor */}
+      {/* Custom CSS */}
       <style>
         {`
-          .cursor-pointer {
+          /* Flip Card Styles */
+          .flip-card {
+            perspective: 1000px;
             cursor: pointer;
           }
           
+          .flip-card-inner {
+            position: relative;
+            width: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+          }
+          
+          .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+          }
+          
+          .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+          }
+          
+          .flip-card-back {
+            transform: rotateY(180deg);
+          }
+          
+          /* Card Styles */
+          .rounded-4 {
+            border-radius: 1rem !important;
+          }
+          
+          .shadow-lg {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+          }
+          
+          /* Subservice Card */
+          .subservice-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+          }
+          
+          .subservice-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+          }
+          
+          /* Scrollbar */
           .overflow-auto::-webkit-scrollbar {
             width: 6px;
           }
@@ -1296,20 +1491,24 @@ const ServicesPage = () => {
             border-radius: 3px;
           }
           
-          .overflow-auto::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.4);
+          /* Arrow Icon Animation */
+          .arrow-icon {
+            transition: transform 0.3s ease;
           }
           
-          .btn.p-0:hover {
-            background-color: rgba(255, 255, 255, 0.3) !important;
+          .flip-card:hover .arrow-icon {
+            transform: translateX(5px);
           }
           
-          .shadow-lg {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+          /* Badge Styles */
+          .badge {
+            font-weight: 500;
           }
           
-          .rounded {
-            border-radius: 15px !important;
+          /* Hover effect for cards */
+          .flip-card:not(.flipped):hover .flip-card-front {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
           }
         `}
       </style>

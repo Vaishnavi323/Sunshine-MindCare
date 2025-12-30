@@ -1,0 +1,135 @@
+/* HealthcareServices.css */
+.healthcare-services {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.services-header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+}
+
+.services-header .divider {
+  height: 4px;
+  width: 100px;
+  background-color: #4cc9f0;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+/* Card Flip Styles */
+.card-flip {
+  perspective: 1000px;
+  height: 380px;
+  cursor: pointer;
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.8s;
+  border-radius: 12px;
+}
+
+.card-front {
+  transform: rotateY(0deg);
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+.card-flip.flipped .card-front {
+  transform: rotateY(-180deg);
+}
+
+.card-flip.flipped .card-back {
+  transform: rotateY(0deg);
+}
+
+/* Service Image */
+.service-image {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  position: relative;
+}
+
+.service-image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(30, 60, 114, 0.1),
+    rgba(30, 60, 114, 0.3)
+  );
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* Card Styling */
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(30, 60, 114, 0.15) !important;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Modal Styling */
+.modal-service-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.modal-content {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.color-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* Footer */
+.services-footer {
+  background-color: #e9ecef;
+  border-top: 1px solid #dee2e6;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .card-flip {
+    height: 350px;
+  }
+
+  .service-image {
+    height: 150px;
+  }
+
+  .services-header h1 {
+    font-size: 2rem;
+  }
+}
