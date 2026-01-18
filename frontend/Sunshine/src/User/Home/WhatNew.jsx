@@ -16,49 +16,7 @@ const MentalHealthSection = () => {
     const [flippedCards, setFlippedCards] = useState({});
 
     // Fetch services from API
-    useEffect(() => {
-        const fetchRecentServices = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-
-                const response = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/service/list`
-                );
-                const result = await response.json();
-
-                if (result.status && Array.isArray(result.error)) {
-                    const services = result.error.slice(0, 4).map(service => ({
-                        id: service.id,
-                        title: service.title,
-                        description: service.description,
-                        image: service.image
-                            ? `${IMAGE_BASE_URL}/${service.image}`
-                            : 'https://via.placeholder.com/600',
-                        subservices: service.sub_services?.map(sub => ({
-                            title: sub.title,
-                            description: sub.description || '',
-                            duration: sub.duration || 'N/A'
-                        })) || []
-                    }));
-
-                    setRecentServices(services);
-                } else {
-                    throw new Error('Invalid API response');
-                }
-
-            } catch (err) {
-                console.error(err);
-                setError(err.message);
-                setRecentServices(getMockRecentServices().slice(0, 4));
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchRecentServices();
-    }, []);
-
+    
 
 
     // Fallback mock data - Maximum 4 services
@@ -73,7 +31,7 @@ const MentalHealthSection = () => {
         setSelectedService(null);
     };
 
-
+    
     useEffect(() => {
         const fetchRecentServices = async () => {
             try {
