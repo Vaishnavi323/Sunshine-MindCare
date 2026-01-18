@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import w1 from '../../assets/w1.jpg';
 import w2 from '../../assets/w2.jpg';
 import w3 from '../../assets/w3.jpg';
+const IMAGE_BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/uploads/services`;
+
 
 const MentalHealthSection = () => {
     const [recentServices, setRecentServices] = useState([]);
@@ -15,193 +17,51 @@ const MentalHealthSection = () => {
 
     // Fetch services from API
     useEffect(() => {
-    const fetchRecentServices = async () => {
-        try {
-            setLoading(true);
-            setError(null);
+        const fetchRecentServices = async () => {
+            try {
+                setLoading(true);
+                setError(null);
 
-            const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/service/list`
-            );
-            const result = await response.json();
+                const response = await fetch(
+                    `${import.meta.env.VITE_BACKEND_URL}/service/list`
+                );
+                const result = await response.json();
 
-            if (result.status && Array.isArray(result.error)) {
-                const services = result.error.slice(0, 4).map(service => ({
-                    id: service.id,
-                    title: service.title,
-                    description: service.description,
-                    image: service.image || 'https://via.placeholder.com/600',
-                    subservices: service.sub_services?.map(sub => ({
-                        title: sub.title,
-                        description: sub.description || '',
-                        duration: sub.duration || 'N/A'
-                    })) || []
-                }));
+                if (result.status && Array.isArray(result.error)) {
+                    const services = result.error.slice(0, 4).map(service => ({
+                        id: service.id,
+                        title: service.title,
+                        description: service.description,
+                        image: service.image
+                            ? `${IMAGE_BASE_URL}/${service.image}`
+                            : 'https://via.placeholder.com/600',
+                        subservices: service.sub_services?.map(sub => ({
+                            title: sub.title,
+                            description: sub.description || '',
+                            duration: sub.duration || 'N/A'
+                        })) || []
+                    }));
 
-                setRecentServices(services);
-            } else {
-                throw new Error('Invalid API response');
+                    setRecentServices(services);
+                } else {
+                    throw new Error('Invalid API response');
+                }
+
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
+                setRecentServices(getMockRecentServices().slice(0, 4));
+            } finally {
+                setLoading(false);
             }
+        };
 
-        } catch (err) {
-            console.error(err);
-            setError(err.message);
-            setRecentServices(getMockRecentServices().slice(0, 4));
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    fetchRecentServices();
-}, []);
+        fetchRecentServices();
+    }, []);
 
 
-    
+
     // Fallback mock data - Maximum 4 services
-    const getMockRecentServices = () => [
-        {
-            id: 1,
-            title: "Assesments",
-            image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=600&fit=crop',
-            description: "One-on-one counseling sessions tailored to your unique needs and goals.",
-            subservices: [
-                {
-                    title: "Intelligence Quotient (IQ) Tests",
-                },
-                {
-                    title: "Developmental Quotient (DQ) Test",
-                },
-                {
-                    title: "Social Quotient (SQ) Test",
-                },
-                {
-                    title: "Tests for emotional expression CAT (Children Apperception Test)",
-                },
-                {
-                    title: "TAT (Thematic Apperception Test)",
-                },
-                {
-                    title: "ROR (Rorschach Ink Blot Test)",
-                },
-                {
-                    title: "Autism assessment",
-                },
-                {
-                    title: "ADHD assessment",
-                },
-                {
-                    title: "Career Guidance/Aptitude Test",
-                },
-                {
-                    title: "Personality Test (MMPI/MCMI 4)",
-                },
-                {
-                    title: "Millon Adolescent Clinical Inventory II (MACI-II): for identifying temperamental and behavioral issues in the Adolescents",
-                },
-                {
-                    title: "Test for Obsessive Compulsive Disorders",
-                },
-                {
-                    title: "HAM-A and BDI for Anxiety/ Depression",
-                },
-                {
-                    title: "WRAT 5 India: for diagnosing learning difficulty",
-                },
-                {
-                    title: "CBCL 1 % to 5 years and CBCL. 6 to 18 years (Child Behavioral Checklist): To identify behavioral and emotional challenges in children.",
-                }
-            ]
-        },
-        {
-            id: 2,
-            title: "Therapy",
-            image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&h=600&fit=crop',
-            description: "Strengthen your relationship and improve communication patterns with professional guidance.",
-            subservices: [
-                {
-                    title: "Cognitive Behavior Therapy",
-                },
-                {
-                    title: "Behavior Therapy",
-                },
-                {
-                    title: "Psychoanalysis",
-                },
-                {
-                    title: "Humanistic Therapy",
-                },
-                {
-                    title: "Grief Counselling",
-                },
-                {
-                    title: "Marriage / Couple Therapy",
-                },
-                {
-                    title: "Family Therapy",
-                },
-                {
-                    title: "Supportive psychotherapy",
-                },
-                {
-                    title: "Social Skill Training",
-                },
-                {
-                    title: "Motivational Enhancement Therapy for De-addiction",
-                },
-                {
-                    title:"Relaxation Therapy",
-                },
-                {
-                    title:"Habit Reversal Training",
-                },
-                {
-                    title:"Career Guidance Counselling",
-                },
-                {
-                    title:"Remedial Therapy",
-                },
-                {
-                    title:"REBT",
-                }   
-            ]
-        },
-        {
-            id: 3,
-            title: "Group & Support",
-            image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=600&fit=crop',
-            description: "Improve family relationships and resolve conflicts in a supportive environment.",
-            subservices: [
-                {
-                    title: "Family Counseling",
-                    description: "Improve family dynamics and resolve conflicts with professional guidance.",
-                    duration: "60 mins"
-                },
-                {
-                    title: "Parenting Support",
-                    description: "Develop effective parenting strategies and improve family communication.",
-                    duration: "50 mins"
-                }
-            ]
-        },
-        {
-            id: 4,
-            title: "Education & Training",
-            image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=600&fit=crop',
-            description: "Evidence-based treatments for anxiety disorders and stress management.",
-            subservices: [
-                {
-                    title: "Anxiety Management",
-                    description: "Learn techniques to manage and reduce anxiety symptoms effectively.",
-                    duration: "50 mins"
-                },
-                {
-                    title: "Stress Reduction",
-                    description: "Develop coping strategies to manage daily stress and improve resilience.",
-                    duration: "50 mins"
-                }
-            ]
-        }
-    ];
 
     const handleCardClick = (service) => {
         setSelectedService(service);
@@ -212,6 +72,49 @@ const MentalHealthSection = () => {
         setShowModal(false);
         setSelectedService(null);
     };
+
+
+    useEffect(() => {
+        const fetchRecentServices = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                const response = await fetch(
+                    `${import.meta.env.VITE_BACKEND_URL}/service/list`
+                );
+                const result = await response.json();
+
+                if (result.status && Array.isArray(result.error)) {
+                    const services = result.error.slice(0, 4).map(service => ({
+                        id: service.id,
+                        title: service.title,
+                        description: service.description,
+                        image: service.image
+                            ? `${import.meta.env.VITE_BACKEND_URL}/uploads/services/${service.image}`
+                            : 'https://via.placeholder.com/600',
+                        subservices: service.sub_services?.map(sub => ({
+                            title: sub.title,
+                            description: sub.description || '',
+                            duration: sub.duration || 'N/A'
+                        })) || []
+                    }));
+
+                    setRecentServices(services);
+                } else {
+                    throw new Error('Invalid API response');
+                }
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
+                setRecentServices(getMockRecentServices().slice(0, 4));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchRecentServices();
+    }, []);
 
     const handleCardHover = (serviceId, isHovering) => {
         setFlippedCards(prev => ({
@@ -755,7 +658,7 @@ const MentalHealthSection = () => {
 
                     <div className="services-grid">
                         {recentServices.slice(0, 4).map((service) => (
-                            <div 
+                            <div
                                 key={service.id}
                                 className={`flip-card ${flippedCards[service.id] ? 'flipped' : ''}`}
                                 onMouseEnter={() => handleCardHover(service.id, true)}
@@ -772,7 +675,7 @@ const MentalHealthSection = () => {
                                         />
                                         <h3 className="service-title-front">{service.title}</h3>
                                         <p className="service-description-front">{service.description}</p>
-                                        
+
                                     </div>
 
                                     {/* Back of Card */}
@@ -797,10 +700,10 @@ const MentalHealthSection = () => {
             </div>
 
             {/* Subservices Modal */}
-            <Modal 
-                show={showModal} 
-                onHide={handleCloseModal} 
-                size="lg" 
+            <Modal
+                show={showModal}
+                onHide={handleCloseModal}
+                size="lg"
                 centered
                 className="service-modal"
             >
@@ -808,8 +711,8 @@ const MentalHealthSection = () => {
                     <>
                         <Modal.Header closeButton className="modal-header-content">
                             <div className="modal-image-container">
-                                <img 
-                                    src={selectedService.image} 
+                                <img
+                                    src={selectedService.image}
                                     alt={selectedService.title}
                                     className="modal-service-image"
                                 />
@@ -824,16 +727,16 @@ const MentalHealthSection = () => {
                                 <h4 className="subservices-title">Available Treatments</h4>
                                 <div className="subservices-grid">
                                     {selectedService.subservices.map((subservice, index) => (
-                                        <div 
+                                        <div
                                             key={index}
                                             className="subservice-card-modal"
                                         >
                                             <div className="subservice-content">
                                                 <div className="subservice-header-modal">
                                                     <h5 className="subservice-title-modal">{subservice.title}</h5>
-                                                    
+
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     ))}
