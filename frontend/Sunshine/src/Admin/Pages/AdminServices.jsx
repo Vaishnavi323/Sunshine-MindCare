@@ -91,26 +91,55 @@ const Services = () => {
   };
 
   // Update service
+  //   const updateServiceAPI = async (serviceId, serviceData) => {
+  //     console.log("Updating service:", serviceId, serviceData);
+  //   const response = await fetch(
+  //     `${API_BASE_URL}/service/update/${serviceId}`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         "Authorization": `Bearer ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         title: serviceData.name,
+  //         description: serviceData.description,
+  //         image: serviceData.image, // Assuming image is a URL or base64 string   
+  //       }),
+  //     }
+  //   );
+
+  //   return await response.json();
+  // };
+
   const updateServiceAPI = async (serviceId, serviceData) => {
     console.log("Updating service:", serviceId, serviceData);
-  const response = await fetch(
-    `${API_BASE_URL}/service/update/${serviceId}`,
-    {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: serviceData.name,
-        description: serviceData.description,
-        image: serviceData.image, // Assuming image is a URL or base64 string   
-      }),
-    }
-  );
 
-  return await response.json();
-};
+    const formData = new FormData();
+
+    formData.append("title", serviceData.name);
+    formData.append("description", serviceData.description);
+
+    // ✅ Append image ONLY if it's a File object
+    if (serviceData.image instanceof File) {
+      formData.append("image", serviceData.image);
+    }
+
+    const response = await fetch(
+      `${API_BASE_URL}/service/update/${serviceId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // ❌ DO NOT set Content-Type manually
+        },
+        body: formData,
+      }
+    );
+
+    return await response.json();
+  };
+
   // Delete service
   const deleteServiceAPI = async (serviceId) => {
     const response = await fetch(`${API_BASE_URL}/service/delete/${serviceId}`, {
@@ -124,37 +153,37 @@ const Services = () => {
   };
 
   // Add subservice
- const addSubserviceAPI = async (subserviceData) => {
-  try {
-    const formData = new FormData();
+  const addSubserviceAPI = async (subserviceData) => {
+    try {
+      const formData = new FormData();
 
-    formData.append("title", subserviceData.name);
-    formData.append("description", subserviceData.description);
-    formData.append("service_id", parentService.id);
-    formData.append("duration", subserviceData.duration);
+      formData.append("title", subserviceData.name);
+      formData.append("description", subserviceData.description);
+      formData.append("service_id", parentService.id);
+      formData.append("duration", subserviceData.duration);
 
-    if (subserviceData.price) {
-      formData.append(
-        "price",
-        subserviceData.price.replace("₹", "").trim()
-      );
+      if (subserviceData.price) {
+        formData.append(
+          "price",
+          subserviceData.price.replace("₹", "").trim()
+        );
+      }
+
+      const response = await fetch(`${API_BASE_URL}/subservice/add`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          //  Content-Type mat do (browser khud set karega)
+        },
+        body: formData,
+      });
+
+      return await response.json();
+    } catch (error) {
+      console.error("Add subservice error:", error);
+      throw error;
     }
-
-    const response = await fetch(`${API_BASE_URL}/subservice/add`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        //  Content-Type mat do (browser khud set karega)
-      },
-      body: formData,
-    });
-
-    return await response.json();
-  } catch (error) {
-    console.error("Add subservice error:", error);
-    throw error;
-  }
-};
+  };
 
 
   // Update subservice
@@ -328,11 +357,10 @@ const Services = () => {
       {/* Alert */}
       {alert && (
         <div className="fixed top-4 right-4 z-50 animate-fade-in">
-          <div className={`px-6 py-4 rounded-xl shadow-lg border ${
-            alert.type === 'success' 
-              ? 'bg-green-100 text-green-800 border-green-300' 
+          <div className={`px-6 py-4 rounded-xl shadow-lg border ${alert.type === 'success'
+              ? 'bg-green-100 text-green-800 border-green-300'
               : 'bg-red-100 text-red-800 border-red-300'
-          }`}>
+            }`}>
             <div className="flex items-center space-x-3">
               <span className="font-semibold">{alert.message}</span>
             </div>
@@ -347,15 +375,15 @@ const Services = () => {
             <p className="text-gray-600">Manage services and subservices</p>
           </div>
           <div className="flex gap-3">
-            <button 
+            <button
               onClick={fetchServices}
               disabled={loading}
               className="bg-gray-600 text-white px-4 py-3 rounded-xl font-semibold flex items-center gap-2 hover:shadow-lg transition-all disabled:opacity-50"
             >
               🔄 Refresh
             </button>
-            <button 
-              onClick={() => setShowServiceForm(true)} 
+            <button
+              onClick={() => setShowServiceForm(true)}
               disabled={loading}
               className="bg-gradient-to-r from-[#1f1f35] to-[#174593] text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -385,16 +413,16 @@ const Services = () => {
         </div>
 
         <div className="bg-white rounded-xl shadow-md border p-4 mb-6 flex flex-col md:flex-row gap-4">
-          <input 
-            type="text" 
-            placeholder="Search services..." 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-            className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#174593]" 
+          <input
+            type="text"
+            placeholder="Search services..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#174593]"
           />
-          <select 
-            value={selectedCategory} 
-            onChange={(e) => setSelectedCategory(e.target.value)} 
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
             className="px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#174593]"
           >
             {categories.map(c => <option key={c} value={c}>{c === "all" ? "All Categories" : c}</option>)}
@@ -428,14 +456,14 @@ const Services = () => {
                     <span>📋 {service.subservices.length} subservices</span>
                   </div>
                   <div className="flex gap-2">
-                    <button 
-                      onClick={() => { setEditingService(service); setShowServiceForm(true); }} 
+                    <button
+                      onClick={() => { setEditingService(service); setShowServiceForm(true); }}
                       className="px-4 py-2 bg-gradient-to-r from-[#1f1f35] to-[#174593] text-white rounded-lg text-sm font-semibold hover:shadow-md"
                     >
                       Edit
                     </button>
-                    <button 
-                      onClick={() => setDeleteConfirm({ type: 'service', id: service.id, name: service.name })} 
+                    <button
+                      onClick={() => setDeleteConfirm({ type: 'service', id: service.id, name: service.name })}
                       className="px-4 py-2 bg-white text-red-600 border border-red-300 rounded-lg text-sm font-semibold hover:bg-red-50"
                     >
                       Delete
@@ -448,8 +476,8 @@ const Services = () => {
                 <div className="p-5 border-t bg-gray-50">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="font-semibold text-gray-900">Subservices ({service.subservices.length})</h4>
-                    <button 
-                      onClick={() => { setParentService(service); setEditingSubservice(null); setShowSubserviceForm(true); }} 
+                    <button
+                      onClick={() => { setParentService(service); setEditingSubservice(null); setShowSubserviceForm(true); }}
                       className="px-3 py-2 bg-[#1f1f35] text-white rounded-lg text-sm font-semibold hover:bg-[#174593]"
                     >
                       + Add
@@ -462,14 +490,14 @@ const Services = () => {
                           <div className="flex justify-between items-start mb-2">
                             <h5 className="font-semibold text-gray-900">{sub.name}</h5>
                             <div className="flex gap-1">
-                              <button 
-                                onClick={() => { setParentService(service); setEditingSubservice(sub); setShowSubserviceForm(true); }} 
+                              <button
+                                onClick={() => { setParentService(service); setEditingSubservice(sub); setShowSubserviceForm(true); }}
                                 className="w-7 h-7 bg-blue-500 text-white rounded flex items-center justify-center text-xs hover:bg-blue-600"
                               >
                                 ✎
                               </button>
-                              <button 
-                                onClick={() => setDeleteConfirm({ type: 'subservice', serviceId: service.id, id: sub.id, name: sub.name })} 
+                              <button
+                                onClick={() => setDeleteConfirm({ type: 'subservice', serviceId: service.id, id: sub.id, name: sub.name })}
                                 className="w-7 h-7 bg-red-500 text-white rounded flex items-center justify-center text-xs hover:bg-red-600"
                               >
                                 ✕
@@ -497,8 +525,8 @@ const Services = () => {
           <div className="text-center py-16 bg-white rounded-xl shadow-md border">
             <p className="text-5xl mb-4">🩺</p>
             <h3 className="text-xl font-bold text-gray-900 mb-2">No Services Found</h3>
-            <button 
-              onClick={() => setShowServiceForm(true)} 
+            <button
+              onClick={() => setShowServiceForm(true)}
               className="mt-4 bg-gradient-to-r from-[#1f1f35] to-[#174593] text-white px-6 py-3 rounded-xl font-semibold"
             >
               Add Service
@@ -509,20 +537,20 @@ const Services = () => {
 
       {/* Forms & Modals */}
       {showServiceForm && (
-        <ServiceForm 
-          service={editingService} 
-          onSubmit={handleServiceSubmit} 
-          onCancel={() => { setShowServiceForm(false); setEditingService(null); }} 
+        <ServiceForm
+          service={editingService}
+          onSubmit={handleServiceSubmit}
+          onCancel={() => { setShowServiceForm(false); setEditingService(null); }}
           loading={loading}
         />
       )}
-      
+
       {showSubserviceForm && (
-        <SubserviceForm 
-          subservice={editingSubservice} 
-          parentService={parentService} 
-          onSubmit={handleSubserviceSubmit} 
-          onCancel={() => { setShowSubserviceForm(false); setEditingSubservice(null); setParentService(null); }} 
+        <SubserviceForm
+          subservice={editingSubservice}
+          parentService={parentService}
+          onSubmit={handleSubserviceSubmit}
+          onCancel={() => { setShowSubserviceForm(false); setEditingSubservice(null); setParentService(null); }}
           loading={loading}
         />
       )}
@@ -535,18 +563,18 @@ const Services = () => {
               Are you sure you want to delete {deleteConfirm.type} "{deleteConfirm.name}"?
             </p>
             <div className="flex gap-3">
-              <button 
-                onClick={() => setDeleteConfirm(null)} 
+              <button
+                onClick={() => setDeleteConfirm(null)}
                 disabled={loading}
                 className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 disabled:opacity-50"
               >
                 Cancel
               </button>
-              <button 
-                onClick={() => deleteConfirm.type === 'service' 
-                  ? handleDeleteService(deleteConfirm.id) 
+              <button
+                onClick={() => deleteConfirm.type === 'service'
+                  ? handleDeleteService(deleteConfirm.id)
                   : handleDeleteSubservice(deleteConfirm.serviceId, deleteConfirm.id)
-                } 
+                }
                 disabled={loading}
                 className="flex-1 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-2"
               >
@@ -581,31 +609,31 @@ const ServiceForm = ({ service, onSubmit, onCancel, loading }) => {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  if (!file.type.startsWith("image/")) {
-    alert("Please select a valid image");
-    return;
-  }
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image");
+      return;
+    }
 
-  if (file.size > 5 * 1024 * 1024) {
-    alert("Max size 5MB allowed");
-    return;
-  }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Max size 5MB allowed");
+      return;
+    }
 
-  // Preview
-  const reader = new FileReader();
-  reader.onloadend = () => setImagePreview(reader.result);
-  reader.readAsDataURL(file);
+    // Preview
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
 
-  // IMPORTANT: actual file ko save karo
-  setFormData((prev) => ({
-    ...prev,
-    imageFile: file,
-  }));
-};
+    // IMPORTANT: actual file ko save karo
+    setFormData((prev) => ({
+      ...prev,
+      imageFile: file,
+    }));
+  };
 
 
   const handleSubmit = () => {
