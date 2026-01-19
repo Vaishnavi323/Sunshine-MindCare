@@ -92,6 +92,7 @@ const Services = () => {
 
   // Update service
   const updateServiceAPI = async (serviceId, serviceData) => {
+    console.log("Updating service:", serviceId, serviceData);
   const response = await fetch(
     `${API_BASE_URL}/service/update/${serviceId}`,
     {
@@ -103,6 +104,7 @@ const Services = () => {
       body: JSON.stringify({
         title: serviceData.name,
         description: serviceData.description,
+        image: serviceData.image, // Assuming image is a URL or base64 string   
       }),
     }
   );

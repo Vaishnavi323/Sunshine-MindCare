@@ -15,10 +15,7 @@ const MentalHealthSection = () => {
     const [showModal, setShowModal] = useState(false);
     const [flippedCards, setFlippedCards] = useState({});
 
-    // Fetch services from API
     
-
-
     // Fallback mock data - Maximum 4 services
 
     const handleCardClick = (service) => {
